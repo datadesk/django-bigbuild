@@ -5,7 +5,6 @@ PyYAML==3.11
 validictory==1.0.1
 django-compressor==2.0
 greeking==2.1.0
-pip>=8.0.0
 pytz
 flake8
 coverage
