@@ -30,6 +30,7 @@ TEMPLATES = [
     },
 ]
 
+
 @override_settings(RETIRED_DIR=RETIRED_DIR)
 @override_settings(BUILD_DIR=BUILD_DIR)
 @override_settings(PAGE_DIR=PAGE_DIR)
