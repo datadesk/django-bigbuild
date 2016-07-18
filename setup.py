@@ -40,6 +40,7 @@ class TestCommand(Command):
                 },
             ],
             PAGE_DIR="./pages/",
+            PAGE_BLACKLIST=['.DS_Store',],
             RETIRED_DIR="./.retired/",
             BAKERY_GZIP=False,
             BAKERY_VIEWS=(

@@ -30,19 +30,6 @@ TEMPLATES = [
     },
 ]
 
-
-class RealPagesTest(SimpleTestCase):
-    """
-    Tests that run against our real pages.
-    """
-    def test_metadata_validity(self):
-        """
-        Validate that all of the pages have valid metadata.
-        """
-        for page in PageList():
-            self.assertTrue(page.is_metadata_valid())
-
-
 @override_settings(RETIRED_DIR=RETIRED_DIR)
 @override_settings(BUILD_DIR=BUILD_DIR)
 @override_settings(PAGE_DIR=PAGE_DIR)
@@ -114,6 +101,10 @@ class FakePagesTest(SimpleTestCase):
         obj.headline = latimes_ipsum.get_story().headline
         obj.published = True
         self.assertFalse(obj.has_recommended_metadata())
+
+        obj.byline = "foobar"
+        obj.headline = "something else"
+        self.assertTrue(obj.has_recommended_metadata())
 
     def test_retiredpage(self):
         p = PageList()['my-fake-page']
@@ -216,6 +207,13 @@ foo:: bar;:
 
     def test_data(self):
         p = PageList()['my-second-fake-page']
+
+        p.data = {"foo": "bar.csv"}
+        p.write_frontmatter()
+        with open(os.path.join(p.data_path, 'bar.csv'), 'w+') as f:
+            f.write('foo,bar')
+        p.sync_frontmatter()
+        p.metadata['data']['foo']
 
         p.data = {"foo": "bar.json"}
         p.write_frontmatter()
