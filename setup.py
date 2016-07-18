@@ -87,10 +87,10 @@ class TestCommand(Command):
 setup(
     name='django-bigbuild',
     version='0.0.1',
-    description='A simple system for creating complex pages',
+    description='The open-source engine that powers bigbuilder, the Los Angeles Times Data Desk\'s system for publishing standalone pages',
     author='The Los Angeles Times Data Desk',
     author_email='datadesk@latimes.com',
-    url='http://www.github.com/datadesk/bigbuilder/',
+    url='http://www.github.com/datadesk/django-bigbuild/',
     packages=(
         'bigbuild',
         'bigbuild.management',
@@ -105,6 +105,8 @@ setup(
         'Programming Language :: Python',
         'Programming Language :: Python :: 2',
         'Programming Language :: Python :: 2.7',
+        'Programming Language :: Python :: 3',
+        'Programming Language :: Python :: 3.5',
         'Framework :: Django',
         'Framework :: Django :: 1.9',
         'License :: OSI Approved :: MIT License',
