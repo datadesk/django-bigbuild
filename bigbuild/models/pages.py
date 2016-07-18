@@ -5,6 +5,7 @@ import os
 import csv
 import json
 import yaml
+import codecs
 import shutil
 import logging
 import frontmatter
@@ -88,15 +89,14 @@ class Page(BasePage):
         """
         template = self.get_template(template_name)
         html = template.render(Context(template_context))
-        with open(self.index_path, 'wb') as f:
-            f.write(html.encode("utf-8-sig"))
+        with codecs.open(self.index_path, 'w', 'utf-8') as f:
+            f.write(html)
 
     def write_frontmatter(self):
         """
         Creates metadata.yaml in the page directory.
         """
-        with open(self.frontmatter_path, 'wb') as f:
-            frontmatter.dump(self, f)
+        frontmatter.dump(self, self.frontmatter_path)
 
     def write_static(self):
         """
@@ -106,12 +106,12 @@ class Page(BasePage):
 
         css_path = os.path.join(self.static_path, 'style.css')
         css = self.get_template("bigbuild/pages/style.css-tpl").source
-        with open(css_path, 'wb') as f:
+        with codecs.open(css_path, 'w', 'utf-8') as f:
             f.write(css)
 
         js_path = os.path.join(self.static_path, 'app.js')
         js = self.get_template("bigbuild/pages/app.js-tpl").source
-        with open(js_path, 'wb') as f:
+        with codecs.open(js_path, 'w', 'utf-8') as f:
             f.write(js)
 
     def write_checklist(self):
@@ -120,7 +120,7 @@ class Page(BasePage):
         """
         template = self.get_template("bigbuild/pages/checklist.md-tpl")
         md = template.render(Context(dict(object=self)))
-        with open(self.checklist_path, 'wb') as f:
+        with codecs.open(self.checklist_path, 'w', 'utf-8') as f:
             f.write(md)
 
     def get_template(self, name):
@@ -132,7 +132,7 @@ class Page(BasePage):
 
     def sync_frontmatter(self):
         super(Page, self).sync_frontmatter()
-        with open(self.frontmatter_path) as f:
+        with codecs.open(self.frontmatter_path) as f:
             # Parse the YAML with confidence since the super call above
             # has already weeded out any errors
             post = frontmatter.load(f)
@@ -145,7 +145,7 @@ class Page(BasePage):
                 if not os.path.exists(p):
                     raise BadMetadata("Data file could not be found at %s" % p)
                 # Open the file
-                with open(p, 'rb') as f:
+                with codecs.open(p, 'r') as f:
                     # If it's a CSV file open it that way...
                     if p.endswith(".csv"):
                         self.data[key] = list(csv.DictReader(f))
