@@ -96,6 +96,7 @@ class PageList(Sequence):
         Returns a list of Page objects ready to be built
         in this environment.
         """
+        os.path.exists(settings.PAGE_DIR) or os.mkdir(settings.PAGE_DIR)
         return [
             p for p in self.get_page_list(settings.PAGE_DIR, Page)
             if p.should_build()
@@ -106,6 +107,7 @@ class PageList(Sequence):
         Returns a list of RetiredPage objects ready to be built
         in this environment.
         """
+        os.path.exists(settings.RETIRED_DIR) or os.mkdir(settings.RETIRED_DIR)
         return [
             p for p in self.get_page_list(settings.RETIRED_DIR, RetiredPage)
             if p.should_build()

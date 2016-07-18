@@ -1,5 +1,87 @@
 from setuptools import setup
 
+from distutils.core import Command
+
+
+class TestCommand(Command):
+    user_options = []
+
+    def initialize_options(self):
+        pass
+
+    def finalize_options(self):
+        pass
+
+    def run(self):
+        from django.conf import settings
+        settings.configure(
+            DATABASES={
+                'default': {
+                    'NAME': 'test.db',
+                    'TEST_NAME': 'test.db',
+                    'ENGINE': 'django.db.backends.sqlite3'
+                }
+            },
+            INSTALLED_APPS = (
+                'django.contrib.auth',
+                'django.contrib.contenttypes',
+                'django.contrib.sessions',
+                'django.contrib.staticfiles',
+                'compressor',
+                'greeking',
+                'bigbuild',
+            ),
+            TEMPLATES=[
+                {
+                    'BACKEND': 'django.template.backends.django.DjangoTemplates',
+                    'DIRS': [],
+                    'APP_DIRS': False,
+                    'OPTIONS': {},
+                },
+            ],
+            PAGE_DIR="./pages/",
+            RETIRED_DIR="./.retired/",
+            BAKERY_GZIP=False,
+            BAKERY_VIEWS=(
+                'bigbuild.views.IndexRedirectView',
+                'bigbuild.views.PageListView',
+                'bigbuild.views.PageDetailView',
+                'bigbuild.views.AdIframeView',
+                'bigbuild.views.Static404View',
+                'bigbuild.views.RobotsView',
+                'bigbuild.sitemaps.SitemapView',
+                'bigbuild.sitemaps.GoogleNewsSitemapView',
+                'bigbuild.feeds.LatestPages',
+            ),
+            STATIC_ROOT="./.static",
+            STATIC_URL = "/static/",
+            COMPRESS_ENABLED = True,
+            COMPRESS_URL = "/projects/",
+            COMPRESS_JS_COMPRESSOR = "bigbuild.compressors.SimpleJsCompressor",
+            COMPRESS_CSS_COMPRESSOR = "bigbuild.compressors.SimpleCssCompressor",
+            STATICFILES_FINDERS = (
+                'compressor.finders.CompressorFinder',
+            ),
+            COMPRESS_CSS_FILTERS = [
+                'compressor.filters.cssmin.rCSSMinFilter'
+            ],
+            COMPRESS_JS_FILTERS = [
+                'compressor.filters.jsmin.JSMinFilter',
+            ],
+            COMPRESS_PRECOMPILERS = (
+                ('text/coffeescript', 'coffee --compile --stdio'),
+                ('text/less', 'lessc {infile} {outfile}'),
+                ('text/x-sass', 'sass {infile} {outfile}'),
+            ),
+            COMPRESS_CACHEABLE_PRECOMPILERS = (),
+            USE_TZ = True,
+            ROOT_URLCONF = 'bigbuild.urls'
+        )
+        from django.core.management import call_command
+        import django
+        django.setup()
+        call_command('test', 'bigbuild')
+
 
 setup(
     name='django-bigbuild',
@@ -33,4 +115,5 @@ setup(
         'greeking>=2.1.0',
         'pytz',
     ],
+    cmdclass={'test': TestCommand}
 )
