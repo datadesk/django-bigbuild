@@ -67,6 +67,12 @@ class FakePagesTest(SimpleTestCase):
                 slug='a-working-page',
                 published=False,
                 description='Foobar'
+            ),
+            Page(
+                slug='a-live-page',
+                published=True,
+                pub_date=datetime(2001, 1, 1, 0, 0, 0),
+                description='Foobar'
             )
         ]
         [p.create_directory() for p in pages]
@@ -125,6 +131,7 @@ class FakePagesTest(SimpleTestCase):
         with override_settings(PAGE_PUBLICATION_STATUS='working'):
             page_list = PageList()
             self.assertTrue(len(page_list) > 0)
+        print [p.is_live() for p in PageList()]
         with override_settings(PAGE_PUBLICATION_STATUS='live'):
             page_list = PageList()
             print list(page_list), len(page_list), len(list(page_list))
