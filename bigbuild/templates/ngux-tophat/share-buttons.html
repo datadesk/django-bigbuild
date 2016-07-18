@@ -1,0 +1,9 @@
+<div class="sharebuttons clearfix"
+    {% if data_url %}data-url="{{ data_url }}"{% endif %}
+    {% if data_title %}data-title="{{ data_title }}"{% endif %}
+    {% if data_description %}data-description="{{ data_description }}"{% endif %}
+    {% if data_image %}data-image="{{ data_image }}"{% endif %}>
+    <i class="LATFacebook" data-socialshare-type="facebook"></i>
+    <i class="LATTwitter" data-socialshare-type="twitter" {% if hashtag %}data-hash-tag="{{ hashtag }}"{% endif %}></i>
+    <i class="LATEmail" data-socialshare-type="email"></i>
+</div>

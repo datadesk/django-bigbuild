@@ -1,0 +1,61 @@
+{% extends "ngux-tophat/base.html" %}
+
+{% block title %}All pages - {{ block.super }}{% endblock %}
+{% block omniture-pageName %}{{ block.super }}page-list:front{% endblock %}
+{% block omniture-contenttype %}front{% endblock %}
+
+{% block banner-ad %}{% endblock %}
+
+{% block extra-css %}
+<style type="text/css">
+    tr.working {
+        background-color: #4591B8;
+    }
+    tr.pending {
+        background-color: #DA1B28;
+    }
+    tr.working,
+    tr.pending {
+        color: #E6E6E6;
+    }
+    tr.working a,
+    tr.pending a {
+        color: #E6E6E6;
+    }
+    th.align-right,
+    td.align-right {
+        text-align: right;
+    }
+</style>
+{% endblock %}
+
+{% block content %}
+<h1>All pages</h1>
+
+<div class="row">
+    <div class="span12">
+        <table class="table">
+            <thead>
+                <tr>
+                    <th>Title</th>
+                    <th class="align-right">Publication date</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for obj in object_list %}
+                <tr class="{% if obj.is_live %}live{% else %}{{ obj.pub_status }}{% endif%}">
+                    <td>
+                        <a href="{{ obj.get_absolute_url }}">
+                            {% if not obj.is_live %}<span class="blink">{{ obj.pub_status|upper }}:</span> {% endif %}{{ obj.headline|safe }}
+                        </a>
+                    </td>
+                    <td class="align-right">
+                        {{ obj.pub_date|date:"N j, Y" }}
+                    </td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+</div>
+{% endblock %}

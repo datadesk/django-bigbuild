@@ -1,0 +1,7 @@
+[run]
+include =
+  bigbuild/*.py
+
+[report]
+exclude_lines =
+    pragma: no cover

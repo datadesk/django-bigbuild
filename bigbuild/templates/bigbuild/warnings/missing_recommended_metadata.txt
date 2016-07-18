@@ -1,0 +1,15 @@
+The page at {{ page.slug }} is missing some recommended values in its ``metadata.md`` file.
+
+These values are not required to publish a page, but you're likely to have bugs
+with how your page appears on social media without them.
+
+To fix this problem, open up the file at {{ page.frontmatter_path }}
+
+Then make sure each of the following fields is filled in:
+
+* headline
+* description
+* byline
+* image_url
+
+This is not a huge emergency, but this needs to get sorted out.

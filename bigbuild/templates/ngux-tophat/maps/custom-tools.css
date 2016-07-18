@@ -1,0 +1,39 @@
+.overlay {
+    z-index:1000;
+    margin:0;
+    padding:10px 15px 10px 15px;
+    background-color:#fff;
+    background-color:rgba(255,255,255,0.95);
+    box-shadow: 0 1px 5px rgba(0, 0, 0, 0.65);
+    border-radius: 4px;
+}
+/* For legend generation */
+.legend-title {
+    margin-bottom: 5px;
+}
+.legend-key {
+    /*margin-top: 5px;*/
+    float:left;
+    font:12px Arial, sans-serif;
+    color:#333;
+}
+.legend-key span {
+    line-height:20px;
+}
+.legend-swatch {
+    display:inline-block;
+    height:14px;
+    width:14px;
+    margin:0 10px 0 0;
+    position:relative;
+    bottom:-2px;
+    background-color:#ccc;
+    border-radius:10px;
+    -moz-border-radius:10px;
+    -webkit-border-radius:10px;
+}
+
+.leaflet-label {border:none; background-color:rgba(255,255,255,0.8); padding:5px 10px; font-weight:normal;}
+.leaflet-label:before {left:-7px;}
+.leaflet-label:after {right:-7px;}
+.leaflet-label:before, .leaflet-label:after {border-top:0; border-bottom:0;}

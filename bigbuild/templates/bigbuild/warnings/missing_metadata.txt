@@ -1,0 +1,8 @@
+The page at {{ page.directory_path }} is missing its valuable ``metadata.md`` file.
+
+That means:
+
+* The metadata.md was mistakenly deleted and you need to restore it.
+* It is a junk directory that needs to go.
+
+This is not a huge emergency, but this needs to get sorted out.

@@ -1,0 +1,18 @@
+Checklist
+=========
+
+- [ ] Fill out [all metadata fields](https://www.github.com/datadesk/bigbuilder/edit/master/pages/{{ object.slug }}/metadata.md), including the share image
+- [ ] Make sure your slug follows our rules and starts with ``la-`` and whatever section slug is appropriate.
+- [ ] Remove all `console.log`s
+- [ ] Send to the copy desk
+- [ ] Compress your JavaScript and CSS with our custom templatetags, if you can
+- [ ] Test on Internet Explorer
+- [ ] Test on mobile phones
+- [ ] Add a ["More like this" list](http://cookbook.latimes.com/copy/#related-items) to the bottom of the page
+- [ ] [Send it live](https://github.com/datadesk/bigbuilder#publish-to-the-live-site)
+- [ ] Pitch to the social media team
+- [ ] Proof in [Facebook Sharing Debugger](https://developers.facebook.com/tools/debug/)
+- [ ] Proof in [Google Structured Data Testing Tool](https://search.google.com/structured-data/testing-tool?hl=EN)
+- [ ] Proof in [Twitter Card Validator](https://cards-dev.twitter.com/validator)
+- [ ] Proof in [HTML5 Outliner](https://gsnedders.html5.org/outliner/)
+- [ ] [Tweet it out](http://www.twitter.com/)!

@@ -1,0 +1,153 @@
+<!DOCTYPE html>
+<html lang="{% templatetag openblock %} block lang {% templatetag closeblock %}en{% templatetag openblock %} endblock {% templatetag closeblock %}" {% templatetag openblock %} block extra-html {% templatetag closeblock %}{% templatetag openblock %} endblock {% templatetag closeblock %}>
+<head>
+    {% templatetag openblock %} block chartbeat-top {% templatetag closeblock %}<script type='text/javascript'>var _sf_startpt=(new Date()).getTime()</script>{% templatetag openblock %} endblock {% templatetag closeblock %}
+
+    <!-- METADATA -->
+    <title>{% templatetag openblock %} block title {% templatetag closeblock %}Los Angeles Times{% templatetag openblock %} endblock {% templatetag closeblock %}</title>
+    {% templatetag openblock %} block meta {% templatetag closeblock %}
+        <meta charset="utf-8" />
+        <meta name="description" content="{% templatetag openblock %} block description {% templatetag closeblock %}{% templatetag openblock %} endblock {% templatetag closeblock %}" />
+        <meta name="keywords" content="{% templatetag openblock %} block keywords {% templatetag closeblock %}data desk, los angeles times, latimes, l.a. times{% templatetag openblock %} endblock {% templatetag closeblock %}" />
+        {% templatetag openblock %} block viewport {% templatetag closeblock %}<meta name="viewport" content="width=device-width, initial-scale=1.0">{% templatetag openblock %} endblock {% templatetag closeblock %}
+        <link rel="shortcut icon" type="image/x-icon" href="//cookbook.latimes.com/img/favicon.ico">
+        <link rel="publisher" href="//plus.google.com/u/0/112727226361732924638" />
+        <meta name="google-site-verification" content="a9pAUAoFTyj7Nut3H5OiQ-fUyyqdwdVT7VcFGICrpTo" />
+        {% templatetag openblock %} block extra-meta {% templatetag closeblock %}{% templatetag openblock %} endblock {% templatetag closeblock %}
+    {% templatetag openblock %} endblock {% templatetag closeblock %}
+
+    <!-- CSS -->
+    {% templatetag openblock %} block css {% templatetag closeblock %}
+    <link rel="stylesheet" type="text/css" href="//cookbook.latimes.com/bootstrap/2.3.2/css/bootstrap.min.css" />
+    <link rel="stylesheet" type="text/css" href="//cookbook.latimes.com/css/ngux-tophat-{{ COOKBOOK_STATIC_FILES_VERSION }}.min.css" />
+    <link rel="stylesheet" type="text/css" href="//cookbook.latimes.com/bootstrap/2.3.2/css/bootstrap-responsive.min.css" />
+    <link rel="stylesheet" type="text/css" href="//cookbook.latimes.com/css/ngux-tophat-responsive-{{ COOKBOOK_STATIC_FILES_VERSION }}.min.css" />
+    {% templatetag openblock %} endblock {% templatetag closeblock %}
+
+    {% templatetag openblock %} block extra-css {% templatetag closeblock %}{% templatetag openblock %} endblock {% templatetag closeblock %}
+
+    <!-- JAVASCRIPT -->
+    {% templatetag openblock %} block js {% templatetag closeblock %}
+    {% templatetag openblock %} block html5shiv {% templatetag closeblock %}
+    <!--[if lt IE 9]>
+          <script type="text/javascript" src="//cookbook.latimes.com/js/html5shiv.js"></script>
+     <![endif]-->
+    {% templatetag openblock %} endblock {% templatetag closeblock %}
+    {% templatetag openblock %} block jquery {% templatetag closeblock %}<script type="text/javascript" src=//cookbook.latimes.com/js/jquery-1.12.4/jquery.min.js"></script>{% templatetag openblock %} endblock {% templatetag closeblock %}
+    {% templatetag openblock %} block bootstrap {% templatetag closeblock %}<script type="text/javascript" src="//cookbook.latimes.com/bootstrap/2.3.2/js/bootstrap.min.js"></script>{% templatetag openblock %} endblock {% templatetag closeblock %}
+    {% templatetag openblock %} block underscore {% templatetag closeblock %}<script src="//cookbook.latimes.com/js/underscore-1.8.3-min.js" type="text/javascript"></script>{% templatetag openblock %} endblock {% templatetag closeblock %}
+    {% templatetag openblock %} block gigya {% templatetag closeblock %}<script type="text/javascript" src="//cdn.gigya.com/js/socialize.js?apiKey=2_COh26GgfZDptreu0iQ9aknzT_Ig861qYxOHZVxizrZMTn81vygTB-ptN33wgCtrj"></script>{% templatetag openblock %} endblock {% templatetag closeblock %}
+    {% templatetag openblock %} block tophat-js {% templatetag closeblock %}<script type="text/javascript" src="//cookbook.latimes.com/js/ngux-tophat-{{ COOKBOOK_STATIC_FILES_VERSION }}.min.js"></script>{% templatetag openblock %} endblock {% templatetag closeblock %}
+    <!--[if lte IE 7]><script type="text/javascript" src="//cookbook.latimes.com/js/icons-ie7.js"></script><![endif]-->
+    {% templatetag openblock %} block ad-js {% templatetag closeblock %}<script type="text/javascript" src="//cookbook.latimes.com/js/ngux-ads-2.4.1.min.js"></script>{% templatetag openblock %} endblock {% templatetag closeblock %}
+    {% templatetag openblock %} endblock {% templatetag closeblock %}
+
+    {% templatetag openblock %} block extra-js {% templatetag closeblock %}{% templatetag openblock %} endblock {% templatetag closeblock %}
+    {% templatetag openblock %} block extra-rss {% templatetag closeblock %}{% templatetag openblock %} endblock {% templatetag closeblock %}
+    {% templatetag openblock %} block extra-head {% templatetag closeblock %}{% templatetag openblock %} endblock {% templatetag closeblock %}
+</head>
+<body {% templatetag openblock %} block extra-body {% templatetag closeblock %}data-ad-path="4011/trb.latimes{% templatetag openblock %} block ad-path {% templatetag closeblock %}/news/datadesk{% templatetag openblock %} endblock {% templatetag closeblock %}" data-ad-ptype="{% templatetag openblock %} block ad-ptype {% templatetag closeblock %}s{% templatetag openblock %} endblock {% templatetag closeblock %}" data-ad-iframe-url="{% templatetag openblock %} block ad-iframe {% templatetag closeblock %}/static/ngux-tophat-ad-iframe.html{% templatetag openblock %} endblock {% templatetag closeblock %}"{% templatetag openblock %} endblock {% templatetag closeblock %} >
+    <!-- NAV -->
+    {% templatetag openblock %} block nav {% templatetag closeblock %}
+    <nav title="Navigation">
+        {% templatetag openblock %} include "ngux-tophat/nav/default.html" {% templatetag closeblock %}
+    </nav>
+    {% templatetag openblock %} endblock {% templatetag closeblock %}
+
+    {% templatetag openblock %} block container {% templatetag closeblock %}
+    <!-- CONTENT GOES HERE -->
+    <div class="container" id="container">
+        {% templatetag openblock %} block banner-ad {% templatetag closeblock %}
+            {% templatetag openblock %}include "ngux-tophat/ads/banner.html" {% templatetag closeblock %}
+        {% templatetag openblock %} endblock {% templatetag closeblock %}
+        <article>
+        {% templatetag openblock %} block content {% templatetag closeblock %}
+        {% templatetag openblock %} endblock {% templatetag closeblock %}
+        </article>
+    </div>
+    {% templatetag openblock %} endblock {% templatetag closeblock %}
+
+    {% templatetag openblock %} block stats {% templatetag closeblock %}
+
+        <!-- Google Analytics code -->
+        <script type="text/javascript">
+              (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+              (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+              m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+              })(window,document,'script','//www.google-analytics.com/analytics.js','ga');
+
+              ga('create', '{% templatetag openblock %} block google-analytics-id {% templatetag closeblock %}UA-22575524-1{% templatetag openblock %} endblock {% templatetag closeblock %}', 'latimes.com');
+              ga('send', 'pageview');
+        </script>
+
+        {% templatetag openblock %} block omniture {% templatetag closeblock %}
+        <script type="text/javascript">
+            ((((window.trb || (window.trb = {})).data || (trb.data = {})).metrics || (trb.data.metrics = {})).thirdparty = {
+                // Page naming convention:
+                //  <site-slug>:<app-slug>:<path>:<datadesk-slug>-<page-slug>:<content-type>.
+                // Example:
+                //  lat:projects.latimes.com:local:data-pat-tillman:individualarticle.
+                //  (Don't miss the period at the end.)
+                pageName: 'lat:{% templatetag openblock %} block omniture-pageName {% templatetag closeblock %}{% templatetag openblock %} endblock {% templatetag closeblock %}.',
+                channel: '{% templatetag openblock %} block omniture-channel {% templatetag closeblock %}local{% templatetag openblock %} endblock {% templatetag closeblock %}', // Path
+                server: '{% templatetag openblock %} block omniture-server {% templatetag closeblock %}www.latimes.com{% templatetag openblock %} endblock {% templatetag closeblock %}', // Full domain
+                hier1: 'latimes:{% templatetag openblock %} block omniture-full-tribune-path {% templatetag closeblock %}local{% templatetag openblock %} endblock {% templatetag closeblock %}', // Path (with latimes prefix)
+                hier2: '{% templatetag openblock %} block omniture-full-latimes-path {% templatetag closeblock %}local{% templatetag openblock %} endblock {% templatetag closeblock %}', // Path (again)
+                prop1: 'D=pageName',
+                prop2: '{% templatetag openblock %} block omniture-base-latimes-path {% templatetag closeblock %}local{% templatetag openblock %} endblock {% templatetag closeblock %}', // Path (again!)
+                prop38: '{% templatetag openblock %} block omniture-contenttype {% templatetag closeblock %}individualarticle{% templatetag openblock %} endblock {% templatetag closeblock %}', // Content type
+                eVar1: {% templatetag openblock %} block omniture-url {% templatetag closeblock %}window.location.href{% templatetag openblock %} endblock {% templatetag closeblock %}, // This URL
+                eVar2: {% templatetag openblock %} block omniture-referring-url {% templatetag closeblock %}document.referrer{% templatetag openblock %} endblock {% templatetag closeblock %}, // The referring URL
+                prop57: 'D=c38',
+                eVar20: 'latimes',
+                eVar21: 'D=c38',
+                eVar34: 'D=ch',
+                eVar35: 'D=pageName',
+                events: ''
+            });
+        </script>
+        <script src="//www.latimes.com/thirdpartyservice?disablenav=true"></script>
+        {% templatetag openblock %} endblock {% templatetag closeblock %}
+
+    {% templatetag openblock %} endblock {% templatetag closeblock %}
+
+    {% templatetag openblock %} block footer {% templatetag closeblock %}
+    <footer title="Footer">
+        {% templatetag openblock %} include "ngux-tophat/footer/default.html" {% templatetag closeblock %}
+    </footer>
+    {% templatetag openblock %} endblock {% templatetag closeblock %}
+
+    {% templatetag openblock %} block body-bottom {% templatetag closeblock %}{% templatetag openblock %} endblock {% templatetag closeblock %}
+
+    {% templatetag openblock %} block chartbeat-bottom {% templatetag closeblock %}
+    <script type="text/javascript">
+    var _sf_async_config={};
+        /** CONFIGURATION START **/
+        _sf_async_config.uid = {% templatetag openblock %}block chartbeat-uid {% templatetag closeblock %}3908{% templatetag openblock %} endblock {% templatetag closeblock %};
+        _sf_async_config.domain = '{% templatetag openblock %} block chartbeat-domain {% templatetag closeblock %}www.latimes.com{% templatetag openblock %} endblock {% templatetag closeblock %}';
+        _sf_async_config.useCanonical = true;
+        _sf_async_config.sections = '{% templatetag openblock %} block chartbeat-sections {% templatetag closeblock %}{% templatetag openblock %} endblock {% templatetag closeblock %}';
+        _sf_async_config.authors = '{% templatetag openblock %} block chartbeat-authors {% templatetag closeblock %}Data Desk{% templatetag openblock %} endblock {% templatetag closeblock %}';
+        /** CONFIGURATION END **/
+        (function(){
+          function loadChartbeat() {
+            window._sf_endpt=(new Date()).getTime();
+            var e = document.createElement('script');
+            e.setAttribute('language', 'javascript');
+            e.setAttribute('type', 'text/javascript');
+            e.setAttribute('src', '//static.chartbeat.com/js/chartbeat.js');
+            document.body.appendChild(e);
+          }
+          var oldonload = window.onload;
+          window.onload = (typeof window.onload != 'function') ?
+             loadChartbeat : function() { oldonload(); loadChartbeat(); };
+        })();
+    </script>
+    {% templatetag openblock %} endblock {% templatetag closeblock %}
+
+</body>
+<!--Good with data?-->
+<!--Tired of grinding on the same old apps?-->
+<!--Want to use your skills in defense of truth, justice and the American way?-->
+<!--Email datadesk@latimes.com and let us know you're out there.-->
+</html>

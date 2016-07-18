@@ -1,0 +1,19 @@
+<div id="tophat-container">
+    <div id="tophat">
+        {% block content %}
+            <span id="tophat-dropdown">
+                <hr />
+                <hr />
+                <hr />
+            </span>
+            {% block nav-logo %}
+                <a id="tophat-logo" href="//www.latimes.com/"></a>
+            {% endblock %}
+            {% block nav-links %}
+                <div class="tophat-links">
+                    {% include "ngux-tophat/nav/links.html" %}
+                </div>
+            {% endblock %}
+        {% endblock %}
+    </div>
+</div>

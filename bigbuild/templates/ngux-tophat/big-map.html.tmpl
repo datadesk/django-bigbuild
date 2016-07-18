@@ -1,0 +1,162 @@
+{% templatetag openblock %} extends {{ base_template }} {% templatetag closeblock %}
+
+{% templatetag openblock %} block footer {% templatetag closeblock %}{% templatetag openblock %} endblock {% templatetag closeblock %}
+
+{% templatetag openblock %} block css {% templatetag closeblock %}
+    {{ block.super }}
+    {% templatetag openblock %} block map-css {% templatetag closeblock %}<link rel="stylesheet" type="text/css" href="//cookbook.latimes.com/js/leaflet-1.0.0-b1/leaflet.css" />{% templatetag openblock %} endblock {% templatetag closeblock %}
+    <link rel="stylesheet" type="text/css" href="//cookbook.latimes.com/css/ngux-big-map-{{ COOKBOOK_STATIC_FILES_VERSION }}.min.css" />
+{% templatetag openblock %} endblock {% templatetag closeblock %}
+
+{% templatetag openblock %} block extra-js {% templatetag closeblock %}
+    {{ block.super }}
+    {% templatetag openblock %} block map-js {% templatetag closeblock %}<script src="//cookbook.latimes.com/js/leaflet-1.0.0-b1/leaflet.js" type="text/javascript"></script>{% templatetag openblock %} endblock {% templatetag closeblock %}
+{% templatetag openblock %} endblock {% templatetag closeblock %}
+
+{% templatetag openblock %} block extra-head {% templatetag closeblock %}
+    {% templatetag openblock %} include "ngux-tophat/maps/custom-tools.html" {% templatetag closeblock %}
+{% templatetag openblock %} endblock {% templatetag closeblock %}
+
+{% templatetag openblock %} block nav {% templatetag closeblock %}
+<div id="tophat-container">
+    <div id="tophat" class="visible-desktop">
+        <a id="tophat-logo" href="//www.latimes.com/"></a>
+        <div class="tophat-links">
+            {% templatetag openblock %} include "ngux-tophat/nav/links.html" {% templatetag closeblock %}
+            <div class="tophat-sharebuttons visible-desktop">
+                <div class="sharebuttons">
+                    <i class="LATFacebook" data-socialshare-type="facebook"></i>
+                    <i class="LATTwitter" data-socialshare-type="twitter"></i>
+                    <i class="LATEmail" data-socialshare-type="email"></i>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div id="tophat" class="tophat-small hidden-desktop">
+        <span id="tophat-dropdown">
+            <hr />
+            <hr />
+            <hr />
+        </span>
+        <a id="tophat-logo" href="//www.latimes.com/"></a>
+        <div id="tophat-title">{% templatetag openblock %} block small-headline {% templatetag closeblock %}{% templatetag openblock %} endblock {% templatetag closeblock %}</div>
+        <div class="tophat-links">
+            {% templatetag openblock %} include "ngux-tophat/nav/links.html" {% templatetag closeblock %}
+            <div class="tophat-sharebuttons visible-desktop">
+                <div class="sharebuttons">
+                    <i class="LATFacebook" data-socialshare-type="facebook"></i>
+                    <i class="LATTwitter" data-socialshare-type="twitter"></i>
+                    <i class="LATEmail" data-socialshare-type="email"></i>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% templatetag openblock %} endblock {% templatetag closeblock %}
+
+{% templatetag openblock %} block container {% templatetag closeblock %}
+<div class="container big-map-container" id="container">
+    {% templatetag openblock %} block content {% templatetag closeblock %}
+        {% templatetag openblock %} block big-map-holder {% templatetag closeblock %}
+        <article class="row-fluid" id="big-map-holder">
+
+            {% templatetag openblock %} block big-box {% templatetag closeblock %}
+            <hgroup id="big-box" class="overlay visible-desktop">
+                <div id="big-box-close">
+                    <a><i class="LATClose01"></i></a>
+                </div>
+                <h1>{% templatetag openblock %} block big-box-headline {% templatetag closeblock %}{% templatetag openblock %} endblock {% templatetag closeblock %}</h1>
+                {% templatetag openblock %} block big-box-byline {% templatetag closeblock %}
+                <p class="byline">
+                    By <span class="author">{{ object.byline|safe }}</span>
+                </p>
+                {% templatetag openblock %} endblock {% templatetag closeblock %}
+                <p class="dateline">
+                    {% templatetag openblock %} block big-box-dateline {% templatetag closeblock %}{% templatetag openblock %} endblock {% templatetag closeblock %}
+                </p>
+                <div class="description">
+                    {% templatetag openblock %} block big-box-description {% templatetag closeblock %}{% templatetag openblock %} endblock {% templatetag closeblock %}
+                </div>
+                {% templatetag openblock %} block big-box-footnotes {% templatetag closeblock %}
+                <div id="footnotes">
+                    <p>Source{% templatetag openblock %} block big-box-source-plural {% templatetag closeblock %}s{% templatetag openblock %} endblock {% templatetag closeblock %}: {% templatetag openblock %} block big-box-sources {% templatetag closeblock %}{% templatetag openblock %} endblock {% templatetag closeblock %}</p>
+                    <p>Credit{% templatetag openblock %} block big-box-credit-plural {% templatetag closeblock %}s{% templatetag openblock %} endblock {% templatetag closeblock %}: {% templatetag openblock %} block big-box-credits {% templatetag closeblock %}{% templatetag openblock %} endblock {% templatetag closeblock %}</p>
+                </div>
+                {% templatetag openblock %} endblock {% templatetag closeblock %}
+            </hgroup>
+            <script type="text/javascript">
+                $("#big-box-close a").click(function (e) {
+                    $("#big-box").removeClass('visible-desktop').hide();
+                    $(".info-btn").removeClass('hidden-desktop');
+                });
+            </script>
+            {% templatetag openblock %} endblock {% templatetag closeblock %}
+
+            {% templatetag openblock %} block small-box-modal {% templatetag closeblock %}
+            <aside class="modal" id="small-box-modal">
+                <div class="modal-dialog">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <button type="button" class="close" data-dismiss="modal"><i class="LATClose01"></i></button>
+                            <h1>{% templatetag openblock %} block small-box-modal-headline {% templatetag closeblock %}{% templatetag openblock %} endblock {% templatetag closeblock %}</h1>
+                        </div>
+                        <div class="modal-body">
+                            <div class="description">
+                            {% templatetag openblock %} block small-box-modal-description {% templatetag closeblock %}{% templatetag openblock %} endblock {% templatetag closeblock %}
+                            </div>
+                        </div>
+                        <div class="modal-footer">
+                            <button class="btn" data-dismiss="modal"><i class="LATLocation"></i> See the map</button>
+                        </div>
+                    </div>
+                </div>
+            </aside>
+            {% templatetag openblock %} endblock {% templatetag closeblock %}
+
+            {% templatetag openblock %} block big-map-canvas {% templatetag closeblock %}
+            <div id="big-map-canvas"></div>
+            {% templatetag openblock %} endblock {% templatetag closeblock %}
+
+            {% templatetag openblock %} block about-latimes {% templatetag closeblock %}
+            <aside class="modal" id="tos-modal">
+                <div class="modal-dialog">
+                    <div class="modal-content">
+
+                        <div class="modal-header">
+                            <button type="button" class="close" data-dismiss="modal"><i class="LATClose01"></i></button>
+                            <h1>About latimes.com</h1>
+                        </div>
+
+                        <div class="modal-body">
+
+                            <p>The Los Angeles Times is the largest metropolitan daily newspaper in the country,
+                            with a daily readership of 1.4 million and 2.5 million on Sunday, more than 22 million unique
+                            latimes.com visitors monthly and a combined print and online local weekly audience of 4.1 million.
+                            The Pulitzer Prize-winning Times has been covering Southern California for more than 130 years.</p>
+
+                            <div class="tos">
+                                <a href="//www.latimes.com/lat-terms,0,7374802.story">Terms of Service</a> |
+                                <a href="//privacy.tribune.com">Privacy Policy</a> |
+                                <a href="//www.latimes.com/lat-about-our-ads,0,3875412.htmlstory">About Our Ads</a> |
+                                <a href="//www.latimes.com/services/site/la-reprint-request-splash,0,6731163.htmlstory">© <script type="text/javascript">document.write(new Date().getFullYear())</script></a> |
+                                <a href="//www.latimes.com/about/">About This Site</a>
+                            </div>
+                        </div>
+
+                    </div>
+                </div>
+            </aside>
+            <script type="text/javascript">
+                $(document).ready(function(){
+                    var href = "<a style='cursor:pointer;' onclick=\"$('#tos-modal').modal('toggle');\">About</a> | "
+                    $(".leaflet-control-attribution").prepend(href);
+                });
+            </script>
+            {% templatetag openblock %} endblock {% templatetag closeblock %}
+
+        </article>
+        {% templatetag openblock %} endblock {% templatetag closeblock %}
+
+    {% templatetag openblock %} endblock {% templatetag closeblock %}
+</div>
+{% templatetag openblock %} endblock {% templatetag closeblock %}

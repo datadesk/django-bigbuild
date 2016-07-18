@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9"
+        xmlns:news="http://www.google.com/schemas/sitemap-news/0.9">
+{% for obj in object_list %}
+  <url>
+    <loc>http://www.latimes.com{{ obj.get_absolute_url }}</loc>
+    <news:news>
+      <news:publication>
+        <news:name>Los Angeles Times</news:name>
+        <news:language>en</news:language>
+      </news:publication>
+      <news:publication_date>{{ obj.pub_date|date:"Y-m-d" }}</news:publication_date>
+      <news:title>{{ obj.headline }}</news:title>
+    </news:news>
+  </url>
+{% endfor %}
+</urlset>

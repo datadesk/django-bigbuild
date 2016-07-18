@@ -1,0 +1,90 @@
+<style type="text/css">
+    nav#bigbar {
+        position: fixed;
+        top: 0px;
+        z-index: 100;
+        width: 100%;
+        height: 50px;
+        background-color: #4591B8;
+        color: white;
+        opacity: 0.95;
+        font-family: 'Benton Gothic Regular', Arial, serif;
+        font-size: 15px;
+    }
+    nav#bigbar a {
+        color: white;
+    }
+    nav#bigbar a:hover {
+        color: #e6e6e6;
+    }
+    nav#bigbar section {
+        line-height: 50px;
+        height: 100%;
+        margin: 0;
+        padding-left: 10px;
+        padding-right: 10px;
+        display: inline-table;
+        float; left;
+    }
+    nav#bigbar section[name='title'] {
+        text-transform: uppercase;
+    }
+    nav#bigbar section[name="env"] {
+        background-color: #FF5443;
+    }
+    nav#bigbar section[name="close"] {
+        float:right;
+    }
+</style>
+
+<script id="bigbar" type="template/jst">
+    <nav id="bigbar">
+        <section name="title">
+            <a href="/projects/">BIGBUILDER</a>
+        </section>
+        <section name="env">
+            {% if STAGING %}Stage{% endif %}
+            {% if DEVELOPMENT %}Development{% endif %}
+        </section>
+        <section name="status">
+            {% if object.pub_status == 'live' %}
+                <a target="_blank" href="http://www.latimes.com{{ object.get_absolute_url }}">Live <i class="LATLinkOutArrow"></i></a>
+            {% elif object.pub_status == 'pending' %}
+                Pending
+            {% else %}
+                Working
+            {% endif %}
+        </section>
+        {% if STAGING %}
+        <section name="edit-metadata">
+            <a target="_blank" href="https://github.com/datadesk/bigbuilder/edit/master/pages/{{ object.slug }}/metadata.md">
+                Edit <i class="LATEdit"></i>
+            </a>
+        </section>
+        {% endif %}
+        <section name="close" class="hidden-phone">
+            <i class="LATClose01"></i>
+        </section>
+    </nav>
+</script>
+
+<script type="text/javascript">
+    var createBigBar = function () {
+        var tmpl = $("#bigbar").html();
+        var html = _.template(tmpl)();
+        $("body").append(html);
+        $("section[name='close']").click(hideBigBar);
+    };
+
+    var hideBigBar = function() {
+        console.log("hide");
+        $("nav#bigbar").hide();
+        window.location.hash = "nobigbar";
+    };
+
+    $(document).ready(function () {
+        if (window.location.hash != "#nobigbar") {
+            createBigBar();
+        }
+    });
+</script>

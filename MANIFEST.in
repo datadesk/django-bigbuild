@@ -1,0 +1,2 @@
+recursive-include bigbuild/static *
+recursive-include bigbuild/templates *
