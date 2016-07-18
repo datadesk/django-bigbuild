@@ -62,6 +62,11 @@ class FakePagesTest(SimpleTestCase):
                 published=True,
                 pub_date=datetime(2030, 1, 1, 0, 0, 0),
                 description=''
+            ),
+            Page(
+                slug='a-working-page',
+                published=False,
+                description='Foobar'
             )
         ]
         [p.create_directory() for p in pages]
