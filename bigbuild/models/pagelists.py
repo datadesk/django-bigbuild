@@ -31,9 +31,15 @@ class PageList(Sequence):
         self.pages = sorted(self.pages, key=lambda o: o.is_live())
 
     def __iter__(self):
+        """
+        What to use when this PageList is used in a for loop.
+        """
         return iter(self.pages)
 
     def __len__(self):
+        """
+        Returns the number of pages in this PageList.
+        """
         return len(self.pages)
 
     def __getitem__(self, key):
