@@ -89,7 +89,7 @@ class Page(BasePage):
         template = self.get_template(template_name)
         html = template.render(Context(template_context))
         with open(self.index_path, 'wb') as f:
-            f.write(html)
+            f.write(html.encode("utf-8-sig"))
 
     def write_frontmatter(self):
         """
