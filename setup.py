@@ -99,6 +99,7 @@ setup(
         'bigbuild.templatetags',
     ),
     include_package_data=True,
+    license="MIT",
     classifiers=[
         'Development Status :: 5 - Production/Stable',
         'Programming Language :: Python',
