@@ -1,6 +1,7 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
 import os
+import six
 import logging
 from django.conf import settings
 from collections import Sequence
@@ -46,7 +47,7 @@ class PageList(Sequence):
         """
         Pull items either with a slug key or an integer index.
         """
-        if isinstance(key, basestring):
+        if isinstance(key, six.string_types):
             try:
                 return [i for i in self.pages if i.slug == key][0]
             except IndexError:

@@ -116,6 +116,7 @@ setup(
         'django-compressor>=2.0',
         'greeking>=2.1.0',
         'pytz',
+        'six',
     ],
     cmdclass={'test': TestCommand}
 )
