@@ -131,10 +131,8 @@ class FakePagesTest(SimpleTestCase):
         with override_settings(PAGE_PUBLICATION_STATUS='working'):
             page_list = PageList()
             self.assertTrue(len(page_list) > 0)
-        print [p.is_live() for p in PageList()]
         with override_settings(PAGE_PUBLICATION_STATUS='live'):
             page_list = PageList()
-            print list(page_list), len(page_list), len(list(page_list))
             self.assertTrue(len(page_list) > 0)
         page_list = PageList()
         with self.assertRaises(KeyError):
