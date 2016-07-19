@@ -1,5 +1,6 @@
 from django.conf.urls import url
-from bigbuild import views
+from bigbuild import views, feeds, sitemaps
+
 
 urlpatterns = [
     # Pages
@@ -25,8 +26,11 @@ urlpatterns = [
     ),
 
     # Machine-readable feeds
-    url(r'^projects/sitemap.xml$', sitemaps.SitemapView.as_view(),
-        name='sitemap'),
+    url(
+        r'^projects/sitemap.xml$',
+        sitemaps.SitemapView.as_view(),
+        name='sitemap'
+    ),
     url(
         r'^projects/google-news-sitemap.xml$',
         sitemaps.GoogleNewsSitemapView.as_view(),
