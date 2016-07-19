@@ -156,16 +156,3 @@ class AdIframeView(BuildableTemplateView):
     """
     template_name = "ngux-tophat/ads/ngux-tophat-ad-iframe.html"
     build_path = "projects/static/ngux-tophat-ad-iframe.html"
-
-
-#
-# Page redirects
-#
-
-
-class MegaMillionsRedirectView(BuildableRedirectView):
-    """
-    Redirects the root URL to /projects/
-    """
-    build_path = "projects/mega-millions-lottery-simulator/index.html"
-    url = "/projects/la-g-mega-millions-lottery-simulator/"
