@@ -3,6 +3,9 @@ from bigbuild import views, feeds, sitemaps
 
 
 urlpatterns = [
+    # Index redirect
+    url(r'^$', views.IndexRedirectView.as_view(), name="index-redirect"),
+
     # Pages
     url(r'^projects/$', views.PageListView.as_view(), name='page-list'),
     url(
