@@ -66,7 +66,7 @@ class PageList(Sequence):
         # Loop through all of the directories in the page directory
         for d in os.listdir(path):
             # Ignore any names in our blacklist
-            if d in getattr(settings, 'PAGE_BLACKLIST', []):
+            if d in getattr(settings, 'PAGE_BLACKLIST', ['.DS_Store']):
                 continue
 
             # Create a Page object from the directory slug
