@@ -43,7 +43,6 @@ class FakePagesTest(SimpleTestCase):
     @classmethod
     def setUpClass(cls):
         super(FakePagesTest, cls).setUpClass()
-        os.path.exists(RETIRED_DIR) or os.mkdir(RETIRED_DIR)
         pages = [
             Page(slug='My Fake Page', published=True),
             Page(

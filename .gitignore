@@ -3,6 +3,7 @@
 config/django.log
 config/settings_local.py
 pages/foobar
+pages
 .sass-cache
 
 # Sqlite db
