@@ -1,5 +1,5 @@
+import os
 from setuptools import setup
-
 from distutils.core import Command
 
 
@@ -39,8 +39,7 @@ class TestCommand(Command):
                     'OPTIONS': {},
                 },
             ],
-            PAGE_DIR="./pages/",
-            RETIRED_DIR="./.retired/",
+            BASE_DIR=os.path.dirname(__file__),
             BAKERY_GZIP=False,
             BAKERY_VIEWS=(
                 'bigbuild.views.IndexRedirectView',

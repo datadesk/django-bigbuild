@@ -112,7 +112,7 @@ class BasePage(object):
         """
         Returns the directory path where this page will exist.
         """
-        return os.path.join(getattr(settings, self.DIR_NAME), self.slug)
+        return os.path.join(self.base_directory, self.slug)
 
     @property
     def directory_exists(self):

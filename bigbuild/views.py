@@ -6,6 +6,7 @@ from django.http import Http404
 from django.conf import settings
 from django.views.static import serve
 from bigbuild.models import PageList, Page, RetiredPage
+from bigbuild import get_page_directory, get_retired_directory
 from bigbuild.management.commands.build import Command as Build
 from bakery.views import (
     BuildableTemplateView,
@@ -137,7 +138,7 @@ def page_static_serve(request, slug, path):  # pragma: no cover
         return serve(
             request,
             path,
-            document_root=settings.PAGE_DIR,
+            document_root=get_page_directory(),
             show_indexes=True
         )
     # If it can't try to fallback to the RETIRED_DIR
@@ -145,7 +146,7 @@ def page_static_serve(request, slug, path):  # pragma: no cover
         return serve(
             request,
             path,
-            document_root=settings.RETIRED_DIR,
+            document_root=get_retired_directory(),
             show_indexes=True
         )
 

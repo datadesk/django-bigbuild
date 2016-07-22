@@ -10,6 +10,7 @@ from bigbuild.exceptions import (
     MissingRecommendedMetadataWarning
 )
 from bigbuild.models import Page, RetiredPage
+from bigbuild import get_page_directory, get_retired_directory
 logger = logging.getLogger(__name__)
 
 
@@ -18,6 +19,9 @@ class PageList(Sequence):
     A list of all the Page objects in the application.
     """
     def __init__(self):
+        # Set the page directories
+        self.dynamic_directory = get_page_directory()
+        self.retired_directory = get_retired_directory()
         # Create a combined list of live pages and retired pages
         self.pages = []
         self.pages.extend(self.get_dynamic_pages())
@@ -103,9 +107,8 @@ class PageList(Sequence):
         Returns a list of Page objects ready to be built
         in this environment.
         """
-        os.path.exists(settings.PAGE_DIR) or os.mkdir(settings.PAGE_DIR)
         return [
-            p for p in self.get_page_list(settings.PAGE_DIR, Page)
+            p for p in self.get_page_list(self.dynamic_directory, Page)
             if p.should_build()
         ]
 
@@ -114,8 +117,7 @@ class PageList(Sequence):
         Returns a list of RetiredPage objects ready to be built
         in this environment.
         """
-        os.path.exists(settings.RETIRED_DIR) or os.mkdir(settings.RETIRED_DIR)
         return [
-            p for p in self.get_page_list(settings.RETIRED_DIR, RetiredPage)
+            p for p in self.get_page_list(self.retired_directory, RetiredPage)
             if p.should_build()
         ]

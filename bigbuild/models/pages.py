@@ -11,6 +11,7 @@ import logging
 import frontmatter
 from django.conf import settings
 from bigbuild.models import BasePage
+from bigbuild import get_page_directory
 from bigbuild.exceptions import BadMetadata
 from django.template import Engine, Context
 logger = logging.getLogger(__name__)
@@ -20,8 +21,12 @@ class Page(BasePage):
     """
     A custom page published via static.latimes.com
     """
-    # The settings attribute with the directory where pages are stored
-    DIR_NAME = 'PAGE_DIR'
+    @property
+    def base_directory(self):
+        """
+        Returns base directory for pages.
+        """
+        return get_page_directory()
 
     @property
     def retired_directory_path(self):
