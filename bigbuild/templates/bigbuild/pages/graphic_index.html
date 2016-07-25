@@ -1,13 +1,4 @@
 {% templatetag openblock %} extends "bigbuild/base.html" {% templatetag closeblock %}
-{% templatetag openblock %} load compress greeking_tags bigbuild_tags {% templatetag closeblock %}
-
-{% templatetag openblock %} block extra-css {% templatetag closeblock %}
-    {% if sans %}<link rel="stylesheet" type="text/css" href="http://d1qqc1e9kvmdh8.cloudfront.net/css/ngux-sans-0.5.3.min.css" />{% endif %}
-    {% if dark %}<link rel="stylesheet" type="text/css" href="http://d1qqc1e9kvmdh8.cloudfront.net/css/ngux-dark-0.5.3.min.css" />{% endif %}
-    {% templatetag openblock %} compress css inline {% templatetag closeblock %}
-    <link rel="stylesheet" href="{% templatetag openvariable %} STATIC_URL {% templatetag closevariable %}style.css">
-    {% templatetag openblock %} endcompress {% templatetag closeblock %}
-{% templatetag openblock %} endblock {% templatetag closeblock %}
 
 {% templatetag openblock %} block container {% templatetag closeblock %}
 <article class="container">
@@ -34,15 +25,4 @@
         {% templatetag openblock %} endif {% templatetag closeblock %}
     </section>
 </article>
-{% templatetag openblock %} endblock {% templatetag closeblock %}
-
-{% templatetag openblock %} block body-bottom {% templatetag closeblock %}
-{% templatetag openblock %} compress js inline {% templatetag closeblock %}
-<script type="text/javascript" src="{% templatetag openvariable %} STATIC_URL {% templatetag closevariable %}app.js"></script>
-{% templatetag openblock %} endcompress {% templatetag closeblock %}
-<script type="text/javascript">
-$(function () {
-    app.boot();
-});
-</script>
 {% templatetag openblock %} endblock {% templatetag closeblock %}

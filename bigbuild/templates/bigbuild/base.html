@@ -1,92 +1,20 @@
-{% extends "ngux-tophat/base.html" %}
-{% load bigbuild_tags %}
-
-{% block title %}{{ object.headline|striptags|safe }} - Los Angeles Times{% endblock %}
-{% block description %}{{ object.description|striptags|safe }}{% endblock %}
-
-{% block omniture-pageName %}{% omniture_section object.slug %}:{{ object.slug }}:individualarticle{% endblock %}
-{% block omniture-contenttype %}individualarticle{% endblock %}
-{% block omniture-channel %}{% omniture_section object.slug %}{% endblock %}
-{% block omniture-full-tribune-path %}{% omniture_section object.slug %}{% endblock %}
-{% block omniture-full-latimes-path %}{% omniture_section object.slug %}{% endblock %}
-{% block omniture-base-latimes-path %}{% omniture_section object.slug %}{% endblock %}
-
-{% block chartbeat-domain %}latimes.com{% endblock %}
-{% block chartbeat-authors %}{{ object.byline|striptags }}{% endblock %}
-{% block chartbeat-sections %}bigbuilder{% endblock %}
-
-{% block google-analytics-id %}UA-65208330-4{% endblock %}
-
-{% block ad-iframe %}/projects/static/ngux-tophat-ad-iframe.html{% endblock %}
-
-{% block extra-meta %}
-    {% block social-tags %}
-    <meta property="og:title" content="{{ object.headline|striptags|safe }}"/>
-    <meta property="og:type" content="article"/>
-    <meta property="og:url" content="http://www.latimes.com{{ object.get_absolute_url }}" />
-    <meta property="og:image" content="{{ object.image_url }}"/>
-    <meta property="og:site_name" content="www.latimes.com"/>
-    <meta property="og:description" content="{{ object.description|striptags|safe }}"/>
-    <meta property="fb:admins" content="1257725335"/>
-    <meta property="fb:app_id" content="171740782909828" />
-    <meta property="twitter:site" content="@latimes" />
-    <meta property="twitter:card" content="summary_large_image" />
-    <meta property="twitter:url" content="http://www.latimes.com{{ object.get_absolute_url }}" />
-    <meta property="twitter:title" content="{{ object.headline|striptags|safe }}" />
-    <meta property="twitter:description" content="{{ object.description|striptags|truncatewords_html:68|safe }}" />
-    <meta property="twitter:image" content="{{ object.image_url }}" />
-    <script type="application/ld+json">
-    {
-      "@context": "http://schema.org",
-      "@type": "NewsArticle",
-      "headline": "{{ object.headline|striptags|safe|escapejs }}",
-      "image": {
-          "@type": "ImageObject",
-          "contentUrl": "{{ object.image_url }}",
-          "url": "{{ object.image_url }}",
-          "representativeOfPage": true
-      },
-      "datePublished": "{{ object.pub_date|date:'Y-m-d' }}",
-      "description": "{{ object.description|striptags|truncatewords_html:68|safe }}",
-      "publisher": {
-          "@type": "Organization",
-          "name": "Los Angeles Times",
-          "url": "http://www.latimes.com",
-          "location": {
-              "@type": "Place",
-              "name": "Los Angeles"
-          },
-          "logo": {
-              "@type": "ImageObject",
-              "contentUrl": "http://cookbook.latimes.com/img/ngux-tophat/logos/lat_logo_730_black.png",
-              "url": "http://cookbook.latimes.com/img/ngux-tophat/logos/lat_logo_730_black.png"
-          }
-      },
-      "author": {
-          "@type": "Person",
-          "name": "{{ object.byline|striptags|safe|escapejs }}"
-      }
-    }
-    </script>
-    {% endblock %}
-{% endblock %}
-
-{% block nav %}
-    {% if STAGING or DEVELOPMENT %}
-        {% if BIGBAR %}
-            {% if not RETIREMENT %}
-                {% include "bigbuild/pages/bigbar.html" %}
+<!doctype html>
+<html lang="en">
+    <head>
+        <meta charset="utf-8">
+        <title>{{ object.headline|striptags|safe }}</title>
+        <meta name="description" content="{{ object.description|striptags|safe }}">
+    </head>
+    <body>
+        {% if STAGING or DEVELOPMENT %}
+            {% if BIGBAR %}
+                {% if not RETIREMENT %}
+                    {% include "bigbuild/pages/bigbar.html" %}
+                {% endif %}
             {% endif %}
         {% endif %}
-    {% endif %}
-    {{ block.super }}
-{% endblock %}
 
-{% block footer %}
-    {{ block.super }}
-    <script type="text/javascript" src="//ssor.tribdss.com/reg/tribune/lanews-static.min.js" defer async></script>
-    {% if PRODUCTION %}
-    <script type="text/javascript" src="//www.tribdss.com/meter/latngux.min.js" defer async></script>
-    {% endif %}
-    <script type="text/javascript">(window.registration || (registration = [])).push('viafoura');</script>
-{% endblock %}
+        {% block container %}
+        {% endblock %}
+    </body>
+</html>
