@@ -45,7 +45,6 @@ class TestCommand(Command):
                 'bigbuild.views.IndexRedirectView',
                 'bigbuild.views.PageListView',
                 'bigbuild.views.PageDetailView',
-                'bigbuild.views.AdIframeView',
                 'bigbuild.views.Static404View',
                 'bigbuild.views.RobotsView',
                 'bigbuild.sitemaps.SitemapView',

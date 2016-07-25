@@ -23,13 +23,6 @@ urlpatterns = [
         name='page-detail-static'
     ),
 
-    # Advertising extras
-    url(
-        r'^projects/static/ngux-tophat-ad-iframe.html$',
-        views.AdIframeView.as_view(),
-        name='ad-iframe'
-    ),
-
     # Machine-readable feeds
     url(
         r'^projects/sitemap.xml$',

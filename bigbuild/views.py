@@ -149,11 +149,3 @@ def page_static_serve(request, slug, path):  # pragma: no cover
             document_root=get_retired_directory(),
             show_indexes=True
         )
-
-
-class AdIframeView(BuildableTemplateView):
-    """
-    Builds the weird custom ad iframe we need to keep Tribune in business.
-    """
-    template_name = "ngux-tophat/ads/ngux-tophat-ad-iframe.html"
-    build_path = "projects/static/ngux-tophat-ad-iframe.html"

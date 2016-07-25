@@ -1,35 +1,6 @@
-{% extends "ngux-tophat/base.html" %}
+{% extends "bigbuild/base.html" %}
 
-{% block title %}All pages - {{ block.super }}{% endblock %}
-{% block omniture-pageName %}{{ block.super }}page-list:front{% endblock %}
-{% block omniture-contenttype %}front{% endblock %}
-
-{% block banner-ad %}{% endblock %}
-
-{% block extra-css %}
-<style type="text/css">
-    tr.working {
-        background-color: #4591B8;
-    }
-    tr.pending {
-        background-color: #DA1B28;
-    }
-    tr.working,
-    tr.pending {
-        color: #E6E6E6;
-    }
-    tr.working a,
-    tr.pending a {
-        color: #E6E6E6;
-    }
-    th.align-right,
-    td.align-right {
-        text-align: right;
-    }
-</style>
-{% endblock %}
-
-{% block content %}
+{% block container %}
 <h1>All pages</h1>
 
 <div class="row">
