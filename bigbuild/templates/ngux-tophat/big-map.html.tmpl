@@ -1,4 +1,4 @@
-{% templatetag openblock %} extends {{ base_template }} {% templatetag closeblock %}
+{% templatetag openblock %} extends {{ base_template|safe }} {% templatetag closeblock %}
 
 {% templatetag openblock %} block footer {% templatetag closeblock %}{% templatetag openblock %} endblock {% templatetag closeblock %}
 
