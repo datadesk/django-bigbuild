@@ -8,40 +8,6 @@ from django.utils.html import conditional_escape
 register = template.Library()
 
 
-@register.simple_tag
-def omniture_section(slug):
-    """
-    Accepts a Los Angeles Times slug and returns the section name that
-    should be submitted to our Omniture analytics system.
-    """
-    # Cross walk the start of slugs to omniture sections
-    prefixes = {
-        'la-me-': 'local',
-        'la-na-pol-': 'politics',
-        'la-na': 'nation',
-        'la-pol-': 'politics',
-        'la-ed-': 'opinion',
-        'la-oe-': 'opinion',
-        'la-fi-': 'business',
-        'la-fg-': 'world',
-        'la-ca-': 'entertainment',
-        'la-et-': 'entertainment',
-        'la-sp-': 'sports',
-        'la-hm-': 'home',
-        'la-fo-': 'food',
-        'la-tr-': 'travel',
-        'la-ig-': 'fashion',
-        'la-sci-': 'science'
-    }
-    try:
-        section = next(
-            prefixes.get(i) for i in prefixes.keys() if slug.startswith(i)
-        ) or 'local'
-    except StopIteration:
-        section = 'local'
-    return section
-
-
 @register.filter(needs_autoescape=True)
 def dropcap(text, autoescape=True):
     """
