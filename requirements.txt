@@ -1,10 +1,10 @@
-Django==1.9.7
+Django==1.9.8
 python-frontmatter==0.2.1
 django-bakery==0.8.3
 PyYAML==3.11
 validictory==1.0.1
 django-compressor==2.0
-greeking==2.1.0
+greeking==2.1.1
 pytz
 flake8
 coverage

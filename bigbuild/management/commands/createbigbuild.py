@@ -19,12 +19,13 @@ class Command(BaseCommand):
             description=obj.description,
             byline=obj.byline,
             content=linebreaks(dropcap(obj.content)),
-            extra={
-                'heroic_image': {
-                    'src': 'http://placehold.it/2000x800',
-                    'caption': '',
-                    'credit': ''
-                },
-                'credits': 'Credits TK',
-            }
+            extra=dict(
+                heroic_image=dict(
+                    src='http://placehold.it/2000x800',
+                    caption='',
+                    credit=''
+                ),
+                credits='Credits TK',
+                more_like_this=[o.__dict__ for o in latimes_ipsum.get_related_items()],
+            )
         )
