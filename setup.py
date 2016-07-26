@@ -110,10 +110,10 @@ setup(
     ],
     install_requires=[
         'python-frontmatter>=0.2.1',
-        'django-bakery>=0.8.4',
+        'django-bakery>=0.8.3',
         'validictory>=1.0.1',
         'django-compressor>=2.0',
-        'greeking>=2.1.1',
+        'greeking>=2.1.2',
         'pytz',
         'six',
     ],
