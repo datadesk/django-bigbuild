@@ -16,8 +16,9 @@ class Command(BaseCommand):
             headline=obj.headline,
             description=obj.description,
             byline=obj.byline,
-            extra={
-                'credits': 'Credits TK',
-                'sources': 'Sources TK'
-            }
+            extra=dict(
+                credits='Credits TK',
+                sources='Sources TK',
+                more_like_this=[o.__dict__ for o in latimes_ipsum.get_related_items()],
+            )
         )
