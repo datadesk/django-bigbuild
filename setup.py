@@ -83,7 +83,7 @@ class TestCommand(Command):
 
 setup(
     name='django-bigbuild',
-    version='0.0.10',
+    version='0.0.11',
     description='The open-source engine that powers bigbuilder, the Los Angeles Times Data Desk\'s system for publishing standalone pages',
     author='The Los Angeles Times Data Desk',
     author_email='datadesk@latimes.com',
@@ -113,7 +113,7 @@ setup(
         'django-bakery>=0.8.3',
         'validictory>=1.0.1',
         'django-compressor>=2.0',
-        'greeking>=2.1.0',
+        'greeking>=2.1.1',
         'pytz',
         'six',
     ],
