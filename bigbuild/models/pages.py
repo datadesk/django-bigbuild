@@ -9,7 +9,6 @@ import codecs
 import shutil
 import logging
 import frontmatter
-from django.conf import settings
 from bigbuild.models import BasePage
 from bigbuild.exceptions import BadMetadata
 from django.template import Engine, Context
@@ -33,7 +32,7 @@ class Page(BasePage):
         """
         Returns the path where this page would be retired, if it were retired.
         """
-        return get_retired_directory()
+        return os.path.join(get_retired_directory(), self.slug)
 
     @property
     def retired_directory_exists(self):
