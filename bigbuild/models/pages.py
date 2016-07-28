@@ -11,9 +11,9 @@ import logging
 import frontmatter
 from django.conf import settings
 from bigbuild.models import BasePage
-from bigbuild import get_page_directory
 from bigbuild.exceptions import BadMetadata
 from django.template import Engine, Context
+from bigbuild import get_page_directory, get_retired_directory
 logger = logging.getLogger(__name__)
 
 
@@ -33,7 +33,7 @@ class Page(BasePage):
         """
         Returns the path where this page would be retired, if it were retired.
         """
-        return os.path.join(settings.RETIRED_DIR, self.slug)
+        return get_retired_directory()
 
     @property
     def retired_directory_exists(self):
