@@ -91,9 +91,11 @@ BAKERY_VIEWS=(
     'bigbuild.sitemaps.GoogleNewsSitemapView',
     'bigbuild.feeds.LatestPages',
 )
-STATIC_ROOT="./.static"
+STATIC_ROOT=os.path.join(BASE_DIR, "pages")
 STATIC_URL = "/static/"
 COMPRESS_ENABLED = True
+COMPRESS_CSS_ENABLED = False
+COMPRESS_JS_ENABLED = False
 COMPRESS_URL = "/projects/"
 COMPRESS_JS_COMPRESSOR = "bigbuild.compressors.SimpleJsCompressor"
 COMPRESS_CSS_COMPRESSOR = "bigbuild.compressors.SimpleCssCompressor"
