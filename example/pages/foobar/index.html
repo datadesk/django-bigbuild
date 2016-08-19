@@ -1,0 +1,37 @@
+{% extends "bigbuild/base.html" %}
+{% load compress %}
+
+{% block container %}
+<article class="container">
+    <header class="center">
+        <h1>{{ object.headline }}</h1>
+        <p class="description">{{ object.description|safe }}</p>
+        <p class="byline">
+            By <span class="author">{{ object.byline|safe }}</span>
+        </p>
+        <p class="dateline">
+            <time datetime="{{ object.pub_date|date:"Y-m-d" }}" pubdate>
+                {{ object.pub_date|date:"N j, Y" }}
+            </time>
+        </p>
+    </header>
+    <section name="graphic" class="graphic"></section>
+    <section name="credits">
+        {% if object.extra.sources %}
+            <p class="sources">Sources: {{ object.extra.sources|safe }}</p>
+        {% endif %}
+        {% if object.extra.credits %}
+            <p class="credits">Credits: {{ object.extra.credits|safe }}</p>
+        {% endif %}
+    </section>
+</article>
+<script src="http://cookbook.latimes.com/js/jquery-1.12.4/jquery.min.js"></script>
+{% compress js inline %}
+<script type="text/javascript" src="{{ STATIC_URL }}app.js"></script>
+{% endcompress %}
+<script type="text/javascript">
+$(function () {
+    app.boot();
+});
+</script>
+{% endblock %}

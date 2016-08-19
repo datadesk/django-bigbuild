@@ -90,8 +90,30 @@ class SimpleCompressor(Compressor):
 
 
 class SimpleCssCompressor(CssCompressor, SimpleCompressor):
-    pass
+    """
+    Our custom CSS compressor.
+    """
+    def __init__(self, content=None, output_prefix="css", context=None):
+        """
+        Override that introduces a new setting, COMPRESS_CSS_ENABLED, that lets only CSS compression be turned off.
+        """
+        if getattr(settings, 'COMPRESS_CSS_ENABLED', True):
+            filters = list(settings.COMPRESS_CSS_FILTERS)
+        else:
+            filters = list()
+        super(CssCompressor, self).__init__(content, output_prefix, context, filters)
 
 
 class SimpleJsCompressor(JsCompressor, SimpleCompressor):
-    pass
+    """
+    Our custom JavaScript compressor.
+    """
+    def __init__(self, content=None, output_prefix="js", context=None):
+        """
+        Override that introduces a new setting, COMPRESS_HS_ENABLED, that lets only JS compression be turned off.
+        """
+        if getattr(settings, 'COMPRESS_JS_ENABLED', True):
+            filters = list(settings.COMPRESS_JS_FILTERS)
+        else:
+            filters = []
+        super(JsCompressor, self).__init__(content, output_prefix, context, filters)
