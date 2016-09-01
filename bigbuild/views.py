@@ -2,11 +2,12 @@
 # -*- coding: utf-8 -*-
 import os
 import shutil
+from django.urls import reverse
 from django.http import Http404
 from django.conf import settings
 from django.views.static import serve
 from bigbuild.models import PageList, Page, RetiredPage
-from bigbuild import get_page_directory, get_retired_directory
+from bigbuild import get_page_directory, get_retired_directory, get_base_url
 from bigbuild.management.commands.build import Command as Build
 from bakery.views import (
     BuildableTemplateView,
@@ -29,15 +30,18 @@ class RobotsView(BuildableTemplateView):
     The robots.txt file.
     """
     template_name = "bigbuild/robots.txt"
-    build_path = "projects/robots.txt"
+    build_path = os.path.join(get_base_url()[1:], "robots.txt")
 
 
 class IndexRedirectView(BuildableRedirectView):
     """
     Redirects the root URL to /projects/
     """
-    build_path = "index.html"
-    url = "/projects/"
+    url = get_base_url()
+
+    @property
+    def build_path(self):
+        return os.path.join(reverse('index-redirect')[1:], "index.html")
 
 
 class PageListView(BuildableTemplateView):
@@ -45,7 +49,10 @@ class PageListView(BuildableTemplateView):
     Renders a homepage with a list of all the pages.
     """
     template_name = "bigbuild/page_list.html"
-    build_path = "projects/index.html"
+
+    @property
+    def build_path(self):
+        return os.path.join(reverse('page-list')[1:], "index.html")
 
     def get_context_data(self):
         PAGE_PUBLICATION_STATUS = getattr(
@@ -87,9 +94,7 @@ class PageDetailView(BuildableDetailView):
         source_dir = obj.static_path
         target_dir = os.path.join(
             settings.BUILD_DIR,
-            'projects',
-            obj.slug,
-            'static'
+            obj.get_static_url()[1:]
         )
         if settings.BAKERY_GZIP:
             Build().copytree_and_gzip(
@@ -105,7 +110,7 @@ class PageDetailView(BuildableDetailView):
             super(PageDetailView, self).build_object(obj)
             self.build_static_directory(obj)
         elif isinstance(obj, RetiredPage):
-            target = os.path.join(settings.BUILD_DIR, 'projects', obj.slug)
+            target = os.path.join(settings.BUILD_DIR, obj.get_absolute_url()[1:])
             os.path.exists(target) and shutil.rmtree(target)
             if settings.BAKERY_GZIP:
                 Build().copytree_and_gzip(

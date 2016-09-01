@@ -6,6 +6,7 @@ without django.contrib.staticfiles installed.
 """
 import codecs
 from django.conf import settings
+from bigbuild import get_base_url
 from compressor.base import Compressor
 from compressor.js import JsCompressor
 from compressor.css import CssCompressor
@@ -19,6 +20,20 @@ class SimpleCompressor(Compressor):
 
     The aim is to work without django.contrib.staticfiles installed.
     """
+    def get_basename(self, url):
+        """
+        Takes full path to a static file (eg. "/static/css/style.css") and
+        returns path with storage's base url removed (eg. "css/style.css").
+        """
+        base_url = get_base_url()
+        if not url.startswith(base_url):
+            raise UncompressableFileError("'%s' isn't accessible via "
+                                          "COMPRESS_URL ('%s') and can't be "
+                                          "compressed" % (url, base_url))
+        basename = url.replace(base_url, "", 1)
+        # drop the querystring, which is used for non-compressed cache-busting.
+        return basename.split("?", 1)[0]
+
     def get_filename(self, basename):
         """
         A simplification of the standard method to remove a hack around

@@ -1,5 +1,6 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
+from django.urls import reverse
 from bigbuild.models import PageList
 from bakery.views import BuildableListView
 
@@ -8,8 +9,11 @@ class SitemapView(BuildableListView):
     """
     A list of all static pages in a Sitemap ready for Google.
     """
-    build_path = 'projects/sitemap.xml'
     template_name = 'bigbuild/sitemap.xml'
+
+    @property
+    def build_path(self):
+        return reverse('bigbuild-sitemap')[1:]
 
     def get_queryset(self):
         return [p for p in PageList() if p.show_in_feeds]
@@ -25,8 +29,11 @@ class GoogleNewsSitemapView(SitemapView):
     """
     A list of the most recent graphics in a Sitemap ready for Google News.
     """
-    build_path = 'projects/google-news-sitemap.xml'
     template_name = 'bigbuild/google-news-sitemap.xml'
+
+    @property
+    def build_path(self):
+        return reverse('bigbuild-google-news-sitemap')[1:]
 
     def get_queryset(self):
         return [p for p in PageList() if p.show_in_feeds][:25]

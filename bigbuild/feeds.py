@@ -1,5 +1,6 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
+from django.urls import reverse
 from bigbuild.models import PageList
 from django.test import RequestFactory
 from bakery.feeds import BuildableFeed
@@ -18,7 +19,7 @@ class FakeRequestFactory(RequestFactory):
 
     @property
     def path(self):
-        return "/projects/feeds/latest.xml"
+        return reverse('bigbuild-feeds-latest')[1:]
 
 
 class LatestPages(BuildableFeed):
@@ -27,7 +28,10 @@ class LatestPages(BuildableFeed):
     """
     title = "Latest projects - Los Angeles Times"
     link = 'http://www.latimes.com/projects/latest/feeds/latest.xml'
-    build_path = 'projects/feeds/latest.xml'
+
+    @property
+    def build_path(self):
+        return reverse('bigbuild-feeds-latest')[1:]
 
     def items(self):
         """

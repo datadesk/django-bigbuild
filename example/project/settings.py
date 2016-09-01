@@ -80,6 +80,11 @@ TEMPLATES=[
         'OPTIONS': {},
     },
 ]
+
+BIGBUILD_GIT_DIR = os.path.join(BASE_DIR, "../")
+BIGBUILD_BASE_URL = "/projects/"
+
+BUILD_DIR = os.path.join(BASE_DIR, "..", ".build")
 BAKERY_GZIP=False
 BAKERY_VIEWS=(
     'bigbuild.views.IndexRedirectView',
@@ -96,7 +101,6 @@ STATIC_URL = "/static/"
 COMPRESS_ENABLED = True
 COMPRESS_CSS_ENABLED = False
 COMPRESS_JS_ENABLED = False
-COMPRESS_URL = "/projects/"
 COMPRESS_JS_COMPRESSOR = "bigbuild.compressors.SimpleJsCompressor"
 COMPRESS_CSS_COMPRESSOR = "bigbuild.compressors.SimpleCssCompressor"
 STATICFILES_FINDERS = (

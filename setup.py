@@ -54,7 +54,6 @@ class TestCommand(Command):
             STATIC_ROOT="./.static",
             STATIC_URL = "/static/",
             COMPRESS_ENABLED = True,
-            COMPRESS_URL = "/projects/",
             COMPRESS_JS_COMPRESSOR = "bigbuild.compressors.SimpleJsCompressor",
             COMPRESS_CSS_COMPRESSOR = "bigbuild.compressors.SimpleCssCompressor",
             STATICFILES_FINDERS = (
@@ -83,7 +82,7 @@ class TestCommand(Command):
 
 setup(
     name='django-bigbuild',
-    version='0.0.15',
+    version='0.1.0',
     description='The open-source engine that powers bigbuilder, the Los Angeles Times Data Desk\'s system for publishing standalone pages',
     author='The Los Angeles Times Data Desk',
     author_email='datadesk@latimes.com',
@@ -105,7 +104,7 @@ setup(
         'Programming Language :: Python :: 3',
         'Programming Language :: Python :: 3.5',
         'Framework :: Django',
-        'Framework :: Django :: 1.9',
+        'Framework :: Django :: 1.10',
         'License :: OSI Approved :: MIT License',
     ],
     install_requires=[
@@ -116,6 +115,7 @@ setup(
         'greeking>=2.1.3',
         'pytz',
         'six',
+        'GitPython',
     ],
     cmdclass={'test': TestCommand}
 )

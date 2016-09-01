@@ -36,7 +36,7 @@ class Command(BaseCommand):
 
             # Save that directory to the retired folder
             shutil.copytree(
-                os.path.join(settings.BUILD_DIR, 'projects', p.slug),
+                os.path.join(settings.BUILD_DIR, p.get_absolute_url()[1:]),
                 p.retired_directory_path,
             )
 

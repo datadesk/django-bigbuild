@@ -6,6 +6,7 @@ import shutil
 import logging
 import validictory
 import frontmatter
+from django.db import models
 from datetime import datetime
 from django.conf import settings
 from django.utils import timezone
@@ -87,8 +88,9 @@ class BasePage(object):
             d['data'] = self.data
         return d
 
+    @models.permalink
     def get_absolute_url(self):
-        return '/projects/%s/' % self.slug
+        return ('page-detail', [self.slug])
 
     def get_static_url(self):
         return os.path.join(self.get_absolute_url(), 'static') + "/"
