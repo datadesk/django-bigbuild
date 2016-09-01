@@ -72,7 +72,8 @@ class TestCommand(Command):
             ),
             COMPRESS_CACHEABLE_PRECOMPILERS = (),
             USE_TZ = True,
-            ROOT_URLCONF = 'bigbuild.urls'
+            ROOT_URLCONF = 'bigbuild.urls',
+            BIGBUILD_GIT_BRANCH = os.environ.get("BIGBUILD_GIT_BRANCH", None),
         )
         from django.core.management import call_command
         import django
