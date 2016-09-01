@@ -1,7 +1,8 @@
 .PHONY: ship test updatetemplates
 
 ship:
-	python setup.py sdist bdist_wheel upload
+	python setup.py sdist bdist_wheel
+	twine upload dist/* --skip-existing
 
 test:
 	flake8 bigbuild
