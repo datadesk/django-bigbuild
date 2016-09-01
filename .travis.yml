@@ -9,6 +9,9 @@ python:
 cache:
   - pip
 
+env:
+  - BIGBUILD_GIT_BRANCH=$(TRAVIS_BRANCH)
+
 install:
   - pip install -r requirements.txt
 
