@@ -40,6 +40,8 @@ def get_repo_branch():
     """
     Returns the name of the current git branch.
     """
+    if getattr(settings, 'BIGBUILD_GIT_BRANCH', None):
+        return settings.BIGBUILD_GIT_BRANCH
     repo_path = getattr(settings, 'BIGBUILD_GIT_DIR', settings.BASE_DIR)
     branch = Repo(repo_path).active_branch
     return branch.name
