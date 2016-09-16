@@ -34,8 +34,6 @@ class Command(BaseCommand):
             if not isinstance(p, Page):
                 raise CommandError("Slug (%s) is not a Page object" % slug)
 
-            print p.content
-
             # Build it
             PageRetireView().build_object(p)
 
