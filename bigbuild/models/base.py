@@ -160,6 +160,22 @@ class BasePage(object):
         """
         return os.path.join(self.directory_path, 'data')
 
+    @property
+    def rendered_content(self):
+        """
+        Returns the page's contents, which can contain Django templating tags, rendered as simple HTML.
+        """
+        engine = Engine.get_default()
+        template = engine.from_string(self.content)
+        context = RequestContext(
+            RequestFactory().get(self.get_absolute_url()),
+            {
+                "object": self,
+                'STATIC_URL': self.get_static_url()
+            }
+        )
+        return template.render(context)
+
     def sync_frontmatter(self):
         """
         Reads in the frontmatter from metadata.yaml and syncs it with
@@ -192,18 +208,10 @@ class BasePage(object):
             except KeyError:
                 self.extra = {}
 
-            # Render the content as a Django template
-            engine = Engine.get_default()
-            template = engine.from_string(post.content)
-            context = RequestContext(
-                RequestFactory().get(self.get_absolute_url()),
-                {
-                    "object": self,
-                    'STATIC_URL': self.get_static_url()
-                }
-            )
-            content = template.render(context)
-            self.content = content
+            # Pull in the content as is
+            self.content = post.content
+            # Render it out as flat HTML
+            self.content = self.rendered_content
 
     def is_metadata_valid(self):
         """

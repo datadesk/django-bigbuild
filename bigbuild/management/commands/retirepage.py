@@ -14,6 +14,13 @@ class Command(BaseCommand):
 
     def add_arguments(self, parser):
         parser.add_argument('slug', nargs='+', type=str)
+        parser.add_argument(
+            '--keep-page',
+            action='store_true',
+            dest='keep_page',
+            default=False,
+            help='Do not delete the page directory as part of the retirement'
+        )
 
     def handle(self, *args, **options):
         # Loop through the slugs
@@ -26,6 +33,8 @@ class Command(BaseCommand):
 
             if not isinstance(p, Page):
                 raise CommandError("Slug (%s) is not a Page object" % slug)
+
+            print p.content
 
             # Build it
             PageRetireView().build_object(p)
@@ -41,10 +50,9 @@ class Command(BaseCommand):
             )
 
             # Save the metadata to the retired folder
-            shutil.copy2(
-                p.frontmatter_path,
-                os.path.join(p.retired_directory_path, 'metadata.md'),
-            )
+            frontmatter_path = os.path.join(p.retired_directory_path, 'metadata.md')
+            p.write_frontmatter(frontmatter_path)
 
             # Delete the page folder
-            shutil.rmtree(p.directory_path)
+            if not options['keep_page']:
+                shutil.rmtree(p.directory_path)

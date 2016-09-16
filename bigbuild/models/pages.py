@@ -96,11 +96,11 @@ class Page(BasePage):
         with codecs.open(self.index_path, 'w', 'utf-8') as f:
             f.write(html)
 
-    def write_frontmatter(self):
+    def write_frontmatter(self, path=None):
         """
-        Creates metadata.yaml in the page directory.
+        Creates metadata.yaml in the page directory, or a supplied target directory.
         """
-        frontmatter.dump(self, self.frontmatter_path)
+        frontmatter.dump(self, path or self.frontmatter_path)
 
     def write_static(self):
         """

@@ -1,0 +1,68 @@
+<!doctype html>
+<html lang="en">
+    <head>
+        <meta charset="utf-8">
+        <title>This is not a headline</title>
+        <meta name="description" content="Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua">
+    </head>
+    <body>
+        
+
+        
+<article class="container">
+    <header class="center">
+        <h1>This is not a headline</h1>
+        <p class="description">Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua</p>
+        <p class="byline">
+            By <span class="author">This is not a byline</span>
+        </p>
+        <p class="dateline">
+            <time datetime="2016-07-28" pubdate>
+                July 28, 2016
+            </time>
+        </p>
+    </header>
+    <section name="graphic" class="graphic">
+        <section id="section-one">
+    This is section one.
+
+</section>
+    </section>
+    <section name="credits">
+        
+            <p class="sources">Sources: Sources TK</p>
+        
+        
+            <p class="credits">Credits: Credits TK</p>
+        
+    </section>
+</article>
+<script src="http://cookbook.latimes.com/js/jquery-1.12.4/jquery.min.js"></script>
+<script type="text/javascript">var app = {};
+app.selector = "section.graphic";
+app.el = $(app.selector);
+
+app.boot = function () {
+    var filler = $("<div>")
+      .css("font-size", "50px")
+      .css("color", "#ffffff")
+      .css("text-align", "center")
+      .css("line-height", "600px")
+      .css("background-color", "#e6e6e6")
+      .html("This is not a headline");
+    filler = $("<div>")
+      .css("margin-top", "30px")
+      .css("margin-bottom", "30px")
+      .css("height", "600px")
+      .append(filler);
+    this.el.append(filler);
+};
+</script>
+<script type="text/javascript">
+$(function () {
+    app.boot();
+});
+</script>
+
+    </body>
+</html>

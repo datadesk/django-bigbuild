@@ -15,7 +15,9 @@
             </time>
         </p>
     </header>
-    <section name="graphic" class="graphic"></section>
+    <section name="graphic" class="graphic">
+        {{ object.content }}
+    </section>
     <section name="credits">
         {% if object.extra.sources %}
             <p class="sources">Sources: {{ object.extra.sources|safe }}</p>

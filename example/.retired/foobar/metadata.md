@@ -27,5 +27,6 @@ slug: foobar
 ---
 
 <section id="section-one">
-    {% include "foobar/sections/section_one.html" %}
+    This is section one.
+
 </section>
