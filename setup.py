@@ -115,9 +115,9 @@ setup(
         'validictory>=1.0.1',
         'django-compressor>=2.0',
         'greeking>=2.1.3',
+        'GitPython>=2.0.8',
         'pytz',
         'six',
-        'GitPython',
     ],
     cmdclass={'test': TestCommand}
 )
