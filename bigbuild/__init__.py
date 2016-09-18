@@ -55,18 +55,10 @@ def get_base_url():
     if base_url.startswith("/"):
         base_url = base_url[1:]
 
-    repo_branch = get_repo_branch()
-
-    if settings.DEBUG:
-        base_url = os.path.join(
-            "/",
-            repo_branch,
-            base_url
-        )
+    if getattr(settings, 'BIGBUILD_BRANCH_BUILD', False):
+        # Get the branch name
+        repo_branch = get_repo_branch()
+        # Put the branch name ahead of the base url
+        return os.path.join("/", repo_branch, base_url)
     else:
-        base_url = os.path.join(
-            "/",
-            base_url,
-        )
-
-    return base_url
+        return os.path.join("/", base_url)

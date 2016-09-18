@@ -1,4 +1,4 @@
-Django==1.10
+Django==1.10.1
 python-frontmatter==0.2.1
 django-bakery==0.8.10
 PyYAML==3.11

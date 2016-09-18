@@ -74,6 +74,7 @@ class TestCommand(Command):
             USE_TZ = True,
             ROOT_URLCONF = 'bigbuild.urls',
             BIGBUILD_GIT_BRANCH = os.environ.get("BIGBUILD_GIT_BRANCH", None),
+            BIGBUILD_BRANCH_BUILD = True,
         )
         from django.core.management import call_command
         import django
