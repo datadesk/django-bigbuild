@@ -11,5 +11,5 @@ The open-source engine that powers bigbuilder, the Los Angeles Times Data Desk's
 Name | URL
 :--- |:---
 Packaging | [pypi.python.org/pypi/django-bigbuild](https://pypi.python.org/pypi/django-bigbuild)
-Build bot | [travis-ci.com/datadesk/django-bigbuild](https://travis-ci.com/datadesk/django-bigbuild/)
+Build bot | [travis-ci.org/datadesk/django-bigbuild](https://travis-ci.org/datadesk/django-bigbuild/)
 Coverage status | [coveralls.io/github/datadesk/django-bigbuild](https://coveralls.io/github/datadesk/django-bigbuild)
