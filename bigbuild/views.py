@@ -61,7 +61,7 @@ class PageListView(BuildableTemplateView):
             'working'
         )
         return {
-            'object_list': PageList(),
+            'object_list': [p for p in PageList() if p.show_in_feeds],
             'PAGE_PUBLICATION_STATUS': PAGE_PUBLICATION_STATUS
         }
 
