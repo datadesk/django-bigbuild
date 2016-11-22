@@ -1,6 +1,7 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
 from django.conf import settings
+from bigbuild import get_repo_branch
 
 
 def environment(request):
@@ -11,5 +12,6 @@ def environment(request):
         'DEVELOPMENT': settings.DEVELOPMENT,
         'STAGING': settings.STAGING,
         'PRODUCTION': settings.PRODUCTION,
-        'BIGBAR': settings.BIGBAR
+        'BIGBAR': settings.BIGBAR,
+        'BRANCH': get_repo_branch(),
     }
