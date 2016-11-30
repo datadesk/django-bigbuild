@@ -2,6 +2,7 @@
 # -*- coding: utf-8 -*-
 import os
 import six
+import shelve
 import logging
 from django.conf import settings
 from collections import Sequence
@@ -22,6 +23,8 @@ class PageList(Sequence):
         # Set the page directories
         self.dynamic_directory = get_page_directory()
         self.retired_directory = get_retired_directory()
+        # Set the cache path
+        self.retired_cache_path = os.path.join(self.retired_directory, '.cache')
         # Create a combined list of live pages and retired pages
         self.pages = []
         self.pages.extend(self.get_dynamic_pages())
@@ -115,11 +118,17 @@ class PageList(Sequence):
         Returns a list of RetiredPage objects ready to be built
         in this environment.
         """
-        logger.debug("Retrieving retired page list")
-        page_list = []
-        for d in os.listdir(self.retired_directory):
-            page = self.get_page(d, RetiredPage)
-            if page and page.should_build():
-                page_list.append(page)
+        if os.path.exists(self.retired_cache_path):
+            logger.debug("Loading cached retired page list")
+            page_list = shelve.open(self.retired_cache_path)
+        else:
+            logger.debug("Retrieving YAML retired page list")
+            page_list = []
+            for d in os.listdir(self.retired_directory):
+                page = self.get_page(d, RetiredPage)
+                if page and page.should_build():
+                    page_list.append(page)
+
+        # Log and return
         logger.debug("{} retired pages retrieved".format(len(page_list)))
         return page_list
