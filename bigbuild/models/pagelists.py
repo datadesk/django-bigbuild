@@ -102,7 +102,6 @@ class PageList(Sequence):
         in this environment.
         """
         page_list = []
-        # Loop through all of the directories in the page directory
         for d in os.listdir(self.dynamic_directory):
             page = self.get_page(d, Page)
             if page and page.should_build():
@@ -115,7 +114,6 @@ class PageList(Sequence):
         in this environment.
         """
         page_list = []
-        # Loop through all of the directories in the page directory
         for d in os.listdir(self.retired_directory):
             page = self.get_page(d, RetiredPage)
             if page and page.should_build():
