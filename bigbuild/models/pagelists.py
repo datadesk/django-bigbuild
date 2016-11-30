@@ -2,7 +2,7 @@
 # -*- coding: utf-8 -*-
 import os
 import six
-import shelve
+import json
 import logging
 from django.conf import settings
 from collections import Sequence
@@ -11,6 +11,7 @@ from bigbuild.exceptions import (
     MissingRecommendedMetadataWarning
 )
 from bigbuild.models import Page, RetiredPage
+from dateutil.parser import parse as dateparse
 from bigbuild import get_page_directory, get_retired_directory
 logger = logging.getLogger(__name__)
 
@@ -129,7 +130,13 @@ class PageList(Sequence):
         # Pull the cached data if it exists
         if os.path.exists(self.retired_cache_path):
             logger.debug("Loading cached retired page list")
-            page_list = shelve.open(self.retired_cache_path)['retired_pages']
+            with open(self.retired_cache_path, 'rb') as f:
+                page_list = []
+                dict_list = json.load(f)['retired_pages']
+                for d in dict_list:
+                    d['pub_date'] = dateparse(d['pub_date'])
+                    p = RetiredPage(**d)
+                    page_list.append(p)
         # Otherwise get them from the YAML
         else:
             logger.debug("Retrieving YAML retired page list")

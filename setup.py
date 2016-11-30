@@ -116,6 +116,7 @@ setup(
         'django-compressor>=2.0',
         'greeking>=2.1.3',
         'GitPython>=2.0.8',
+        'python-dateutil>=2.6.0',
         'pytz',
         'six',
     ],

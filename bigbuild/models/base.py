@@ -28,6 +28,7 @@ class BasePage(object):
         headline="",
         byline="",
         description="",
+        image_url="",
         pub_date=None,
         published=False,
         show_in_feeds=True,
@@ -40,7 +41,7 @@ class BasePage(object):
         self.headline = headline
         self.byline = byline
         self.description = description
-        self.image_url = ""
+        self.image_url = image_url
         self.pub_date = pub_date or datetime.now().replace(
             second=0,
             microsecond=0

@@ -1,7 +1,7 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
 import os
-import shelve
+import json
 from bigbuild.models import PageList
 from bigbuild import get_retired_directory
 from django.core.management.base import BaseCommand
@@ -22,6 +22,8 @@ class Command(BaseCommand):
         page_list = PageList()
 
         # Save the retired pages out to a new cache
-        d = shelve.open(retired_cache_path)
-        d['retired_pages'] = page_list.retired_pages
-        d.close()
+        with open(retired_cache_path, 'wb') as f:
+            json.dump(
+                dict(retired_pages=[p.to_json() for p in page_list.retired_pages]),
+                f
+            )
