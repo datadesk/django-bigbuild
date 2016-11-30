@@ -62,62 +62,62 @@ class PageList(Sequence):
             except IndexError:
                 raise IndexError("No page with this key could be found")
 
-    def get_page_list(self, path, pagetype):
+    def get_page(self, directory, pagetype):
         """
         Returns a list of Page objects from the provided directory path.
         """
-        page_list = []
-        # Loop through all of the directories in the page directory
-        for d in os.listdir(path):
-            # Ignore any names in our blacklist
-            if d in getattr(settings, 'PAGE_BLACKLIST', ['.DS_Store']):
-                continue
+        # Ignore any names in our blacklist
+        if directory in getattr(settings, 'PAGE_BLACKLIST', ['.DS_Store']):
+            return None
 
-            # Create a Page object from the directory slug
-            page = pagetype(d)
+        # Create a Page object from the directory slug
+        page = pagetype(directory)
 
-            # Verify it has frontmatter and is a qualified page
-            if not os.path.exists(page.frontmatter_path):
-                # If it doesn't have frontmatter broadcast a warning
-                # to the developer and skip this directory.
-                warning = MissingMetadataWarning(page)
-                logger.warn(warning)
-                continue
+        # Verify it has frontmatter and is a qualified page
+        if not os.path.exists(page.frontmatter_path):
+            # If it doesn't have frontmatter broadcast a warning
+            # to the developer and skip this directory.
+            warning = MissingMetadataWarning(page)
+            logger.warn(warning)
+            return None
 
-            # Sync in the metadata from the filesystem to the object
-            page.sync_frontmatter()
+        # Sync in the metadata from the filesystem to the object
+        page.sync_frontmatter()
 
-            # Make sure the page is valid
-            if not page.is_metadata_valid():
-                raise ValueError("Metadata is not valid for %s" % page)
+        # Make sure the page is valid
+        if not page.is_metadata_valid():
+            raise ValueError("Metadata is not valid for %s" % page)
 
-            # Make sure the page has recommended metadata
-            # ... if it's ready to publish
-            if page.pub_status in ['live', 'pending']:
-                if not page.has_recommended_metadata():
-                    logger.warn(MissingRecommendedMetadataWarning(page))
+        # Make sure the page has recommended metadata
+        # ... if it's ready to publish
+        if page.pub_status in ['live', 'pending']:
+            if not page.has_recommended_metadata():
+                logger.warn(MissingRecommendedMetadataWarning(page))
 
-            page_list.append(page)
-
-        # Return the page_list
-        return page_list
+        return page
 
     def get_dynamic_pages(self):
         """
         Returns a list of Page objects ready to be built
         in this environment.
         """
-        return [
-            p for p in self.get_page_list(self.dynamic_directory, Page)
-            if p.should_build()
-        ]
+        page_list = []
+        # Loop through all of the directories in the page directory
+        for d in os.listdir(self.dynamic_directory):
+            page = self.get_page(d, Page)
+            if page and page.should_build():
+                page_list.append(page)
+        return page_list
 
     def get_retired_pages(self):
         """
         Returns a list of RetiredPage objects ready to be built
         in this environment.
         """
-        return [
-            p for p in self.get_page_list(self.retired_directory, RetiredPage)
-            if p.should_build()
-        ]
+        page_list = []
+        # Loop through all of the directories in the page directory
+        for d in os.listdir(self.retired_directory):
+            page = self.get_page(d, RetiredPage)
+            if page and page.should_build():
+                page_list.append(page)
+        return page_list
