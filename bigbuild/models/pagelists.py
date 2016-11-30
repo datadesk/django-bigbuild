@@ -101,11 +101,13 @@ class PageList(Sequence):
         Returns a list of Page objects ready to be built
         in this environment.
         """
+        logger.debug("Retrieving dynamic page list")
         page_list = []
         for d in os.listdir(self.dynamic_directory):
             page = self.get_page(d, Page)
             if page and page.should_build():
                 page_list.append(page)
+        logger.debug("{} dynamic pages retrieved".format(len(page_list)))
         return page_list
 
     def get_retired_pages(self):
@@ -113,9 +115,11 @@ class PageList(Sequence):
         Returns a list of RetiredPage objects ready to be built
         in this environment.
         """
+        logger.debug("Retrieving retired page list")
         page_list = []
         for d in os.listdir(self.retired_directory):
             page = self.get_page(d, RetiredPage)
             if page and page.should_build():
                 page_list.append(page)
+        logger.debug("{} retired pages retrieved".format(len(page_list)))
         return page_list
