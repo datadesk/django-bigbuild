@@ -2,9 +2,20 @@
 # -*- coding: utf-8 -*-
 import os
 import json
+from datetime import datetime
 from bigbuild.models import PageList
 from bigbuild import get_retired_directory
 from django.core.management.base import BaseCommand
+
+
+def serializer(obj):
+    """
+    JSON serializer for objects not serializable by default json code
+    """
+    if isinstance(obj, datetime):
+        serial = obj.isoformat()
+        return serial
+    raise TypeError("Type not serializable")
 
 
 class Command(BaseCommand):
@@ -25,5 +36,6 @@ class Command(BaseCommand):
         with open(retired_cache_path, 'wb') as f:
             json.dump(
                 dict(retired_pages=[p.to_json() for p in page_list.retired_pages]),
-                f
+                f,
+                default=serializer
             )
