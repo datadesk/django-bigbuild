@@ -70,8 +70,15 @@ class PageDetailView(BuildableDetailView):
     """
     Renders one of the page objects as an HTML response.
     """
+    _queryset = None
+
     def get_queryset(self):
-        return PageList()
+        if self._queryset:
+            return self._queryset
+        else:
+            qs = PageList()
+            self._queryset = qs
+            return qs
 
     def get_object(self):
         qs = self.get_queryset()
