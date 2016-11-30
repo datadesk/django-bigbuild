@@ -23,18 +23,26 @@ class PageList(Sequence):
         # Set the page directories
         self.dynamic_directory = get_page_directory()
         self.retired_directory = get_retired_directory()
+
         # Set the cache path
         self.retired_cache_path = os.path.join(self.retired_directory, '.cache')
+
+        # Pull the pages
+        self.dynamic_pages = self.get_dynamic_pages()
+        self.retired_pages = self.get_retired_pages()
+
         # Create a combined list of live pages and retired pages
         self.pages = []
-        self.pages.extend(self.get_dynamic_pages())
-        self.pages.extend(self.get_retired_pages())
+        self.pages.extend(self.dynamic_pages)
+        self.pages.extend(self.retired_pages)
+
         # Sort first by reverse chron
         self.pages = sorted(
             self.pages,
             key=lambda o: o.pub_date,
             reverse=True
         )
+
         # Then sort the working pages to the top
         self.pages = sorted(self.pages, key=lambda o: o.is_live())
 
@@ -118,9 +126,11 @@ class PageList(Sequence):
         Returns a list of RetiredPage objects ready to be built
         in this environment.
         """
+        # Pull the cached data if it exists
         if os.path.exists(self.retired_cache_path):
             logger.debug("Loading cached retired page list")
-            page_list = shelve.open(self.retired_cache_path)
+            page_list = shelve.open(self.retired_cache_path)['retired_pages']
+        # Otherwise get them from the YAML
         else:
             logger.debug("Retrieving YAML retired page list")
             page_list = []

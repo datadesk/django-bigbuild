@@ -5,6 +5,7 @@ from datetime import datetime
 from bigbuild import exceptions
 from greeking import latimes_ipsum
 from bigbuild.models import PageList, Page
+from bigbuild import get_retired_directory
 from django.core.management import call_command
 from bigbuild.compressors import SimpleCompressor
 from django.core.management.base import CommandError
@@ -285,6 +286,19 @@ foo:: bar;:
         """
         with override_settings(COMPRESS_ENABLED=False):
             call_command("build")
+
+    def test_cache(self):
+        """
+        Test the page caching
+        """
+        before = PageList()
+        cache_path = os.path.join(get_retired_directory(), '.cache')
+        if os.path.exists(cache_path):
+            os.remove(cache_path)
+        call_command("cachepages")
+        after = PageList()
+        self.assertEqual(before[0].slug, after[0].slug)
+        call_command("cachepages")
 
 
 class DropCapTest(SimpleTestCase):
