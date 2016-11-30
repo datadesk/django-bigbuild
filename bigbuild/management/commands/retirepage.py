@@ -5,6 +5,7 @@ import shutil
 from django.conf import settings
 from bigbuild.views import PageRetireView
 from bigbuild.models import PageList, Page
+from django.core.management import call_command
 from django.core.management.base import BaseCommand, CommandError
 
 
@@ -54,3 +55,5 @@ class Command(BaseCommand):
             # Delete the page folder
             if not options['keep_page']:
                 shutil.rmtree(p.directory_path)
+
+            call_command("cachepages")
