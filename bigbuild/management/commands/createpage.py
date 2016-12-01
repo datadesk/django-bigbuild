@@ -20,28 +20,12 @@ class Command(BaseCommand):
             default=False,
             help='Force overwrite of the page directory if it already exists'
         )
-        parser.add_argument(
-            '--sans',
-            action='store_true',
-            dest='sans',
-            default=False,
-            help='Create a page that uses our alternative sans-serif theme'
-        )
-        parser.add_argument(
-            '--dark',
-            action='store_true',
-            dest='dark',
-            default=False,
-            help='Create a page that uses our alternative dark theme'
-        )
 
     def set_options(self, *args, **options):
         """
         Configures the command based on user input.
         """
         self.force = options['force']
-        self.sans = options['sans']
-        self.dark = options['dark']
         self.slug_list = options['slug']
 
     def create_page(self, slug):
@@ -49,6 +33,15 @@ class Command(BaseCommand):
         Returns a new Page object given the slug submitted by the user.
         """
         return Page(slug)
+
+    def create_page_directory(self, page):
+        """
+        Create a new directory for the provided page.
+        """
+        page.create_directory(
+            force=self.force,
+            index_template_name=self.INDEX_TEMPLATE_NAME
+        )
 
     def handle(self, *args, **options):
         """
@@ -73,14 +66,7 @@ class Command(BaseCommand):
                     )
             # Otherwise we make the page
             else:
-                page.create_directory(
-                    force=self.force,
-                    index_template_name=self.INDEX_TEMPLATE_NAME,
-                    index_template_context=dict(
-                        sans=self.sans,
-                        dark=self.dark,
-                    )
-                )
+                self.create_page_directory(page)
 
             # Print out the result
             self.stdout.write(self.style.SUCCESS('Created page "%s"' % page))
