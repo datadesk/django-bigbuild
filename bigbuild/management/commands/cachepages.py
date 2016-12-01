@@ -33,7 +33,7 @@ class Command(BaseCommand):
         page_list = PageList()
 
         # Save the retired pages out to a new cache
-        with open(retired_cache_path, 'wb') as f:
+        with open(retired_cache_path, 'w') as f:
             json.dump(
                 dict(retired_pages=[p.to_json() for p in page_list.retired_pages]),
                 f,
