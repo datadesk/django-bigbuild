@@ -7,6 +7,6 @@ class Command(BaseCommand):
     def handle(self, *args, **options):
         # When in BIGBUILD_BRANCH_BUILD don't delete because we'll be syncing
         # a different subdirectory for each one of our git branches
-        if settings.BIGBUILD_BRANCH_BUILD:
+        if getattr(settings, 'BIGBUILD_BRANCH_BUILD', False):
             options['no_delete'] = True
         super(Command, self).handle(*args, **options)
