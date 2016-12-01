@@ -167,12 +167,6 @@ class FakePagesTest(SimpleTestCase):
         with self.assertRaises(CommandError):
             call_command("createpage", "test-page")
 
-    def test_createbigbuild(self):
-        call_command("createbigbuild", "test-bigbuild")
-
-    def test_creategraphic(self):
-        call_command("creategraphic", "test-graphic")
-
     def test_retirepage(self):
         p = Page(slug='test-retired-page', published=True, description="TK")
         p.create_directory()
