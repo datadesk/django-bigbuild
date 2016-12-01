@@ -130,7 +130,7 @@ class PageList(Sequence):
         # Pull the cached data if it exists
         if os.path.exists(self.retired_cache_path):
             logger.debug("Loading cached retired page list")
-            with open(self.retired_cache_path, 'rb') as f:
+            with open(self.retired_cache_path, 'r') as f:
                 page_list = []
                 dict_list = json.load(f)['retired_pages']
                 for d in dict_list:
