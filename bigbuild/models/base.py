@@ -91,7 +91,7 @@ class BasePage(object):
 
     @models.permalink
     def get_absolute_url(self):
-        return ('page-detail', [self.slug])
+        return ('bigbuild-page-detail', [self.slug])
 
     def get_static_url(self):
         return os.path.join(self.get_absolute_url(), 'static') + "/"

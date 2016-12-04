@@ -41,7 +41,7 @@ class IndexRedirectView(BuildableRedirectView):
 
     @property
     def build_path(self):
-        return os.path.join(reverse('index-redirect')[1:], "index.html")
+        return os.path.join(reverse('bigbuild-index-redirect')[1:], "index.html")
 
 
 class PageListView(BuildableTemplateView):
@@ -52,7 +52,7 @@ class PageListView(BuildableTemplateView):
 
     @property
     def build_path(self):
-        return os.path.join(reverse('page-list')[1:], "index.html")
+        return os.path.join(reverse('bigbuild-page-list')[1:], "index.html")
 
     def get_context_data(self):
         PAGE_PUBLICATION_STATUS = getattr(

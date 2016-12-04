@@ -6,25 +6,29 @@ from bigbuild import views, feeds, sitemaps, get_base_url
 
 urlpatterns = [
     # Index redirect
-    url(r'^$', views.IndexRedirectView.as_view(), name="index-redirect"),
+    url(
+        r'^$',
+        views.IndexRedirectView.as_view(),
+        name="bigbuild-index-redirect"
+    ),
 
     # Pages
     url(
         r'^{0}$'.format(get_base_url()[1:]),
         views.PageListView.as_view(),
-        name='page-list'
+        name='bigbuild-page-list'
     ),
     url(
         r'^{0}(?P<slug>[-\w]+)/$'.format(get_base_url()[1:]),
         views.PageDetailView.as_view(),
-        name='page-detail'
+        name='bigbuild-page-detail'
     ),
 
     # Static assets
     url(
         r'^{0}(?P<slug>[-\w]+)/static/(?P<path>.*)$'.format(get_base_url()[1:]),
         views.page_static_serve,
-        name='page-detail-static'
+        name='bigbuild-page-detail-static'
     ),
 
     # Machine-readable feeds
