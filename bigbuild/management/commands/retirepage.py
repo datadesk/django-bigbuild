@@ -23,6 +23,12 @@ class Command(BaseCommand):
             help='Do not delete the page directory as part of the retirement'
         )
 
+    def get_build_directory(self):
+        if getattr(settings, 'BUILD_DIR', False):
+            return settings.BUILD_DIR
+        else:
+            return os.path.join(settings.BASE_DIR, '.build')
+
     def handle(self, *args, **options):
         # Loop through the slugs
         for slug in options['slug']:
@@ -44,7 +50,7 @@ class Command(BaseCommand):
 
             # Save that directory to the retired folder
             shutil.copytree(
-                os.path.join(settings.BUILD_DIR, p.get_absolute_url()[1:]),
+                os.path.join(self.get_build_directory(), p.get_absolute_url()[1:]),
                 p.retired_directory_path,
             )
 

@@ -94,13 +94,19 @@ class PageDetailView(BuildableDetailView):
             'STATIC_URL': self.object.get_static_url()
         }
 
+    def get_build_directory(self):
+        if getattr(settings, 'BUILD_DIR', False):
+            return settings.BUILD_DIR
+        else:
+            return os.path.join(settings.BASE_DIR, '.build')
+
     def build_static_directory(self, obj):
         """
         Builds an object's static subdirectory.
         """
         source_dir = obj.static_path
         target_dir = os.path.join(
-            settings.BUILD_DIR,
+            self.get_build_directory(),
             obj.get_static_url()[1:]
         )
         if settings.BAKERY_GZIP:
@@ -117,7 +123,7 @@ class PageDetailView(BuildableDetailView):
             super(PageDetailView, self).build_object(obj)
             self.build_static_directory(obj)
         elif isinstance(obj, RetiredPage):
-            target = os.path.join(settings.BUILD_DIR, obj.get_absolute_url()[1:])
+            target = os.path.join(self.get_build_directory(), obj.get_absolute_url()[1:])
             os.path.exists(target) and shutil.rmtree(target)
             if settings.BAKERY_GZIP:
                 Build().copytree_and_gzip(
