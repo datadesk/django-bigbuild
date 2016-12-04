@@ -7,7 +7,7 @@
     </head>
     <body>
         {% if STAGING or DEVELOPMENT %}
-            {% if BIGBAR %}
+            {% if BIGBUILD_BIGBAR %}
                 {% if not RETIREMENT %}
                     {% include "bigbuild/pages/bigbar.html" %}
                 {% endif %}

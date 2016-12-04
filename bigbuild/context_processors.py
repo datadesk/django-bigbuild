@@ -12,6 +12,6 @@ def environment(request):
         'DEVELOPMENT': settings.DEVELOPMENT,
         'STAGING': settings.STAGING,
         'PRODUCTION': settings.PRODUCTION,
-        'BIGBAR': settings.BIGBAR,
+        'BIGBAR': settings.BIGBUILD_BIGBAR,
         'BRANCH': get_repo_branch(),
     }
