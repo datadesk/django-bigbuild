@@ -11,7 +11,7 @@ def get_page_directory():
     # Return the PAGE_DIR settings, if it's been set, or fall back to the default.
     path = getattr(
         settings,
-        'PAGE_DIR',
+        'BIGBUILD_PAGE_DIR',
         os.path.join(settings.BASE_DIR, 'pages')
     )
     # Make the directory if it doesn't exist already
@@ -27,7 +27,7 @@ def get_retired_directory():
     # Return the RETIRED_DIR settings, if it's been set, or fall back to the default.
     path = getattr(
         settings,
-        'RETIRED_DIR',
+        'BIGBUILD_RETIRED_DIR',
         os.path.join(settings.BASE_DIR, '.retired')
     )
     # Make the directory if it doesn't exist already

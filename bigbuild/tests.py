@@ -18,12 +18,12 @@ logging.disable(logging.CRITICAL)
 
 TEMP_DIR = tempfile.mkdtemp()
 BUILD_DIR = os.path.join(TEMP_DIR, '.build')
-PAGE_DIR = os.path.join(TEMP_DIR, '.pages')
-RETIRED_DIR = os.path.join(TEMP_DIR, '.retired')
+BIGBUILD_PAGE_DIR = os.path.join(TEMP_DIR, '.pages')
+BIGBUILD_RETIRED_DIR = os.path.join(TEMP_DIR, '.retired')
 TEMPLATES = [
     {
         'BACKEND': 'django.template.backends.django.DjangoTemplates',
-        'DIRS': [PAGE_DIR, RETIRED_DIR],
+        'DIRS': [BIGBUILD_PAGE_DIR, BIGBUILD_RETIRED_DIR],
         'APP_DIRS': True,
         'OPTIONS': {
             'context_processors': [],
@@ -32,11 +32,11 @@ TEMPLATES = [
 ]
 
 
-@override_settings(RETIRED_DIR=RETIRED_DIR)
+@override_settings(BIGBUILD_RETIRED_DIR=BIGBUILD_RETIRED_DIR)
 @override_settings(BUILD_DIR=BUILD_DIR)
-@override_settings(PAGE_DIR=PAGE_DIR)
+@override_settings(BIGBUILD_PAGE_DIR=BIGBUILD_PAGE_DIR)
 @override_settings(TEMPLATES=TEMPLATES)
-@override_settings(COMPRESS_ROOT=PAGE_DIR)
+@override_settings(COMPRESS_ROOT=BIGBUILD_PAGE_DIR)
 class FakePagesTest(SimpleTestCase):
     """
     Tests that run against fake pages.
@@ -78,7 +78,7 @@ class FakePagesTest(SimpleTestCase):
         pages[0].create_directory(force=True)
         call_command("retirepage", pages[0].slug)
         # Create a blacklisted file to test that
-        with open(os.path.join(PAGE_DIR, '.DS_Store'), 'w+') as f:
+        with open(os.path.join(BIGBUILD_PAGE_DIR, '.DS_Store'), 'w+') as f:
             f.write("foo")
 
     @override_settings(BAKERY_GZIP=True)
