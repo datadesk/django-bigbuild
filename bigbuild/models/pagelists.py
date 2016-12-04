@@ -79,7 +79,7 @@ class PageList(Sequence):
         Returns a list of Page objects from the provided directory path.
         """
         # Ignore any names in our blacklist
-        if directory in getattr(settings, 'PAGE_BLACKLIST', ['.DS_Store']):
+        if directory in getattr(settings, 'BIGBUILD_PAGE_BLACKLIST', ['.DS_Store']):
             return None
 
         # Create a Page object from the directory slug
