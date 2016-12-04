@@ -1,6 +1,8 @@
 import os
 from git import Repo
 from django.conf import settings
+from django.conf.urls import url
+from six.moves.urllib.parse import urljoin
 default_app_config = 'bigbuild.apps.BigbuildConfig'
 
 
@@ -59,6 +61,23 @@ def get_base_url():
         # Get the branch name
         repo_branch = get_repo_branch()
         # Put the branch name ahead of the base url
-        return os.path.join("/", repo_branch, base_url)
+        return urljoin("/", repo_branch, base_url)
     else:
-        return os.path.join("/", base_url)
+        return urljoin("/", base_url)
+
+
+def prepend_urls(urlpatterns):
+    """
+    Prepends the site's BIGBUILD_BASE_URL to the provided list of urlpatterns.
+    """
+    prepended_list = []
+    base_url = get_base_url()[1:]
+    for pattern in urlpatterns:
+        prepended_url = url(
+            pattern._regex.replace("^", "^{}".format(base_url)),
+            pattern.callback,
+            name=pattern.name
+        )
+        print prepended_url
+        prepended_list.append(pattern)
+    return prepended_list
