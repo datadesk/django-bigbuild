@@ -298,7 +298,7 @@ class BasePage(object):
         Returns True or False
         """
         # Get the publication status of the current environment
-        status = getattr(settings, 'PAGE_PUBLICATION_STATUS', 'working')
+        status = getattr(settings, 'BIGBUILD_PAGE_PUBLICATION_STATUS', 'working')
         # If we are in 'working' mode everything gets built
         if status == 'working':
             return True
