@@ -175,6 +175,7 @@ class FakePagesTest(SimpleTestCase):
             call_command("archivepage", p.slug)
         with self.assertRaises(CommandError):
             call_command("archivepage", "hello-wtf")
+        call_command("retrievepage", "test-archived-page")
 
     def test_warnings(self):
         exceptions.BadMetadata()
