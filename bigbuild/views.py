@@ -183,6 +183,6 @@ def page_static_serve(request, slug, path):  # pragma: no cover
         return serve(
             request,
             path,
-            document_root=get_archive_directory(),
+            document_root=os.path.join(get_archive_directory(), 'static'),
             show_indexes=True
         )
