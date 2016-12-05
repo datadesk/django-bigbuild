@@ -31,9 +31,17 @@ def get_archive_directory():
         'BIGBUILD_ARCHIVE_DIR',
         os.path.join(settings.BASE_DIR, '.archive')
     )
+
     # Make the directory if it doesn't exist already
     os.path.exists(path) or os.mkdir(path)
-    # Return the path
+
+    # Make the two expected subdirectories if they do not already exist
+    static_archive = os.path.join(path, 'static')
+    dynamic_archive = os.path.join(path, 'dynamic')
+    os.path.exists(static_archive) or os.mkdir(static_archive)
+    os.path.exists(dynamic_archive) or os.mkdir(dynamic_archive)
+
+    # Return the roo archive path
     return path
 
 

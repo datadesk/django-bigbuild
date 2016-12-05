@@ -10,9 +10,9 @@ import shutil
 import logging
 import frontmatter
 from bigbuild.models import BasePage
+from bigbuild import get_page_directory
 from bigbuild.exceptions import BadMetadata
 from django.template import Engine, Context
-from bigbuild import get_page_directory, get_archive_directory
 logger = logging.getLogger(__name__)
 
 
@@ -27,20 +27,6 @@ class Page(BasePage):
         """
         return get_page_directory()
 
-    @property
-    def archive_directory_path(self):
-        """
-        Returns the path where this page would be archived, if it were archived.
-        """
-        return os.path.join(get_archive_directory(), self.slug)
-
-    @property
-    def archive_directory_exists(self):
-        """
-        Tests whether a archived directory for this slug already exists.
-        """
-        return os.path.exists(self.archive_directory_path)
-
     def create_directory(
         self,
         force=False,
@@ -51,23 +37,23 @@ class Page(BasePage):
         Creates a new directory for the page.
 
         Returns the path to the directory that has been created, which is
-        the same as the self.directory_path property.
+        the same as the self.dynamic_directory_path property.
 
         Throws an error if the directory already exists. You can force it
         to overwrite a pre-existing directory by submitting the force keyword
         argument as true.
         """
         # Check if the directory exists already and act accordingly
-        if self.directory_exists:
+        if self.dynamic_directory_exists:
             if force:
-                shutil.rmtree(self.directory_path)
+                shutil.rmtree(self.dynamic_directory_path)
             else:
                 raise ValueError(
-                    "Page directory already exists at %s" % self.directory_path
+                    "Page directory already exists at %s" % self.dynamic_directory_path
                 )
 
         # Make the directory
-        os.mkdir(self.directory_path)
+        os.mkdir(self.dynamic_directory_path)
 
         # Add the index template
         self.write_index(
@@ -85,7 +71,7 @@ class Page(BasePage):
         self.write_checklist()
 
         # Return the directory path
-        return self.directory_path
+        return self.dynamic_directory_path
 
     def write_index(self, template_name, template_context={}):
         """

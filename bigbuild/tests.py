@@ -91,8 +91,8 @@ class FakePagesTest(SimpleTestCase):
         obj.__repr__()
         obj.get_absolute_url()
 
-        self.assertTrue(obj.directory_exists)
-        self.assertFalse(obj.archive_directory_exists)
+        self.assertTrue(obj.dynamic_directory_exists)
+        self.assertFalse(obj.archive_dynamic_directory_exists)
 
         with self.assertRaises(ValueError):
             obj.create_directory()
@@ -122,7 +122,7 @@ class FakePagesTest(SimpleTestCase):
         p.__str__()
         p.__repr__()
         p.get_absolute_url()
-        p.directory_path
+        p.dynamic_directory_path
         p.metadata
         PageDetailView().build_object(p)
 

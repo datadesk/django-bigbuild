@@ -51,22 +51,25 @@ class Command(BaseCommand):
             PageArchiveView().build_object(p)
 
             # If the retired directory exists, kill it
-            if os.path.exists(p.archive_directory_path):
-                shutil.rmtree(p.archive_directory_path)  # pragma: no cover
+            if os.path.exists(p.archive_static_directory_path):
+                shutil.rmtree(p.archive_static_directory_path)  # pragma: no cover
 
             # Save that directory to the retired folder
             shutil.copytree(
                 os.path.join(self.get_build_directory(), p.get_absolute_url()[1:]),
-                p.archive_directory_path,
+                p.archive_static_directory_path,
             )
 
             # Save the metadata to the retired folder
-            frontmatter_path = os.path.join(p.archive_directory_path, 'metadata.md')
+            frontmatter_path = os.path.join(p.archive_static_directory_path, 'metadata.md')
             p.write_frontmatter(frontmatter_path)
+
+            # Copy the dynamic page folder to its archival location
+            shutil.copytree(p.dynamic_directory_path, p.archive_dynamic_directory_path)
 
             # Delete the page folder
             if not options['keep_page']:
-                shutil.rmtree(p.directory_path)
+                shutil.rmtree(p.dynamic_directory_path)
 
             # Update the cache
             call_command("cachepages")

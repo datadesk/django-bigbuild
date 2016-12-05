@@ -9,7 +9,7 @@ app.boot = function () {
       .css("text-align", "center")
       .css("line-height", "600px")
       .css("background-color", "#e6e6e6")
-      .html("{{ object.headline }}");
+      .html("THIS IS NOT A GRAPHIC");
     filler = $("<div>")
       .css("margin-top", "30px")
       .css("margin-bottom", "30px")

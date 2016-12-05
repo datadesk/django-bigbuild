@@ -12,6 +12,7 @@ from django.conf import settings
 from django.utils import timezone
 from greeking import latimes_ipsum
 from django.test import RequestFactory
+from bigbuild import get_archive_directory
 from bigbuild.exceptions import BadMetadata
 from django.template import Engine, RequestContext
 from django.template.defaultfilters import slugify
@@ -128,7 +129,7 @@ class BasePage(object):
         """
         Delete the page directory.
         """
-        shutil.rmtree(self.directory_path)
+        shutil.rmtree(self.dynamic_directory_path)
 
     def build(self):
         """
@@ -180,55 +181,83 @@ class BasePage(object):
     #
 
     @property
-    def directory_path(self):
+    def dynamic_directory_path(self):
         """
         Returns the directory path where this page will exist.
         """
         return os.path.join(self.base_directory, self.slug)
 
     @property
-    def directory_exists(self):
+    def dynamic_directory_exists(self):
         """
         Tests whether the page directory for this object exists.
 
         Returns True or False
         """
-        return os.path.exists(self.directory_path)
+        return os.path.exists(self.dynamic_directory_path)
 
     @property
     def index_path(self):
         """
         Returns the index.html path where this page will be marked up.
         """
-        return os.path.join(self.directory_path, 'index.html')
+        return os.path.join(self.dynamic_directory_path, 'index.html')
 
     @property
     def frontmatter_path(self):
         """
         Returns the metadata.md path where this page will be configured.
         """
-        return os.path.join(self.directory_path, 'metadata.md')
+        return os.path.join(self.dynamic_directory_path, 'metadata.md')
 
     @property
     def static_path(self):
         """
         Returns the path to the static subdirectory for extra files.
         """
-        return os.path.join(self.directory_path, 'static')
+        return os.path.join(self.dynamic_directory_path, 'static')
 
     @property
     def checklist_path(self):
         """
         Returns the checklist.md path where the checklist will be stored.
         """
-        return os.path.join(self.directory_path, 'checklist.md')
+        return os.path.join(self.dynamic_directory_path, 'checklist.md')
 
     @property
     def data_path(self):
         """
         Returns the path to the data subdirectory for structured data files.
         """
-        return os.path.join(self.directory_path, 'data')
+        return os.path.join(self.dynamic_directory_path, 'data')
+
+    @property
+    def archive_dynamic_directory_path(self):
+        """
+        Returns the path where this page's dynamic content would be archived, if it were archived.
+        """
+        return os.path.join(get_archive_directory(), 'dynamic', self.slug)
+
+    @property
+    def archive_dynamic_directory_exists(self):
+        """
+        Tests whether a archived directory for this page's dynamic content already exists.
+        """
+        return os.path.exists(self.archive_dynamic_directory_path)
+
+    @property
+    def archive_static_directory_path(self):
+        """
+        Returns the path where this page's dynamic static would be archived, if it were archived.
+        """
+        return os.path.join(get_archive_directory(), 'static', self.slug)
+
+    @property
+    def archive_static_directory_exists(self):
+        """
+        Tests whether a archived directory for this page's dynamic content already exists.
+        """
+        return os.path.exists(self.archive_static_directory_path)
 
     #
     # Validation
