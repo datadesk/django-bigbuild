@@ -51,5 +51,6 @@ urlpatterns = [
         views.IndexRedirectView.as_view(),
         name="bigbuild-index-redirect"
     ),
+    # All the base patterns get a prefix
     url('^{}'.format(get_base_url()[1:]), include(basepatterns)),
 ]

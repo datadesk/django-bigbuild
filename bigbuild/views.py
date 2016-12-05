@@ -17,6 +17,22 @@ from bakery.views import (
 )
 
 
+class BigBuildMixin(object):
+    """
+    A class-based view mixin with utilities for our bigbuild pages.
+    """
+    def joinpath(self, *args):
+        """
+        Returns a joined path with the front slash of the first argument always sliced off.
+
+        Allows for automatically generated URLs from elsewhere in the app be used as relative build paths.
+        """
+        args = list(args)
+        first = args.pop(0)[1:]
+        args.insert(0, first)
+        return os.path.join(*args)
+
+
 class Static404View(Buildable404View):
     """
     The 404 page.
@@ -25,15 +41,18 @@ class Static404View(Buildable404View):
     build_path = "404.html"
 
 
-class RobotsView(BuildableTemplateView):
+class RobotsView(BuildableTemplateView, BigBuildMixin):
     """
     The robots.txt file.
     """
     template_name = "bigbuild/robots.txt"
-    build_path = os.path.join(get_base_url()[1:], "robots.txt")
+
+    @property
+    def build_path(self):
+        return self.joinpath(get_base_url(), "robots.txt")
 
 
-class IndexRedirectView(BuildableRedirectView):
+class IndexRedirectView(BuildableRedirectView, BigBuildMixin):
     """
     Redirects the root URL to /projects/
     """
@@ -41,10 +60,10 @@ class IndexRedirectView(BuildableRedirectView):
 
     @property
     def build_path(self):
-        return os.path.join(reverse('bigbuild-index-redirect')[1:], "index.html")
+        return self.joinpath(reverse('bigbuild-index-redirect'), "index.html")
 
 
-class PageListView(BuildableTemplateView):
+class PageListView(BuildableTemplateView, BigBuildMixin):
     """
     Renders a homepage with a list of all the pages.
     """
@@ -52,7 +71,7 @@ class PageListView(BuildableTemplateView):
 
     @property
     def build_path(self):
-        return os.path.join(reverse('bigbuild-page-list')[1:], "index.html")
+        return self.joinpath(reverse('bigbuild-page-list'), "index.html")
 
     def get_context_data(self):
         PAGE_PUBLICATION_STATUS = getattr(
