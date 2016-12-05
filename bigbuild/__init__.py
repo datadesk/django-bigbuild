@@ -64,20 +64,3 @@ def get_base_url():
         return urljoin("/", repo_branch, base_url)
     else:
         return urljoin("/", base_url)
-
-
-def prepend_urls(urlpatterns):
-    """
-    Prepends the site's BIGBUILD_BASE_URL to the provided list of urlpatterns.
-    """
-    prepended_list = []
-    base_url = get_base_url()[1:]
-    for pattern in urlpatterns:
-        prepended_url = url(
-            pattern._regex.replace("^", "^{}".format(base_url)),
-            pattern.callback,
-            name=pattern.name
-        )
-        print prepended_url
-        prepended_list.append(pattern)
-    return prepended_list
