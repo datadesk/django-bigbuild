@@ -142,7 +142,7 @@ class PageList(Sequence):
         else:
             logger.debug("Retrieving YAML archived page list")
             page_list = []
-            for d in os.listdir(os.path.join(self.archived_directory, 'dynamic')):
+            for d in os.listdir(os.path.join(self.archived_directory, 'static')):
                 page = self.get_page(d, ArchivedPage)
                 if page and page.should_build():
                     page_list.append(page)
