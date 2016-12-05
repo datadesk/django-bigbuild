@@ -8,7 +8,7 @@
     <body>
         {% if STAGING or DEVELOPMENT %}
             {% if BIGBUILD_BIGBAR %}
-                {% if not RETIREMENT %}
+                {% if not ARCHIVAL %}
                     {% include "bigbuild/pages/bigbar.html" %}
                 {% endif %}
             {% endif %}

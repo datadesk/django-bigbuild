@@ -3,14 +3,14 @@
 import os
 import shutil
 from django.conf import settings
-from bigbuild.views import PageRetireView
+from bigbuild.views import PageArchiveView
 from bigbuild.models import PageList, Page
 from django.core.management import call_command
 from django.core.management.base import BaseCommand, CommandError
 
 
 class Command(BaseCommand):
-    help = "Retire a page directory by permanently rendering its HTML"
+    help = "Archive a page directory by permanently rendering its HTML"
     args = "<slug>"
 
     def add_arguments(self, parser):
@@ -20,7 +20,7 @@ class Command(BaseCommand):
             action='store_true',
             dest='keep_page',
             default=False,
-            help='Do not delete the page directory as part of the retirement'
+            help='Do not delete the page directory as part of the archival'
         )
 
     def get_build_directory(self):
@@ -42,20 +42,20 @@ class Command(BaseCommand):
                 raise CommandError("Slug (%s) is not a Page object" % slug)
 
             # Build it
-            PageRetireView().build_object(p)
+            PageArchiveView().build_object(p)
 
             # If the retired directory exists, kill it
-            if os.path.exists(p.retired_directory_path):
-                shutil.rmtree(p.retired_directory_path)  # pragma: no cover
+            if os.path.exists(p.archive_directory_path):
+                shutil.rmtree(p.archive_directory_path)  # pragma: no cover
 
             # Save that directory to the retired folder
             shutil.copytree(
                 os.path.join(self.get_build_directory(), p.get_absolute_url()[1:]),
-                p.retired_directory_path,
+                p.archive_directory_path,
             )
 
             # Save the metadata to the retired folder
-            frontmatter_path = os.path.join(p.retired_directory_path, 'metadata.md')
+            frontmatter_path = os.path.join(p.archive_directory_path, 'metadata.md')
             p.write_frontmatter(frontmatter_path)
 
             # Delete the page folder
