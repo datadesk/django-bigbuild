@@ -146,11 +146,11 @@ class PageDetailView(BuildableDetailView):
             os.path.exists(target) and shutil.rmtree(target)
             if settings.BAKERY_GZIP:
                 Build().copytree_and_gzip(
-                    obj.archive_dynamic_directory_path,
+                    obj.archive_static_directory_path,
                     target
                 )
             else:
-                shutil.copytree(obj.archive_dynamic_directory_path, target)
+                shutil.copytree(obj.archive_static_directory_path, target)
 
     def build_queryset(self):
         [self.build_object(o) for o in self.get_queryset()]
