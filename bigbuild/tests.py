@@ -5,7 +5,7 @@ from datetime import datetime
 from bigbuild import exceptions
 from greeking import latimes_ipsum
 from bigbuild.models import PageList, Page
-from bigbuild import get_retired_directory
+from bigbuild import get_archive_directory
 from django.core.management import call_command
 from bigbuild.compressors import SimpleCompressor
 from django.core.management.base import CommandError
@@ -19,11 +19,11 @@ logging.disable(logging.CRITICAL)
 TEMP_DIR = tempfile.mkdtemp()
 BUILD_DIR = os.path.join(TEMP_DIR, '.build')
 BIGBUILD_PAGE_DIR = os.path.join(TEMP_DIR, '.pages')
-BIGBUILD_RETIRED_DIR = os.path.join(TEMP_DIR, '.retired')
+BIGBUILD_ARCHIVE_DIR = os.path.join(TEMP_DIR, '.archive')
 TEMPLATES = [
     {
         'BACKEND': 'django.template.backends.django.DjangoTemplates',
-        'DIRS': [BIGBUILD_PAGE_DIR, BIGBUILD_RETIRED_DIR],
+        'DIRS': [BIGBUILD_PAGE_DIR, BIGBUILD_ARCHIVE_DIR],
         'APP_DIRS': True,
         'OPTIONS': {
             'context_processors': [],
@@ -32,7 +32,7 @@ TEMPLATES = [
 ]
 
 
-@override_settings(BIGBUILD_RETIRED_DIR=BIGBUILD_RETIRED_DIR)
+@override_settings(BIGBUILD_ARCHIVE_DIR=BIGBUILD_ARCHIVE_DIR)
 @override_settings(BUILD_DIR=BUILD_DIR)
 @override_settings(BIGBUILD_PAGE_DIR=BIGBUILD_PAGE_DIR)
 @override_settings(TEMPLATES=TEMPLATES)
@@ -76,7 +76,7 @@ class FakePagesTest(SimpleTestCase):
         ]
         [p.create_directory() for p in pages]
         pages[0].create_directory(force=True)
-        call_command("retirepage", pages[0].slug)
+        call_command("archivepage", pages[0].slug)
         # Create a blacklisted file to test that
         with open(os.path.join(BIGBUILD_PAGE_DIR, '.DS_Store'), 'w+') as f:
             f.write("foo")
@@ -92,7 +92,7 @@ class FakePagesTest(SimpleTestCase):
         obj.get_absolute_url()
 
         self.assertTrue(obj.directory_exists)
-        self.assertFalse(obj.retired_directory_exists)
+        self.assertFalse(obj.archive_directory_exists)
 
         with self.assertRaises(ValueError):
             obj.create_directory()
@@ -117,7 +117,7 @@ class FakePagesTest(SimpleTestCase):
         obj.headline = "something else"
         self.assertTrue(obj.has_recommended_metadata())
 
-    def test_retiredpage(self):
+    def test_archivedpage(self):
         p = PageList()['my-fake-page']
         p.__str__()
         p.__repr__()
@@ -167,14 +167,14 @@ class FakePagesTest(SimpleTestCase):
         with self.assertRaises(CommandError):
             call_command("createpage", "test-page")
 
-    def test_retirepage(self):
-        p = Page(slug='test-retired-page', published=True, description="TK")
+    def test_archivepage(self):
+        p = Page(slug='test-archived-page', published=True, description="TK")
         p.create_directory()
-        call_command("retirepage", p.slug)
+        call_command("archivepage", p.slug)
         with self.assertRaises(CommandError):
-            call_command("retirepage", p.slug)
+            call_command("archivepage", p.slug)
         with self.assertRaises(CommandError):
-            call_command("retirepage", "hello-wtf")
+            call_command("archivepage", "hello-wtf")
 
     def test_warnings(self):
         exceptions.BadMetadata()
@@ -286,7 +286,7 @@ foo:: bar;:
         Test the page caching
         """
         before = PageList()
-        cache_path = os.path.join(get_retired_directory(), '.cache')
+        cache_path = os.path.join(get_archive_directory(), '.cache')
         if os.path.exists(cache_path):
             os.remove(cache_path)
         call_command("cachepages")

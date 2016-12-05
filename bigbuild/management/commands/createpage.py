@@ -59,7 +59,7 @@ class Command(BaseCommand):
             # If the directory already exists and we're not forcing creation
             # an error should be thrown.
             if (
-                page.directory_exists or page.retired_directory_exists
+                page.directory_exists or page.archive_directory_exists
             ) and not self.force:
                     raise CommandError(
                         self.style.ERROR('Page directory already exists')

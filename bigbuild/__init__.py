@@ -21,15 +21,15 @@ def get_page_directory():
     return path
 
 
-def get_retired_directory():
+def get_archive_directory():
     """
-    Returns the RETIRED_DIR where retired pages are configured.
+    Returns the BIGBUILD_ARCHIVE_DIR where archived pages are configured.
     """
-    # Return the RETIRED_DIR settings, if it's been set, or fall back to the default.
+    # Return the BIGBUILD_ARCHIVE_DIR settings, if it's been set, or fall back to the default.
     path = getattr(
         settings,
-        'BIGBUILD_RETIRED_DIR',
-        os.path.join(settings.BASE_DIR, '.retired')
+        'BIGBUILD_ARCHIVE_DIR',
+        os.path.join(settings.BASE_DIR, '.archive')
     )
     # Make the directory if it doesn't exist already
     os.path.exists(path) or os.mkdir(path)

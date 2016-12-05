@@ -10,9 +10,9 @@ from bigbuild.exceptions import (
     MissingMetadataWarning,
     MissingRecommendedMetadataWarning
 )
-from bigbuild.models import Page, RetiredPage
+from bigbuild.models import Page, ArchivedPage
 from dateutil.parser import parse as dateparse
-from bigbuild import get_page_directory, get_retired_directory
+from bigbuild import get_page_directory, get_archive_directory
 logger = logging.getLogger(__name__)
 
 
@@ -23,19 +23,19 @@ class PageList(Sequence):
     def __init__(self):
         # Set the page directories
         self.dynamic_directory = get_page_directory()
-        self.retired_directory = get_retired_directory()
+        self.archived_directory = get_archive_directory()
 
         # Set the cache path
-        self.retired_cache_path = os.path.join(self.retired_directory, '.cache')
+        self.archived_cache_path = os.path.join(self.archived_directory, '.cache')
 
         # Pull the pages
         self.dynamic_pages = self.get_dynamic_pages()
-        self.retired_pages = self.get_retired_pages()
+        self.archived_pages = self.get_archived_pages()
 
-        # Create a combined list of live pages and retired pages
+        # Create a combined list of live pages and archived pages
         self.pages = []
         self.pages.extend(self.dynamic_pages)
-        self.pages.extend(self.retired_pages)
+        self.pages.extend(self.archived_pages)
 
         # Sort first by reverse chron
         self.pages = sorted(
@@ -122,31 +122,31 @@ class PageList(Sequence):
         logger.debug("{} dynamic pages retrieved".format(len(page_list)))
         return page_list
 
-    def get_retired_pages(self):
+    def get_archived_pages(self):
         """
-        Returns a list of RetiredPage objects ready to be built
+        Returns a list of ArchivedPage objects ready to be built
         in this environment.
         """
         # Pull the cached data if it exists
-        if os.path.exists(self.retired_cache_path):
-            logger.debug("Loading cached retired page list")
-            with open(self.retired_cache_path, 'r') as f:
+        if os.path.exists(self.archived_cache_path):
+            logger.debug("Loading cached archived page list")
+            with open(self.archived_cache_path, 'r') as f:
                 page_list = []
-                dict_list = json.load(f)['retired_pages']
+                dict_list = json.load(f)['archived_pages']
                 for d in dict_list:
                     d['pub_date'] = dateparse(d['pub_date'])
-                    page = RetiredPage(**d)
+                    page = ArchivedPage(**d)
                     if page.should_build():
                         page_list.append(page)
         # Otherwise get them from the YAML
         else:
-            logger.debug("Retrieving YAML retired page list")
+            logger.debug("Retrieving YAML archived page list")
             page_list = []
-            for d in os.listdir(self.retired_directory):
-                page = self.get_page(d, RetiredPage)
+            for d in os.listdir(self.archived_directory):
+                page = self.get_page(d, ArchivedPage)
                 if page and page.should_build():
                     page_list.append(page)
 
         # Log and return
-        logger.debug("{} retired pages retrieved".format(len(page_list)))
+        logger.debug("{} archived pages retrieved".format(len(page_list)))
         return page_list

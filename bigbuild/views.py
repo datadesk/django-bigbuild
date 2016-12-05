@@ -6,8 +6,8 @@ from django.urls import reverse
 from django.http import Http404
 from django.conf import settings
 from django.views.static import serve
-from bigbuild.models import PageList, Page, RetiredPage
-from bigbuild import get_page_directory, get_retired_directory, get_base_url
+from bigbuild.models import PageList, Page, ArchivedPage
+from bigbuild import get_page_directory, get_archive_directory, get_base_url
 from bigbuild.management.commands.build import Command as Build
 from bakery.views import (
     BuildableTemplateView,
@@ -141,7 +141,7 @@ class PageDetailView(BuildableDetailView):
         if isinstance(obj, Page):
             super(PageDetailView, self).build_object(obj)
             self.build_static_directory(obj)
-        elif isinstance(obj, RetiredPage):
+        elif isinstance(obj, ArchivedPage):
             target = os.path.join(self.get_build_directory(), obj.get_absolute_url()[1:])
             os.path.exists(target) and shutil.rmtree(target)
             if settings.BAKERY_GZIP:
@@ -156,11 +156,11 @@ class PageDetailView(BuildableDetailView):
         [self.build_object(o) for o in self.get_queryset()]
 
 
-class PageRetireView(PageDetailView):
+class PageArchiveView(PageDetailView):
 
     def get_context_data(self, object=None):
-        context = super(PageRetireView, self).get_context_data(object=object)
-        context['RETIREMENT'] = True
+        context = super(PageArchiveView, self).get_context_data(object=object)
+        context['ARCHIVAL'] = True
         return context
 
 
@@ -178,11 +178,11 @@ def page_static_serve(request, slug, path):  # pragma: no cover
             document_root=get_page_directory(),
             show_indexes=True
         )
-    # If it can't try to fallback to the RETIRED_DIR
+    # If it can't try to fallback to the BIGBUILD_ARCHIVE_DIR
     except Http404:
         return serve(
             request,
             path,
-            document_root=get_retired_directory(),
+            document_root=get_archive_directory(),
             show_indexes=True
         )

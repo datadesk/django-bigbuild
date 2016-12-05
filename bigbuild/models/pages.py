@@ -12,7 +12,7 @@ import frontmatter
 from bigbuild.models import BasePage
 from bigbuild.exceptions import BadMetadata
 from django.template import Engine, Context
-from bigbuild import get_page_directory, get_retired_directory
+from bigbuild import get_page_directory, get_archive_directory
 logger = logging.getLogger(__name__)
 
 
@@ -28,18 +28,18 @@ class Page(BasePage):
         return get_page_directory()
 
     @property
-    def retired_directory_path(self):
+    def archive_directory_path(self):
         """
-        Returns the path where this page would be retired, if it were retired.
+        Returns the path where this page would be archived, if it were archived.
         """
-        return os.path.join(get_retired_directory(), self.slug)
+        return os.path.join(get_archive_directory(), self.slug)
 
     @property
-    def retired_directory_exists(self):
+    def archive_directory_exists(self):
         """
-        Tests whether a retired directory for this slug already exists.
+        Tests whether a archived directory for this slug already exists.
         """
-        return os.path.exists(self.retired_directory_path)
+        return os.path.exists(self.archive_directory_path)
 
     def create_directory(
         self,
