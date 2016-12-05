@@ -71,5 +71,5 @@ class Command(BaseCommand):
             if not options['keep_page']:
                 shutil.rmtree(p.dynamic_directory_path)
 
-            # Update the cache
-            call_command("cachepages")
+        # Update the cache
+        call_command("cachepages")

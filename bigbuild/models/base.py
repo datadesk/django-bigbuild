@@ -12,6 +12,7 @@ from django.conf import settings
 from django.utils import timezone
 from greeking import latimes_ipsum
 from django.test import RequestFactory
+from bigbuild import get_page_directory
 from bigbuild import get_archive_directory
 from bigbuild.exceptions import BadMetadata
 from django.template import Engine, RequestContext
@@ -179,6 +180,10 @@ class BasePage(object):
     #
     # File pathing
     #
+
+    @property
+    def base_directory(self):
+        return get_page_directory()
 
     @property
     def dynamic_directory_path(self):

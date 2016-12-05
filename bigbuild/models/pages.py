@@ -10,7 +10,6 @@ import shutil
 import logging
 import frontmatter
 from bigbuild.models import BasePage
-from bigbuild import get_page_directory
 from bigbuild.exceptions import BadMetadata
 from django.template import Engine, Context
 logger = logging.getLogger(__name__)
@@ -20,13 +19,6 @@ class Page(BasePage):
     """
     A custom page published via static.latimes.com
     """
-    @property
-    def base_directory(self):
-        """
-        Returns base directory for pages.
-        """
-        return get_page_directory()
-
     def create_directory(
         self,
         force=False,

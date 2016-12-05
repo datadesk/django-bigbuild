@@ -75,7 +75,7 @@ USE_TZ = True
 TEMPLATES=[
     {
         'BACKEND': 'django.template.backends.django.DjangoTemplates',
-        'DIRS': [os.path.join(BASE_DIR, "pages"),],
+        'DIRS': [os.path.join(BASE_DIR, "pages"), os.path.join(BASE_DIR, ".archive", "static")],
         'APP_DIRS': True,
         'OPTIONS': {},
     },
