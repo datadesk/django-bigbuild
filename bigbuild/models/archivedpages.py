@@ -13,4 +13,4 @@ class ArchivedPage(BasePage):
         """
         Returns the metadata.md path where this page will be configured.
         """
-        return os.path.join(self.archive_dynamic_directory_path, 'metadata.md')
+        return os.path.join(self.archive_static_directory_path, 'metadata.md')
