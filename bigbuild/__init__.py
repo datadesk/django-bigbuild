@@ -1,7 +1,6 @@
 import os
 from git import Repo
 from django.conf import settings
-from six.moves.urllib.parse import urljoin
 default_app_config = 'bigbuild.apps.BigbuildConfig'
 
 
@@ -68,6 +67,6 @@ def get_base_url():
         # Get the branch name
         repo_branch = get_repo_branch()
         # Put the branch name ahead of the base url
-        return urljoin("/", repo_branch, base_url)
+        return os.path.join("/", repo_branch, base_url)
     else:
-        return urljoin("/", base_url)
+        return os.path.join("/", base_url)

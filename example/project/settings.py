@@ -84,9 +84,10 @@ TEMPLATES=[
 BIGBUILD_GIT_DIR = os.path.join(BASE_DIR, "../")
 BIGBUILD_BASE_URL = "/projects/"
 BIGBUILD_PAGE_PUBLICATION_STATUS = 'live'
+BIGBUILD_BRANCH_BUILD = True
 
 BUILD_DIR = os.path.join(BASE_DIR, "..", ".build")
-BAKERY_GZIP=False
+BAKERY_GZIP = False
 BAKERY_VIEWS=(
     'bigbuild.views.IndexRedirectView',
     'bigbuild.views.PageListView',
