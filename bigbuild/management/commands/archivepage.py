@@ -24,12 +24,18 @@ class Command(BaseCommand):
         )
 
     def get_build_directory(self):
+        """
+        Returns the location of django-bakery's build directory.
+        """
         if getattr(settings, 'BUILD_DIR', False):
             return settings.BUILD_DIR
         else:
             return os.path.join(settings.BASE_DIR, '.build')
 
     def handle(self, *args, **options):
+        """
+        Make it happen.
+        """
         # Loop through the slugs
         for slug in options['slug']:
             # Pull the object

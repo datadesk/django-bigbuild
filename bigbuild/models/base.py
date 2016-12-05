@@ -61,6 +61,21 @@ class BasePage(object):
     def __str__(self):
         return str(self.slug)
 
+    #
+    # URLs
+    #
+
+    @models.permalink
+    def get_absolute_url(self):
+        return ('bigbuild-page-detail', [self.slug])
+
+    def get_static_url(self):
+        return os.path.join(self.get_absolute_url(), 'static') + "/"
+
+    #
+    # Serialization
+    #
+
     def to_json(self):
         d = self.__dict__
         d['pub_date'] = str(d['pub_date'])
@@ -89,12 +104,9 @@ class BasePage(object):
             d['data'] = self.data
         return d
 
-    @models.permalink
-    def get_absolute_url(self):
-        return ('bigbuild-page-detail', [self.slug])
-
-    def get_static_url(self):
-        return os.path.join(self.get_absolute_url(), 'static') + "/"
+    #
+    # Actions
+    #
 
     def delete(self):
         """
@@ -109,57 +121,6 @@ class BasePage(object):
         from bigbuild.views import PageDetailView
         view = PageDetailView()
         view.build_object(self)
-
-    @property
-    def directory_path(self):
-        """
-        Returns the directory path where this page will exist.
-        """
-        return os.path.join(self.base_directory, self.slug)
-
-    @property
-    def directory_exists(self):
-        """
-        Tests whether the page directory for this object exists.
-
-        Returns True or False
-        """
-        return os.path.exists(self.directory_path)
-
-    @property
-    def index_path(self):
-        """
-        Returns the index.html path where this page will be marked up.
-        """
-        return os.path.join(self.directory_path, 'index.html')
-
-    @property
-    def frontmatter_path(self):
-        """
-        Returns the metadata.md path where this page will be configured.
-        """
-        return os.path.join(self.directory_path, 'metadata.md')
-
-    @property
-    def static_path(self):
-        """
-        Returns the path to the static subdirectory for extra files.
-        """
-        return os.path.join(self.directory_path, 'static')
-
-    @property
-    def checklist_path(self):
-        """
-        Returns the checklist.md path where the checklist will be stored.
-        """
-        return os.path.join(self.directory_path, 'checklist.md')
-
-    @property
-    def data_path(self):
-        """
-        Returns the path to the data subdirectory for structured data files.
-        """
-        return os.path.join(self.directory_path, 'data')
 
     @property
     def rendered_content(self):
@@ -214,6 +175,65 @@ class BasePage(object):
             # Render it out as flat HTML
             self.content = self.rendered_content
 
+    #
+    # File pathing
+    #
+
+    @property
+    def directory_path(self):
+        """
+        Returns the directory path where this page will exist.
+        """
+        return os.path.join(self.base_directory, self.slug)
+
+    @property
+    def directory_exists(self):
+        """
+        Tests whether the page directory for this object exists.
+
+        Returns True or False
+        """
+        return os.path.exists(self.directory_path)
+
+    @property
+    def index_path(self):
+        """
+        Returns the index.html path where this page will be marked up.
+        """
+        return os.path.join(self.directory_path, 'index.html')
+
+    @property
+    def frontmatter_path(self):
+        """
+        Returns the metadata.md path where this page will be configured.
+        """
+        return os.path.join(self.directory_path, 'metadata.md')
+
+    @property
+    def static_path(self):
+        """
+        Returns the path to the static subdirectory for extra files.
+        """
+        return os.path.join(self.directory_path, 'static')
+
+    @property
+    def checklist_path(self):
+        """
+        Returns the checklist.md path where the checklist will be stored.
+        """
+        return os.path.join(self.directory_path, 'checklist.md')
+
+    @property
+    def data_path(self):
+        """
+        Returns the path to the data subdirectory for structured data files.
+        """
+        return os.path.join(self.directory_path, 'data')
+
+    #
+    # Validation
+    #
+
     def is_metadata_valid(self):
         """
         Tests if the metadata is valid and returns True or False.
@@ -257,6 +277,10 @@ class BasePage(object):
             if md[f] == getattr(boilerplate, f):
                 return False
         return True
+
+    #
+    # Publication controls
+    #
 
     @property
     def pub_status(self):
