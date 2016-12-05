@@ -21,7 +21,7 @@ extra:
 headline: This is not a headline
 image_url: ''
 pub_date: 2016-07-28 00:32:00
-published: false
+published: true
 show_in_feeds: true
 slug: foobar
 ---

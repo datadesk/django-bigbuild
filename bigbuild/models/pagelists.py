@@ -135,8 +135,9 @@ class PageList(Sequence):
                 dict_list = json.load(f)['retired_pages']
                 for d in dict_list:
                     d['pub_date'] = dateparse(d['pub_date'])
-                    p = RetiredPage(**d)
-                    page_list.append(p)
+                    page = RetiredPage(**d)
+                    if page.should_build():
+                        page_list.append(page)
         # Otherwise get them from the YAML
         else:
             logger.debug("Retrieving YAML retired page list")
