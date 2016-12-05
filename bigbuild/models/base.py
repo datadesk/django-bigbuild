@@ -104,6 +104,22 @@ class BasePage(object):
             d['data'] = self.data
         return d
 
+    @property
+    def rendered_content(self):
+        """
+        Returns the page's contents, which can contain Django templating tags, rendered as simple HTML.
+        """
+        engine = Engine.get_default()
+        template = engine.from_string(self.content)
+        context = RequestContext(
+            RequestFactory().get(self.get_absolute_url()),
+            {
+                "object": self,
+                'STATIC_URL': self.get_static_url()
+            }
+        )
+        return template.render(context)
+
     #
     # Actions
     #
@@ -121,22 +137,6 @@ class BasePage(object):
         from bigbuild.views import PageDetailView
         view = PageDetailView()
         view.build_object(self)
-
-    @property
-    def rendered_content(self):
-        """
-        Returns the page's contents, which can contain Django templating tags, rendered as simple HTML.
-        """
-        engine = Engine.get_default()
-        template = engine.from_string(self.content)
-        context = RequestContext(
-            RequestFactory().get(self.get_absolute_url()),
-            {
-                "object": self,
-                'STATIC_URL': self.get_static_url()
-            }
-        )
-        return template.render(context)
 
     def sync_frontmatter(self):
         """
