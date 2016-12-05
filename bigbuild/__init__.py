@@ -1,7 +1,6 @@
 import os
 from git import Repo
 from django.conf import settings
-from django.conf.urls import url
 from six.moves.urllib.parse import urljoin
 default_app_config = 'bigbuild.apps.BigbuildConfig'
 
