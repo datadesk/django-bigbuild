@@ -41,6 +41,11 @@ basepatterns = [
         feeds.LatestPages(),
         name="bigbuild-feeds-latest"
     ),
+    url(
+        r'^robots.txt$',
+        views.RobotsView.as_view(),
+        name="bigbuild-robots-txt"
+    ),
 ]
 
 
