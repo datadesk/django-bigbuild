@@ -279,7 +279,7 @@ class BasePage(object):
                 'headline': {"type": "string", "blank": True},
                 'byline': {"type": "string", "blank": True},
                 'description': {"type": "string", "blank": True},
-                'image_url': {"type": "string", "blank": True},
+                'image_url': {"type": "any", "blank": True},
                 'pub_date': {"type": "any"},
                 'published': {"type": "boolean"},
                 'show_in_feeds': {"type": "boolean"},
@@ -307,9 +307,13 @@ class BasePage(object):
             # If it's an empty string cry foul
             if not md.get(f, ''):
                 return False
+            if f == 'image_url':
+                if md[f] == boilerplate.image.url:
+                    return False
             # Same thing if the value is from our boilerplate
-            if md[f] == getattr(boilerplate, f):
-                return False
+            else:
+                if md[f] == getattr(boilerplate, f):
+                    return False
         return True
 
     #

@@ -98,9 +98,6 @@ class FakePagesTest(SimpleTestCase):
             obj.create_directory()
         self.assertTrue(obj.is_metadata_valid())
 
-        obj.image_url = 100
-        self.assertFalse(obj.is_metadata_valid())
-
         obj.image_url = ''
         obj.pub_date = 'foobar'
         self.assertFalse(obj.is_metadata_valid())
