@@ -4,6 +4,7 @@ import os
 import yaml
 import shutil
 import logging
+import bigbuild
 import validictory
 import frontmatter
 from django.db import models
@@ -12,8 +13,6 @@ from django.conf import settings
 from django.utils import timezone
 from greeking import latimes_ipsum
 from django.test import RequestFactory
-from bigbuild import get_page_directory
-from bigbuild import get_archive_directory
 from bigbuild.exceptions import BadMetadata
 from django.template import Engine, RequestContext
 from django.template.defaultfilters import slugify
@@ -186,7 +185,7 @@ class BasePage(object):
         """
         Returns the directory path where this page will exist.
         """
-        return os.path.join(get_page_directory(), self.slug)
+        return os.path.join(bigbuild.get_page_directory(), self.slug)
 
     @property
     def dynamic_directory_exists(self):
@@ -237,7 +236,7 @@ class BasePage(object):
         """
         Returns the path where this page's dynamic content would be archived, if it were archived.
         """
-        return os.path.join(get_archive_directory(), 'dynamic', self.slug)
+        return os.path.join(bigbuild.get_archive_directory(), 'dynamic', self.slug)
 
     @property
     def archive_dynamic_directory_exists(self):
@@ -251,7 +250,7 @@ class BasePage(object):
         """
         Returns the path where this page's dynamic static would be archived, if it were archived.
         """
-        return os.path.join(get_archive_directory(), 'static', self.slug)
+        return os.path.join(bigbuild.get_archive_directory(), 'static', self.slug)
 
     #
     # Validation
