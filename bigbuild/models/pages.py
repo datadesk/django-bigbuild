@@ -102,7 +102,8 @@ class Page(BasePage):
         """
         template = self.get_template("bigbuild/pages/checklist.md-tpl")
         md = template.render(Context(dict(object=self)))
-        with codecs.open(self.checklist_path, 'w', 'utf-8') as f:
+        checklist_path = os.path.join(self.dynamic_directory_path, 'checklist.md')
+        with codecs.open(checklist_path, 'w', 'utf-8') as f:
             f.write(md)
 
     def get_template(self, name):

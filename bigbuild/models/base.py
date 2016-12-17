@@ -218,13 +218,6 @@ class BasePage(object):
         return os.path.join(self.dynamic_directory_path, 'static')
 
     @property
-    def checklist_path(self):
-        """
-        Returns the checklist.md path where the checklist will be stored.
-        """
-        return os.path.join(self.dynamic_directory_path, 'checklist.md')
-
-    @property
     def data_path(self):
         """
         Returns the path to the data subdirectory for structured data files.
