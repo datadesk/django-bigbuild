@@ -11,6 +11,10 @@ GitPython
 pytz
 six
 
+# Documentation
+sphinx
+sphinx-autobuild
+
 # Testing
 flake8
 coverage
