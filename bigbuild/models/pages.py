@@ -121,9 +121,10 @@ class Page(BasePage):
             post = frontmatter.load(f)
             # Loop through any data files
             self.data = {}
+            data_path = os.path.join(self.dynamic_directory_path, 'data')
             for key, path in post.metadata.get('data', {}).items():
                 # Generate what the path to the file ought to be
-                p = os.path.join(self.data_path, path)
+                p = os.path.join(data_path, path)
                 # Toss an error if it doesn't exist
                 if not os.path.exists(p):
                     raise BadMetadata("Data file could not be found at %s" % p)

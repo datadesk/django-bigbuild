@@ -215,24 +215,25 @@ foo:: bar;:
 
     def test_data(self):
         p = PageList()['my-second-fake-page']
+        data_path = os.path.join(p.dynamic_directory_path, 'data')
 
         p.data = {"foo": "bar.csv"}
         p.write_frontmatter()
-        with open(os.path.join(p.data_path, 'bar.csv'), 'w+') as f:
+        with open(os.path.join(data_path, 'bar.csv'), 'w+') as f:
             f.write('foo,bar')
         p.sync_frontmatter()
         p.metadata['data']['foo']
 
         p.data = {"foo": "bar.json"}
         p.write_frontmatter()
-        with open(os.path.join(p.data_path, 'bar.json'), 'w+') as f:
+        with open(os.path.join(data_path, 'bar.json'), 'w+') as f:
             f.write('[{"foo": "bar"}]')
         p.sync_frontmatter()
         p.metadata['data']['foo']
 
         p.data = {"foo": "bar.yml"}
         p.write_frontmatter()
-        with open(os.path.join(p.data_path, 'bar.yml'), 'w+') as f:
+        with open(os.path.join(data_path, 'bar.yml'), 'w+') as f:
             f.write('- foo: bar')
         p.sync_frontmatter()
         p.metadata['data']['foo']
@@ -247,8 +248,9 @@ foo:: bar;:
         p.data = {}
         p.write_frontmatter()
 
-        os.path.exists(p.data_path) or os.mkdir(p.data_path)
-        with open(os.path.join(p.data_path, 'foo.txt'), 'w+') as f:
+        data_path = os.path.join(p.dynamic_directory_path, 'data')
+        os.path.exists(data_path) or os.mkdir(data_path)
+        with open(os.path.join(data_path, 'foo.txt'), 'w+') as f:
             f.write("foo,bar")
         p.data = {"foo": "foo.txt"}
         p.write_frontmatter()

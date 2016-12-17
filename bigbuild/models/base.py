@@ -218,13 +218,6 @@ class BasePage(object):
         return os.path.join(self.dynamic_directory_path, 'static')
 
     @property
-    def data_path(self):
-        """
-        Returns the path to the data subdirectory for structured data files.
-        """
-        return os.path.join(self.dynamic_directory_path, 'data')
-
-    @property
     def archive_dynamic_directory_path(self):
         """
         Returns the path where this page's dynamic content would be archived, if it were archived.
