@@ -182,15 +182,11 @@ class BasePage(object):
     #
 
     @property
-    def base_directory(self):
-        return get_page_directory()
-
-    @property
     def dynamic_directory_path(self):
         """
         Returns the directory path where this page will exist.
         """
-        return os.path.join(self.base_directory, self.slug)
+        return os.path.join(get_page_directory(), self.slug)
 
     @property
     def dynamic_directory_exists(self):
