@@ -1,5 +1,6 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
+import os
 from bigbuild.models import Page
 from django.core.management.base import BaseCommand, CommandError
 
@@ -58,10 +59,10 @@ class Command(BaseCommand):
 
             # If the directory already exists and we're not forcing creation
             # an error should be thrown.
-            if page.dynamic_directory_exists and not self.force:
+            if os.path.exists(page.dynamic_directory_path) and not self.force:
                 raise CommandError(self.style.ERROR('Page directory already exists'))
 
-            elif page.archive_dynamic_directory_exists and not self.force:
+            elif os.path.exists(page.archive_dynamic_directory_path) and not self.force:
                 raise CommandError(self.style.ERROR('Page directory already exists'))
 
             # Otherwise we make the page

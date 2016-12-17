@@ -36,7 +36,7 @@ class Page(BasePage):
         argument as true.
         """
         # Check if the directory exists already and act accordingly
-        if self.dynamic_directory_exists:
+        if os.path.exists(self.dynamic_directory_path):
             if force:
                 shutil.rmtree(self.dynamic_directory_path)
             else:

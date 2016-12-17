@@ -188,15 +188,6 @@ class BasePage(object):
         return os.path.join(bigbuild.get_page_directory(), self.slug)
 
     @property
-    def dynamic_directory_exists(self):
-        """
-        Tests whether the page directory for this object exists.
-
-        Returns True or False
-        """
-        return os.path.exists(self.dynamic_directory_path)
-
-    @property
     def index_path(self):
         """
         Returns the index.html path where this page will be marked up.
@@ -223,13 +214,6 @@ class BasePage(object):
         Returns the path where this page's dynamic content would be archived, if it were archived.
         """
         return os.path.join(bigbuild.get_archive_directory(), 'dynamic', self.slug)
-
-    @property
-    def archive_dynamic_directory_exists(self):
-        """
-        Tests whether a archived directory for this page's dynamic content already exists.
-        """
-        return os.path.exists(self.archive_dynamic_directory_path)
 
     @property
     def archive_static_directory_path(self):

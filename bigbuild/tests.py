@@ -91,9 +91,6 @@ class FakePagesTest(SimpleTestCase):
         obj.__repr__()
         obj.get_absolute_url()
 
-        self.assertTrue(obj.dynamic_directory_exists)
-        self.assertFalse(obj.archive_dynamic_directory_exists)
-
         with self.assertRaises(ValueError):
             obj.create_directory()
         self.assertTrue(obj.is_metadata_valid())

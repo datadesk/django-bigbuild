@@ -1,5 +1,6 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
+import os
 import shutil
 from django.core.management import call_command
 from bigbuild.models import PageList, ArchivedPage
@@ -29,7 +30,7 @@ class Command(BaseCommand):
                 raise CommandError("Slug (%s) is not a ArchivedPage object" % slug)
 
             # Make sure the dynamic page is archived (some of our older retired pages are static-only)
-            if not p.archive_dynamic_directory_exists:
+            if not os.path.exists(p.archive_dynamic_directory_path):
                 raise CommandError("Slug (%s) does not have dynamic content archived. It cannot be retrieved." % slug)
 
             # Copy the archive's dynamic page to our live dynamic directory
