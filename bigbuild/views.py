@@ -8,7 +8,6 @@ from django.http import Http404
 from django.conf import settings
 from django.views.static import serve
 from bigbuild.models import PageList, Page, ArchivedPage
-from bigbuild import get_page_directory, get_archive_directory, get_base_url
 from bigbuild.management.commands.build import Command as Build
 from bakery.views import (
     BuildableTemplateView,
@@ -50,14 +49,14 @@ class RobotsView(BuildableTemplateView, BigBuildMixin):
 
     @property
     def build_path(self):
-        return self.joinpath(get_base_url(), "robots.txt")
+        return self.joinpath(bigbuild.get_base_url(), "robots.txt")
 
 
 class IndexRedirectView(BuildableRedirectView, BigBuildMixin):
     """
     Redirects the root URL to /projects/
     """
-    url = get_base_url()
+    url = bigbuild.get_base_url()
 
     @property
     def build_path(self):
@@ -176,7 +175,7 @@ def page_static_serve(request, slug, path):  # pragma: no cover
         return serve(
             request,
             path,
-            document_root=get_page_directory(),
+            document_root=bigbuild.get_page_directory(),
             show_indexes=True
         )
     # If it can't try to fallback to the BIGBUILD_ARCHIVE_DIR
@@ -184,6 +183,6 @@ def page_static_serve(request, slug, path):  # pragma: no cover
         return serve(
             request,
             path,
-            document_root=os.path.join(get_archive_directory(), 'static'),
+            document_root=os.path.join(bigbuild.get_archive_directory(), 'static'),
             show_indexes=True
         )
