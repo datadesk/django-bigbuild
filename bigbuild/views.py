@@ -123,17 +123,23 @@ class PageDetailView(BuildableDetailView):
         """
         Builds an object's static subdirectory.
         """
-        source_dir = obj.static_path
+        # The location of static files in the dynamic page directory
+        source_dir = os.path.join(obj.dynamic_directory_path, 'static')
+
+        # The location in the build directory where we want to copy them
         target_dir = os.path.join(
             self.get_build_directory(),
             obj.get_static_url()[1:]
         )
+
+        # An internal django-bakery trick to gzip them if we need to
         if settings.BAKERY_GZIP:
             Build().copytree_and_gzip(
                 source_dir,
                 target_dir
             )
         else:
+            # Or a more vanilla way of copying the files with Python
             os.path.exists(target_dir) and shutil.rmtree(target_dir)
             shutil.copytree(source_dir, target_dir)
 

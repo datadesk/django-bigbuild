@@ -202,13 +202,6 @@ class BasePage(object):
         return os.path.join(self.dynamic_directory_path, 'metadata.md')
 
     @property
-    def static_path(self):
-        """
-        Returns the path to the static subdirectory for extra files.
-        """
-        return os.path.join(self.dynamic_directory_path, 'static')
-
-    @property
     def archive_dynamic_directory_path(self):
         """
         Returns the path where this page's dynamic content would be archived, if it were archived.

@@ -84,14 +84,15 @@ class Page(BasePage):
         """
         Creates a ./static/ subdirectory within the page directory.
         """
-        os.mkdir(self.static_path)
+        static_path = os.path.join(self.dynamic_directory_path, 'static')
+        os.mkdir(static_path)
 
-        css_path = os.path.join(self.static_path, 'style.css')
+        css_path = os.path.join(static_path, 'style.css')
         css = self.get_template("bigbuild/pages/style.css-tpl").source
         with codecs.open(css_path, 'w', 'utf-8') as f:
             f.write(css)
 
-        js_path = os.path.join(self.static_path, 'app.js')
+        js_path = os.path.join(static_path, 'app.js')
         js = self.get_template("bigbuild/pages/app.js-tpl").source
         with codecs.open(js_path, 'w', 'utf-8') as f:
             f.write(js)
