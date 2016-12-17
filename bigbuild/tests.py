@@ -112,6 +112,7 @@ class FakePagesTest(SimpleTestCase):
 
         obj.byline = "foobar"
         obj.headline = "something else"
+        obj.description = "even more"
         self.assertTrue(obj.has_recommended_metadata())
 
     def test_archivedpage(self):

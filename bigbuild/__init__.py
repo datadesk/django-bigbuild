@@ -4,9 +4,21 @@ from django.conf import settings
 default_app_config = 'bigbuild.apps.BigbuildConfig'
 
 
+def get_build_directory():
+    """
+    Returns the django-bakery BUILD_DIR where pages will be built.
+    """
+    # If the user has configured a BIGBUILD_BUILD_DIR, use that.
+    if getattr(settings, 'BUILD_DIR', None):
+        return settings.BUILD_DIR
+    else:
+        # And if they don't return the default
+        return os.path.join(settings.BASE_DIR, '.build')
+
+
 def get_page_directory():
     """
-    Returns the PAGE_DIR where dynamic pages are configured.
+    Returns the BIGBUILD_PAGE_DIR where dynamic pages are configured.
     """
     # Return the PAGE_DIR settings, if it's been set, or fall back to the default.
     path = getattr(

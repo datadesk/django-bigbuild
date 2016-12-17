@@ -2,7 +2,7 @@
 # -*- coding: utf-8 -*-
 import os
 import shutil
-from django.conf import settings
+import bigbuild
 from bigbuild.views import PageArchiveView
 from bigbuild.models import PageList, Page
 from django.core.management import call_command
@@ -22,15 +22,6 @@ class Command(BaseCommand):
             default=False,
             help='Do not delete the page directory as part of the archival'
         )
-
-    def get_build_directory(self):
-        """
-        Returns the location of django-bakery's build directory.
-        """
-        if getattr(settings, 'BUILD_DIR', False):
-            return settings.BUILD_DIR
-        else:
-            return os.path.join(settings.BASE_DIR, '.build')
 
     def handle(self, *args, **options):
         """
@@ -56,7 +47,7 @@ class Command(BaseCommand):
 
             # Save that directory to the retired folder
             shutil.copytree(
-                os.path.join(self.get_build_directory(), p.get_absolute_url()[1:]),
+                os.path.join(bigbuild.get_build_directory(), p.get_absolute_url()[1:]),
                 p.archive_static_directory_path,
             )
 
