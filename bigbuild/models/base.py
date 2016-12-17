@@ -257,13 +257,6 @@ class BasePage(object):
         """
         return os.path.join(get_archive_directory(), 'static', self.slug)
 
-    @property
-    def archive_static_directory_exists(self):
-        """
-        Tests whether a archived directory for this page's dynamic content already exists.
-        """
-        return os.path.exists(self.archive_static_directory_path)
-
     #
     # Validation
     #
