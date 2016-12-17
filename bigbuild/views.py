@@ -2,6 +2,7 @@
 # -*- coding: utf-8 -*-
 import os
 import shutil
+import bigbuild
 from django.urls import reverse
 from django.http import Http404
 from django.conf import settings
@@ -113,12 +114,6 @@ class PageDetailView(BuildableDetailView):
             'STATIC_URL': self.object.get_static_url()
         }
 
-    def get_build_directory(self):
-        if getattr(settings, 'BUILD_DIR', False):
-            return settings.BUILD_DIR
-        else:
-            return os.path.join(settings.BASE_DIR, '.build')
-
     def build_static_directory(self, obj):
         """
         Builds an object's static subdirectory.
@@ -128,7 +123,7 @@ class PageDetailView(BuildableDetailView):
 
         # The location in the build directory where we want to copy them
         target_dir = os.path.join(
-            self.get_build_directory(),
+            bigbuild.get_build_directory(),
             obj.get_static_url()[1:]
         )
 
@@ -148,7 +143,7 @@ class PageDetailView(BuildableDetailView):
             super(PageDetailView, self).build_object(obj)
             self.build_static_directory(obj)
         elif isinstance(obj, ArchivedPage):
-            target = os.path.join(self.get_build_directory(), obj.get_absolute_url()[1:])
+            target = os.path.join(bigbuild.get_build_directory(), obj.get_absolute_url()[1:])
             os.path.exists(target) and shutil.rmtree(target)
             if settings.BAKERY_GZIP:
                 Build().copytree_and_gzip(
