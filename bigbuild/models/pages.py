@@ -19,6 +19,19 @@ class Page(BasePage):
     """
     A custom page published via static.latimes.com
     """
+    def delete(self):
+        """
+        Delete the page directory.
+        """
+        shutil.rmtree(self.page_directory_path)
+
+    @property
+    def frontmatter_path(self):
+        """
+        Returns the metadata.md path where this page will be configured.
+        """
+        return os.path.join(self.page_directory_path, 'metadata.md')
+
     def create_directory(
         self,
         force=False,

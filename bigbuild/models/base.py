@@ -2,7 +2,6 @@
 # -*- coding: utf-8 -*-
 import os
 import yaml
-import shutil
 import logging
 import bigbuild
 import validictory
@@ -129,7 +128,7 @@ class BasePage(object):
         """
         Delete the page directory.
         """
-        shutil.rmtree(self.page_directory_path)
+        raise NotImplementedError
 
     def build(self):
         """
@@ -199,7 +198,7 @@ class BasePage(object):
         """
         Returns the metadata.md path where this page will be configured.
         """
-        return os.path.join(self.page_directory_path, 'metadata.md')
+        raise NotImplementedError
 
     @property
     def archive_dynamic_directory_path(self):
