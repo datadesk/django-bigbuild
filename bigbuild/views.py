@@ -92,6 +92,12 @@ class PageDetailView(BuildableDetailView):
     _queryset = None
 
     def get_queryset(self):
+        """
+        Returns the PageList of all available page objects.
+
+        Employs as simple cache here on the object to avoid reopening
+        the metadata.yml file associated with each page.
+        """
         if self._queryset:
             return self._queryset
         else:
@@ -100,13 +106,22 @@ class PageDetailView(BuildableDetailView):
             return qs
 
     def get_object(self):
+        """
+        Returns the Page object being rendered by this view.
+        """
         qs = self.get_queryset()
         return qs[self.kwargs.get("slug")]
 
     def get_template_names(self):
+        """
+        Returns the template paths to use when rendering this object.
+        """
         return [os.path.join(self.object.slug, "index.html")]
 
     def get_context_data(self, object=None):
+        """
+        Returns the context dictionary to use when rending this page.
+        """
         return {
             'metadata': self.object.metadata,
             'object': self.object,
