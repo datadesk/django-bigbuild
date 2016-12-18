@@ -153,10 +153,18 @@ class PageDetailView(BuildableDetailView):
             shutil.copytree(source_dir, target_dir)
 
     def build_object(self, obj):
+        """
+        Build the provided object
+        """
+        # If it is a Page object ...
         if isinstance(obj, Page):
+            # ... use the default bakery build
             super(PageDetailView, self).build_object(obj)
+            # ... and build the static directory as well.
             self.build_static_directory(obj)
+        # If it is an ArchivedPage object ...
         elif isinstance(obj, ArchivedPage):
+            # ... do a copy and paste from the archive to the build directory
             target = obj.build_directory_path
             os.path.exists(target) and shutil.rmtree(target)
             if settings.BAKERY_GZIP:
