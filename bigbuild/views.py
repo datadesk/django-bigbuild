@@ -116,7 +116,11 @@ class PageDetailView(BuildableDetailView):
         """
         Returns the template paths to use when rendering this object.
         """
-        return [os.path.join(self.object.slug, "index.html")]
+        if isinstance(self.object, Page):
+            template_dir = self.object.page_directory_path
+        elif isinstance(self.object, ArchivedPage):
+            template_dir = self.object.archive_static_directory_path
+        return [os.path.join(template_dir, "index.html")]
 
     def get_context_data(self, object=None):
         """

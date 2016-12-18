@@ -13,6 +13,7 @@ from django.utils import timezone
 from greeking import latimes_ipsum
 from django.test import RequestFactory
 from bigbuild.exceptions import BadMetadata
+from bigbuild.context_processors import bigbuild as bigbuild_cp
 from django.template import Engine, RequestContext
 from django.template.defaultfilters import slugify
 logger = logging.getLogger(__name__)
@@ -110,13 +111,18 @@ class BasePage(object):
         Returns the page's contents, which can contain Django templating tags, rendered as simple HTML.
         """
         engine = Engine.get_default()
+        engine.dirs.extend([
+            bigbuild.get_page_directory(),
+            os.path.join(bigbuild.get_archive_directory(), 'static')
+        ])
         template = engine.from_string(self.content)
         context = RequestContext(
             RequestFactory().get(self.get_absolute_url()),
             {
                 "object": self,
                 'STATIC_URL': self.get_static_url()
-            }
+            },
+            [bigbuild_cp]
         )
         return template.render(context)
 
