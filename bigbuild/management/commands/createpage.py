@@ -59,7 +59,7 @@ class Command(BaseCommand):
 
             # If the directory already exists and we're not forcing creation
             # an error should be thrown.
-            if os.path.exists(page.dynamic_directory_path) and not self.force:
+            if os.path.exists(page.page_directory_path) and not self.force:
                 raise CommandError(self.style.ERROR('Page directory already exists'))
 
             elif os.path.exists(page.archive_dynamic_directory_path) and not self.force:

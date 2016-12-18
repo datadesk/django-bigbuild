@@ -133,7 +133,7 @@ class PageDetailView(BuildableDetailView):
         Builds an object's static subdirectory.
         """
         # The location of static files in the dynamic page directory
-        source_dir = os.path.join(obj.dynamic_directory_path, 'static')
+        source_dir = os.path.join(obj.page_directory_path, 'static')
 
         # The location in the build directory where we want to copy them
         target_dir = os.path.join(

@@ -34,7 +34,7 @@ class Command(BaseCommand):
                 raise CommandError("Slug (%s) does not have dynamic content archived. It cannot be retrieved." % slug)
 
             # Copy the archive's dynamic page to our live dynamic directory
-            shutil.copytree(p.archive_dynamic_directory_path, p.dynamic_directory_path)
+            shutil.copytree(p.archive_dynamic_directory_path, p.page_directory_path)
 
             # Delete the archived directories
             shutil.rmtree(p.archive_dynamic_directory_path)

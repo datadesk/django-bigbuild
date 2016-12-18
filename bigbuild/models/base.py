@@ -129,7 +129,7 @@ class BasePage(object):
         """
         Delete the page directory.
         """
-        shutil.rmtree(self.dynamic_directory_path)
+        shutil.rmtree(self.page_directory_path)
 
     def build(self):
         """
@@ -181,7 +181,7 @@ class BasePage(object):
     #
 
     @property
-    def dynamic_directory_path(self):
+    def page_directory_path(self):
         """
         Returns the directory path where this page will exist.
         """
@@ -192,7 +192,7 @@ class BasePage(object):
         """
         Returns the metadata.md path where this page will be configured.
         """
-        return os.path.join(self.dynamic_directory_path, 'metadata.md')
+        return os.path.join(self.page_directory_path, 'metadata.md')
 
     @property
     def archive_dynamic_directory_path(self):

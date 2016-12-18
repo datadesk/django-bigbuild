@@ -117,7 +117,7 @@ class FakePagesTest(SimpleTestCase):
         p.__str__()
         p.__repr__()
         p.get_absolute_url()
-        p.dynamic_directory_path
+        p.page_directory_path
         p.metadata
         PageDetailView().build_object(p)
 
@@ -212,7 +212,7 @@ foo:: bar;:
 
     def test_data(self):
         p = PageList()['my-second-fake-page']
-        data_path = os.path.join(p.dynamic_directory_path, 'data')
+        data_path = os.path.join(p.page_directory_path, 'data')
 
         p.data = {"foo": "bar.csv"}
         p.write_frontmatter()
@@ -245,7 +245,7 @@ foo:: bar;:
         p.data = {}
         p.write_frontmatter()
 
-        data_path = os.path.join(p.dynamic_directory_path, 'data')
+        data_path = os.path.join(p.page_directory_path, 'data')
         os.path.exists(data_path) or os.mkdir(data_path)
         with open(os.path.join(data_path, 'foo.txt'), 'w+') as f:
             f.write("foo,bar")

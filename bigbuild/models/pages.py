@@ -29,23 +29,23 @@ class Page(BasePage):
         Creates a new directory for the page.
 
         Returns the path to the directory that has been created, which is
-        the same as the self.dynamic_directory_path property.
+        the same as the self.page_directory_path property.
 
         Throws an error if the directory already exists. You can force it
         to overwrite a pre-existing directory by submitting the force keyword
         argument as true.
         """
         # Check if the directory exists already and act accordingly
-        if os.path.exists(self.dynamic_directory_path):
+        if os.path.exists(self.page_directory_path):
             if force:
-                shutil.rmtree(self.dynamic_directory_path)
+                shutil.rmtree(self.page_directory_path)
             else:
                 raise ValueError(
-                    "Page directory already exists at %s" % self.dynamic_directory_path
+                    "Page directory already exists at %s" % self.page_directory_path
                 )
 
         # Make the directory
-        os.mkdir(self.dynamic_directory_path)
+        os.mkdir(self.page_directory_path)
 
         # Add the index template
         self.write_index(
@@ -63,7 +63,7 @@ class Page(BasePage):
         self.write_checklist()
 
         # Return the directory path
-        return self.dynamic_directory_path
+        return self.page_directory_path
 
     def write_index(self, template_name, template_context={}):
         """
@@ -71,7 +71,7 @@ class Page(BasePage):
         """
         template = self.get_template(template_name)
         html = template.render(Context(template_context))
-        index_path = os.path.join(self.dynamic_directory_path, 'index.html')
+        index_path = os.path.join(self.page_directory_path, 'index.html')
         with codecs.open(index_path, 'w', 'utf-8') as f:
             f.write(html)
 
@@ -85,7 +85,7 @@ class Page(BasePage):
         """
         Creates a ./static/ subdirectory within the page directory.
         """
-        static_path = os.path.join(self.dynamic_directory_path, 'static')
+        static_path = os.path.join(self.page_directory_path, 'static')
         os.mkdir(static_path)
 
         css_path = os.path.join(static_path, 'style.css')
@@ -104,7 +104,7 @@ class Page(BasePage):
         """
         template = self.get_template("bigbuild/pages/checklist.md-tpl")
         md = template.render(Context(dict(object=self)))
-        checklist_path = os.path.join(self.dynamic_directory_path, 'checklist.md')
+        checklist_path = os.path.join(self.page_directory_path, 'checklist.md')
         with codecs.open(checklist_path, 'w', 'utf-8') as f:
             f.write(md)
 
@@ -123,7 +123,7 @@ class Page(BasePage):
             post = frontmatter.load(f)
             # Loop through any data files
             self.data = {}
-            data_path = os.path.join(self.dynamic_directory_path, 'data')
+            data_path = os.path.join(self.page_directory_path, 'data')
             for key, path in post.metadata.get('data', {}).items():
                 # Generate what the path to the file ought to be
                 p = os.path.join(data_path, path)
