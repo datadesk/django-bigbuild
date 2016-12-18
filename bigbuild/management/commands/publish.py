@@ -1,3 +1,5 @@
+#!/usr/bin/env python
+# -*- coding: utf-8 -*-
 from django.conf import settings
 from bakery.management.commands.publish import Command as BaseCommand
 
