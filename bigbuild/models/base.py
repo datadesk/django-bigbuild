@@ -12,8 +12,8 @@ from django.conf import settings
 from django.utils import timezone
 from greeking import latimes_ipsum
 from django.test import RequestFactory
+from bigbuild import context_processors
 from bigbuild.exceptions import BadMetadata
-from bigbuild.context_processors import bigbuild as bigbuild_cp
 from django.template import Engine, RequestContext
 from django.template.defaultfilters import slugify
 logger = logging.getLogger(__name__)
@@ -122,7 +122,7 @@ class BasePage(object):
                 "object": self,
                 'STATIC_URL': self.get_static_url()
             },
-            [bigbuild_cp]
+            [context_processors.bigbuild]
         )
         return template.render(context)
 

@@ -7,6 +7,7 @@ from django.urls import reverse
 from django.http import Http404
 from django.conf import settings
 from django.views.static import serve
+from bigbuild import context_processors
 from bigbuild.models import PageList, Page, ArchivedPage
 from bigbuild.management.commands.build import Command as Build
 from bakery.views import (
@@ -21,6 +22,13 @@ class BigBuildMixin(object):
     """
     A class-based view mixin with utilities for our bigbuild pages.
     """
+    def process_context(self, context):
+        """
+        Run bigbuild's custom context processors and return then as part of the provided dictionary.
+        """
+        context.update(context_processors.bigbuild(self.request))
+        return context
+
     def joinpath(self, *args):
         """
         Returns a joined path with the front slash of the first argument always sliced off.
@@ -79,13 +87,14 @@ class PageListView(BuildableTemplateView, BigBuildMixin):
             'PAGE_PUBLICATION_STATUS',
             'working'
         )
-        return {
+        context = {
             'object_list': [p for p in PageList() if p.show_in_feeds],
             'PAGE_PUBLICATION_STATUS': PAGE_PUBLICATION_STATUS
         }
+        return self.process_context(context)
 
 
-class PageDetailView(BuildableDetailView):
+class PageDetailView(BuildableDetailView, BigBuildMixin):
     """
     Renders one of the page objects as an HTML response.
     """
@@ -126,11 +135,12 @@ class PageDetailView(BuildableDetailView):
         """
         Returns the context dictionary to use when rending this page.
         """
-        return {
+        context = {
             'metadata': self.object.metadata,
             'object': self.object,
             'STATIC_URL': self.object.get_static_url()
         }
+        return self.process_context(context)
 
     def build_static_directory(self, obj):
         """
@@ -188,7 +198,7 @@ class PageArchiveView(PageDetailView):
     def get_context_data(self, object=None):
         context = super(PageArchiveView, self).get_context_data(object=object)
         context['ARCHIVAL'] = True
-        return context
+        return self.process_context(context)
 
 
 def page_static_serve(request, slug, path):  # pragma: no cover
