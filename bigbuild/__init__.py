@@ -3,7 +3,11 @@
 import os
 from git import Repo
 from django.conf import settings
+from django.utils.version import get_version
 default_app_config = 'bigbuild.apps.BigbuildConfig'
+
+VERSION = (0, 4, 1, 'final', 0)
+__version__ = get_version(VERSION)
 
 
 def get_build_directory():
