@@ -56,7 +56,7 @@ class Command(BaseCommand):
 
             # Delete the page folder
             if not options['keep_page']:
-                shutil.rmtree(p.page_directory_path)
+                p.delete()
 
         # Update the cache
         call_command("cachepages")

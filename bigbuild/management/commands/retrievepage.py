@@ -37,8 +37,7 @@ class Command(BaseCommand):
             shutil.copytree(p.archive_dynamic_directory_path, p.page_directory_path)
 
             # Delete the archived directories
-            shutil.rmtree(p.archive_dynamic_directory_path)
-            shutil.rmtree(p.archive_static_directory_path)
+            p.delete()
 
         # Update the cache
         call_command("cachepages")
