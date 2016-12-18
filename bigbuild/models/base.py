@@ -188,13 +188,6 @@ class BasePage(object):
         return os.path.join(bigbuild.get_page_directory(), self.slug)
 
     @property
-    def index_path(self):
-        """
-        Returns the index.html path where this page will be marked up.
-        """
-        return os.path.join(self.dynamic_directory_path, 'index.html')
-
-    @property
     def frontmatter_path(self):
         """
         Returns the metadata.md path where this page will be configured.

@@ -71,7 +71,8 @@ class Page(BasePage):
         """
         template = self.get_template(template_name)
         html = template.render(Context(template_context))
-        with codecs.open(self.index_path, 'w', 'utf-8') as f:
+        index_path = os.path.join(self.dynamic_directory_path, 'index.html')
+        with codecs.open(index_path, 'w', 'utf-8') as f:
             f.write(html)
 
     def write_frontmatter(self, path=None):
