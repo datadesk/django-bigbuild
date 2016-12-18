@@ -183,9 +183,16 @@ class BasePage(object):
     @property
     def page_directory_path(self):
         """
-        Returns the directory path where this page will exist.
+        Returns the directory path where this page will be stored.
         """
         return os.path.join(bigbuild.get_page_directory(), self.slug)
+
+    @property
+    def build_directory_path(self):
+        """
+        Returns the directory path where this page will be "baked" as flat files.
+        """
+        return os.path.join(bigbuild.get_build_directory(), self.get_absolute_url()[1:])
 
     @property
     def frontmatter_path(self):

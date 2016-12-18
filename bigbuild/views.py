@@ -157,7 +157,7 @@ class PageDetailView(BuildableDetailView):
             super(PageDetailView, self).build_object(obj)
             self.build_static_directory(obj)
         elif isinstance(obj, ArchivedPage):
-            target = os.path.join(bigbuild.get_build_directory(), obj.get_absolute_url()[1:])
+            target = obj.build_directory_path
             os.path.exists(target) and shutil.rmtree(target)
             if settings.BAKERY_GZIP:
                 Build().copytree_and_gzip(
