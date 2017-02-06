@@ -98,28 +98,20 @@ class PageDetailView(BuildableDetailView, BigBuildMixin):
     """
     Renders one of the page objects as an HTML response.
     """
-    _queryset = None
-
-    def get_queryset(self):
-        """
-        Returns the PageList of all available page objects.
-
-        Employs as simple cache here on the object to avoid reopening
-        the metadata.yml file associated with each page.
-        """
-        if self._queryset:
-            return self._queryset
-        else:
-            qs = PageList()
-            self._queryset = qs
-            return qs
-
     def get_object(self):
         """
         Returns the Page object being rendered by this view.
         """
-        qs = self.get_queryset()
-        return qs[self.kwargs.get("slug")]
+        # Check if it is a dynamic page, if so return it
+        obj = PageList.get_page(self.kwargs.get("slug"), Page)
+        if obj:
+            return obj
+        # Check if it is an archived page, if so return it
+        obj = PageList.get_page(self.kwargs.get("slug"), ArchivedPage)
+        if obj:
+            return obj
+        # Otherwise, 404
+        raise Http404("No page found with the slug '{}'".format(self.kwargs.get("slug")))
 
     def get_template_names(self):
         """
@@ -190,7 +182,7 @@ class PageDetailView(BuildableDetailView, BigBuildMixin):
                 shutil.copytree(obj.archive_static_directory_path, target)
 
     def build_queryset(self):
-        [self.build_object(o) for o in self.get_queryset()]
+        [self.build_object(o) for o in PageList()]
 
 
 class PageArchiveView(PageDetailView):

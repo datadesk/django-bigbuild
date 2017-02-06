@@ -74,7 +74,8 @@ class PageList(Sequence):
             except IndexError:
                 raise IndexError("No page with this key could be found")
 
-    def get_page(self, directory, pagetype):
+    @staticmethod
+    def get_page(directory, pagetype):
         """
         Returns a list of Page objects from the provided directory path.
         """
