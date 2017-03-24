@@ -11,10 +11,16 @@ cache:
   - pip
 
 env:
+  global:
   - BIGBUILD_GIT_BRANCH=$TRAVIS_BRANCH
+  matrix:
+    - DJANGO_VERSION=1.10.6
+    - DJANGO_VERSION=1.11rc1
 
 install:
   - pip install -r requirements.txt
+  - pip uninstall Django
+  - pip install -q Django==$DJANGO_VERSION
 
 script:
   - make test
