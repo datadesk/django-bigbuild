@@ -21,7 +21,6 @@ env:
 
 install:
   - pip install -r requirements.txt
-  - pip uninstall Django
   - pip install -q Django==$DJANGO_VERSION
 
 script:
