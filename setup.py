@@ -113,7 +113,7 @@ system for publishing standalone pages",
         'License :: OSI Approved :: MIT License',
     ],
     install_requires=[
-        'python-frontmatter==0.2.1',
+        'python-frontmatter>=0.4.2',
         'django-bakery>=0.8.11',
         'validictory>=1.0.1',
         'django-compressor>=2.0',
