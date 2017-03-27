@@ -215,6 +215,7 @@ foo:: bar;:
     def test_data(self):
         p = PageList()['my-second-fake-page']
         data_path = os.path.join(p.page_directory_path, 'data')
+        static_path = os.path.join(p.page_directory_path, 'static')
 
         p.data = {"foo": "bar.csv"}
         p.write_frontmatter()
@@ -234,6 +235,20 @@ foo:: bar;:
         p.write_frontmatter()
         with open(os.path.join(data_path, 'bar.yml'), 'w+') as f:
             f.write('- foo: bar')
+        p.sync_frontmatter()
+        p.metadata['data']['foo']
+
+        p.data = {"foo": "data/bar.csv"}
+        p.write_frontmatter()
+        with open(os.path.join(data_path, 'bar.csv'), 'w+') as f:
+            f.write('foo,bar')
+        p.sync_frontmatter()
+        p.metadata['data']['foo']
+
+        p.data = {"foo": "static/bar.csv"}
+        p.write_frontmatter()
+        with open(os.path.join(static_path, 'bar.csv'), 'w+') as f:
+            f.write('foo,bar')
         p.sync_frontmatter()
         p.metadata['data']['foo']
 
