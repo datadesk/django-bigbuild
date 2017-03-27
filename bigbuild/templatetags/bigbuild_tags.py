@@ -1,6 +1,7 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
 import json
+from django import template
 from bigbuild.models import Page
 register = template.Library()
 

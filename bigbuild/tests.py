@@ -11,7 +11,6 @@ from bigbuild import get_archive_directory
 from django.core.management import call_command
 from bigbuild.compressors import SimpleCompressor
 from django.core.management.base import CommandError
-from bigbuild.templatetags.bigbuild_tags import dropcap
 from bigbuild.templatetags.bigbuild_tags import jsonify
 from bigbuild.views import PageListView, PageDetailView
 from compressor.exceptions import UncompressableFileError
@@ -308,22 +307,6 @@ foo:: bar;:
         after = PageList()
         self.assertEqual(before[0].slug, after[0].slug)
         call_command("cachepages")
-
-
-class DropCapTest(SimpleTestCase):
-    """
-    Tests for the dropcap template filter
-    """
-    def test_dropcap(self):
-        self.assertEqual(
-            dropcap("Foo bar"),
-            "<span class='dropcap'>F</span>oo bar"
-        )
-        self.assertEqual(
-            dropcap("Foo bar", autoescape=False),
-            "<span class='dropcap'>F</span>oo bar"
-        )
-        self.assertEqual(dropcap(""), "")
 
 
 class JsonifyTest(SimpleTestCase):
