@@ -1,5 +1,5 @@
 # Dependencies
-python-frontmatter==0.2.1
+python-frontmatter==0.4.2
 django-bakery==0.8.10
 PyYAML==3.11
 validictory==1.0.1
