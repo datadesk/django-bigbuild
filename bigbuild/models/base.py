@@ -90,7 +90,6 @@ class BasePage(object):
         For the purpose of deconstructing this object to Jekyll frontmatter.
         """
         d = dict([
-            ('slug', str(self.slug)),
             ('headline', self.headline),
             ('byline', self.byline),
             ('description', self.description),
@@ -161,7 +160,6 @@ class BasePage(object):
                 )
 
             # Set the basic frontmatter metadata
-            self.slug = post.metadata['slug']
             self.headline = post.metadata['headline']
             self.byline = post.metadata['byline']
             self.description = post.metadata['description']
@@ -231,7 +229,6 @@ class BasePage(object):
         schema = {
             "type": "object",
             "properties": {
-                'slug': {"type": "string"},
                 'headline': {"type": "string", "blank": True},
                 'byline': {"type": "string", "blank": True},
                 'description': {"type": "string", "blank": True},
