@@ -36,7 +36,7 @@ class BigBuildMixin(object):
         Allows for automatically generated URLs from elsewhere in the app be used as relative build paths.
         """
         args = list(args)
-        first = args.pop(0)[1:]
+        first = args.pop(0).lstrip("/")
         args.insert(0, first)
         return os.path.join(*args)
 
@@ -144,7 +144,7 @@ class PageDetailView(BuildableDetailView, BigBuildMixin):
         # The location in the build directory where we want to copy them
         target_dir = os.path.join(
             bigbuild.get_build_directory(),
-            obj.get_static_url()[1:]
+            obj.get_static_url().lstrip("/")
         )
 
         # An internal django-bakery trick to gzip them if we need to

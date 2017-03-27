@@ -19,7 +19,7 @@ class FakeRequestFactory(RequestFactory):
 
     @property
     def path(self):
-        return reverse('bigbuild-feeds-latest')[1:]
+        return reverse('bigbuild-feeds-latest').lstrip("/")
 
 
 class LatestPages(BuildableFeed):
@@ -31,7 +31,7 @@ class LatestPages(BuildableFeed):
 
     @property
     def build_path(self):
-        return reverse('bigbuild-feeds-latest')[1:]
+        return reverse('bigbuild-feeds-latest').lstrip("/")
 
     def items(self):
         """

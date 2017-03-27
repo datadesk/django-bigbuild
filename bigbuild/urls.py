@@ -58,5 +58,5 @@ urlpatterns = [
     ),
 
     # All the base patterns prefixed
-    url('^{}'.format(get_base_url()[1:]), include(basepatterns)),
+    url('^{}'.format(get_base_url().lstrip("/")), include(basepatterns)),
 ]

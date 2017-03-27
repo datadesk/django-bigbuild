@@ -13,7 +13,7 @@ class SitemapView(BuildableListView):
 
     @property
     def build_path(self):
-        return reverse('bigbuild-sitemap')[1:]
+        return reverse('bigbuild-sitemap').lstrip("/")
 
     def get_queryset(self):
         return [p for p in PageList() if p.show_in_feeds]
@@ -33,7 +33,7 @@ class GoogleNewsSitemapView(SitemapView):
 
     @property
     def build_path(self):
-        return reverse('bigbuild-google-news-sitemap')[1:]
+        return reverse('bigbuild-google-news-sitemap').lstrip("/")
 
     def get_queryset(self):
         return [p for p in PageList() if p.show_in_feeds][:25]

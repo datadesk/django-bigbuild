@@ -78,8 +78,7 @@ def get_base_url():
     Returns the base URL for site.
     """
     base_url = getattr(settings, 'BIGBUILD_BASE_URL', '')
-    if base_url.startswith("/"):
-        base_url = base_url[1:]
+    base_url = base_url.lstrip("/")
 
     if getattr(settings, 'BIGBUILD_BRANCH_BUILD', False):
         # Get the branch name

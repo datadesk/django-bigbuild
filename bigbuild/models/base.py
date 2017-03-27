@@ -195,7 +195,7 @@ class BasePage(object):
         """
         Returns the directory path where this page will be "baked" as flat files.
         """
-        return os.path.join(bigbuild.get_build_directory(), self.get_absolute_url()[1:])
+        return os.path.join(bigbuild.get_build_directory(), self.get_absolute_url().lstrip("/"))
 
     @property
     def frontmatter_path(self):

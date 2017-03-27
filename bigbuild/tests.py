@@ -146,7 +146,7 @@ class FakePagesTest(SimpleTestCase):
         self.assertTrue(os.path.exists(
             os.path.join(
                 BUILD_DIR,
-                PageList()['my-fake-page'].get_absolute_url()[1:],
+                PageList()['my-fake-page'].get_absolute_url().lstrip("/"),
                 'index.html'
             )
         ))
