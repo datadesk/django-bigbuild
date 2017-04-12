@@ -251,6 +251,22 @@ foo:: bar;:
         p.sync_frontmatter()
         p.metadata['data']['foo']
 
+        p.data = {"foo": "static/bar.aml"}
+        p.write_frontmatter()
+        with open(os.path.join(static_path, 'bar.aml'), 'w+') as f:
+            f.write("""
+
+key: value
+[array]
+* 1
+* 2
+* 3
+
+""")
+        p.sync_frontmatter()
+        p.metadata['data']['foo']
+        self.assertEqual(p.metadata['data']['foo']['key'], 'value')
+
     def test_baddata(self):
         p = PageList()['my-second-fake-page']
 

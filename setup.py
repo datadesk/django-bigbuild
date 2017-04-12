@@ -120,6 +120,7 @@ system for publishing standalone pages",
         'greeking>=2.2.0',
         'GitPython>=2.0.8',
         'python-dateutil>=2.6.0',
+        'archieml>=0.3.1'
         'pytz',
         'six',
     ],

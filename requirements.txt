@@ -6,6 +6,7 @@ validictory==1.0.1
 django-compressor==2.0
 greeking==2.2.0
 python-dateutil>=2.6.0
+archieml>=0.3.1
 GitPython
 pytz
 six

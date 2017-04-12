@@ -8,6 +8,7 @@ import yaml
 import codecs
 import shutil
 import logging
+import archieml
 import frontmatter
 from bigbuild.models import BasePage
 from bigbuild.exceptions import BadMetadata
@@ -164,6 +165,8 @@ class Page(BasePage):
                     # If it's a YAML file open it t'other way ...
                     elif (p.endswith(".yml") or p.endswith(".yaml")):
                         self.data[key] = yaml.load(f)
+                    elif p.endswith(".aml"):
+                        self.data[key] = archieml.load(f)
                     # If it's none of those throw an error.
                     else:
                         raise BadMetadata(

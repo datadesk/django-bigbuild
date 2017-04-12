@@ -1,6 +1,8 @@
 ---
 byline: byline
 description: ddd
+data:
+    archie: static/data.aml
 extra:
   credits: Credits TK
   more_like_this:
