@@ -23,4 +23,4 @@ class Command(BaseCommand):
     def handle(self, *args, **options):
         page_list = PageList()
         page = page_list[0]
-        print page
+        print(page)
