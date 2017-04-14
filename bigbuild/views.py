@@ -2,12 +2,15 @@
 # -*- coding: utf-8 -*-
 import os
 import shutil
+import logging
 import bigbuild
+import multiprocessing
 from django.urls import reverse
 from django.http import Http404
 from django.conf import settings
 from django.views.static import serve
 from bigbuild import context_processors
+from multiprocessing.pool import ThreadPool
 from bigbuild.models import PageList, Page, ArchivedPage
 from bigbuild.management.commands.build import Command as Build
 from bakery.views import (
@@ -16,6 +19,7 @@ from bakery.views import (
     Buildable404View,
     BuildableRedirectView
 )
+logger = logging.getLogger(__name__)
 
 
 class BigBuildMixin(object):
@@ -174,7 +178,9 @@ class PageDetailView(BuildableDetailView, BigBuildMixin):
             target = obj.build_directory_path
             os.path.exists(target) and shutil.rmtree(target)
             if settings.BAKERY_GZIP:
-                Build().copytree_and_gzip(
+                cmd = Build()
+                cmd.no_pooling = True
+                cmd.copytree_and_gzip(
                     obj.archive_static_directory_path,
                     target
                 )
@@ -182,7 +188,11 @@ class PageDetailView(BuildableDetailView, BigBuildMixin):
                 shutil.copytree(obj.archive_static_directory_path, target)
 
     def build_queryset(self):
-        [self.build_object(o) for o in PageList()]
+        page_list = PageList()
+        cpu_count = multiprocessing.cpu_count()
+        logger.debug("Pooling build on {} CPUs".format(cpu_count))
+        pool = ThreadPool(processes=cpu_count)
+        pool.map(self.build_object, page_list)
 
 
 class PageArchiveView(PageDetailView):
