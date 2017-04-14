@@ -191,7 +191,7 @@ class PageDetailView(BuildableDetailView, BigBuildMixin):
         page_list = PageList()
         cpu_count = multiprocessing.cpu_count()
         logger.debug("Pooling build on {} CPUs".format(cpu_count))
-        pool = ThreadPool(processes=cpu_count)
+        pool = ThreadPool(processes=2)
         pool.map(self.build_object, page_list)
 
 
