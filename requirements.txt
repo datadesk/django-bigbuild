@@ -1,6 +1,6 @@
 # Dependencies
 python-frontmatter==0.4.2
-django-bakery==0.10.0
+django-bakery==0.10.1
 PyYAML==3.11
 validictory==1.0.1
 django-compressor==2.0
