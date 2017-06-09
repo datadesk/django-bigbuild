@@ -251,6 +251,11 @@ foo:: bar;:
         p.sync_frontmatter()
         p.metadata['data']['foo']
 
+    def test_aml(self):
+        p = Page(slug='test-aml', published=True)
+        p.create_directory()
+        static_path = os.path.join(p.page_directory_path, 'static')
+
         p.data = {"foo": "static/bar.aml"}
         p.write_frontmatter()
         with open(os.path.join(static_path, 'bar.aml'), 'w+') as f:
@@ -265,7 +270,10 @@ key: value
 """)
         p.sync_frontmatter()
         p.metadata['data']['foo']
-        self.assertEqual(p.metadata['data']['foo']['key'], 'value')
+        self.assertEqual(p.data_objects['foo']['key'], 'value')
+
+        call_command("archivepage", p.slug)
+        call_command("unarchivepage", p.slug)
 
     def test_baddata(self):
         p = PageList()['my-second-fake-page']

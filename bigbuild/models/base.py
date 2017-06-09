@@ -51,10 +51,12 @@ class BasePage(object):
         self.show_in_feeds = show_in_feeds
         # The content
         self.content = content
-        # Any extras
+        # Any extra context variables
         self.extra = extra
-        # Any structured data
+        # Optional paths to structured data
         self.data = data
+        # Where that structured data will be stored after it is imported
+        self.data_objects = {}
 
     def __repr__(self):
         return "<%s %s>" % (self.__class__.__name__, self.__str__())
@@ -79,6 +81,7 @@ class BasePage(object):
 
     def to_json(self):
         d = self.__dict__
+        del d['data_objects']
         d['pub_date'] = str(d['pub_date'])
         return d
 

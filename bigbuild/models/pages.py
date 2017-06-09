@@ -141,7 +141,6 @@ class Page(BasePage):
             post = frontmatter.load(f)
 
             # Loop through any data files
-            self.data = {}
             for key, path in post.metadata.get('data', {}).items():
 
                 # Generate the path if it's stored in the default `data` directory
@@ -158,15 +157,15 @@ class Page(BasePage):
                 with codecs.open(p, 'r') as f:
                     # If it's a CSV file open it that way...
                     if p.endswith(".csv"):
-                        self.data[key] = list(csv.DictReader(f))
+                        self.data_objects[key] = list(csv.DictReader(f))
                     # If it's a JSON file open it this way ...
                     elif p.endswith(".json"):
-                        self.data[key] = json.load(f)
+                        self.data_objects[key] = json.load(f)
                     # If it's a YAML file open it t'other way ...
                     elif (p.endswith(".yml") or p.endswith(".yaml")):
-                        self.data[key] = yaml.load(f)
+                        self.data_objects[key] = yaml.load(f)
                     elif p.endswith(".aml"):
-                        self.data[key] = archieml.load(f)
+                        self.data_objects[key] = archieml.load(f)
                     # If it's none of those throw an error.
                     else:
                         raise BadMetadata(

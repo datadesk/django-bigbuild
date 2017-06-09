@@ -127,6 +127,10 @@ class PageDetailView(BuildableDetailView, BigBuildMixin):
         """
         Returns the context dictionary to use when rending this page.
         """
+        # If the object has data objects pulled from remote files,
+        # swap those in for the paths here.
+        if self.object.data_objects.keys():
+            self.object.data = self.object.data_objects
         context = {
             'metadata': self.object.metadata,
             'object': self.object,
@@ -186,7 +190,9 @@ class PageDetailView(BuildableDetailView, BigBuildMixin):
 
 
 class PageArchiveView(PageDetailView):
-
+    """
+    Renders a page for archiving.
+    """
     def get_context_data(self, object=None):
         context = super(PageArchiveView, self).get_context_data(object=object)
         context['ARCHIVAL'] = True
