@@ -177,6 +177,11 @@ class BasePage(object):
             except KeyError:
                 self.extra = {}
 
+            try:
+                self.data = post.metadata['data']
+            except KeyError:
+                self.data = {}
+
             # Pull in the content as is
             self.content = post.content
             # Render it out as flat HTML
