@@ -1,5 +1,6 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
+import io
 import os
 import json
 from datetime import datetime
@@ -33,9 +34,10 @@ class Command(BaseCommand):
         page_list = PageList()
 
         # Save the archived pages out to a new cache
-        with open(archive_cache_path, 'w') as f:
-            json.dump(
+        with io.open(archive_cache_path, 'w', encoding='utf8') as f:
+            data = json.dumps(
                 dict(archived_pages=[p.to_json() for p in page_list.archived_pages]),
-                f,
-                default=serializer
+                default=serializer,
+                ensure_ascii=False
             )
+            f.write(unicode(data))
