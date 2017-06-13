@@ -4,6 +4,7 @@ import os
 import yaml
 import logging
 import bigbuild
+import jsonfield
 import validictory
 import frontmatter
 from django.db import models
@@ -15,54 +16,34 @@ from django.test import RequestFactory
 from bigbuild import context_processors
 from bigbuild.exceptions import BadMetadata
 from django.template import Engine, RequestContext
-from django.template.defaultfilters import slugify
+from django.utils.encoding import python_2_unicode_compatible
 logger = logging.getLogger(__name__)
 
 
-class BasePage(object):
+@python_2_unicode_compatible
+class BasePage(models.Model):
     """
     An abstract base class with methods shared by all page classes.
     """
-    def __init__(
-        self,
-        slug,
-        headline="",
-        byline="",
-        description="",
-        image_url="",
-        pub_date=None,
-        published=False,
-        show_in_feeds=True,
-        content='',
-        extra={},
-        data={}
-    ):
-        # The metadata
-        self.slug = slugify(slug)
-        self.headline = headline
-        self.byline = byline
-        self.description = description
-        self.image_url = image_url
-        self.pub_date = pub_date or datetime.now().replace(
-            second=0,
-            microsecond=0
-        )
-        self.published = published
-        self.show_in_feeds = show_in_feeds
-        # The content
-        self.content = content
-        # Any extra context variables
-        self.extra = extra
-        # Optional paths to structured data
-        self.data = data
-        # Where that structured data will be stored after it is imported
-        self.data_objects = {}
+    slug = models.SlugField(primary_key=True, max_length=500)
+    headline = models.CharField(max_length=1000, blank=True, default="")
+    byline = models.CharField(max_length=1000, blank=True, default="")
+    description = models.TextField(blank=True)
+    image_url = models.CharField(max_length=1000, blank=True, default="")
+    pub_date = models.DateTimeField(default=datetime.now)
+    published = models.BooleanField(default=False)
+    show_in_feeds = models.BooleanField(default=False)
+    content = models.TextField(blank=True)
+    extra = jsonfield.JSONField(blank=True)
+    data = jsonfield.JSONField(blank=True)
+    # A cache for data objects after they've been loaded
+    data_objects = {}
 
-    def __repr__(self):
-        return "<%s %s>" % (self.__class__.__name__, self.__str__())
+    class Meta:
+        abstract = True
 
     def __str__(self):
-        return str(self.slug)
+        return self.slug
 
     #
     # URLs
@@ -81,7 +62,7 @@ class BasePage(object):
 
     def to_json(self):
         d = self.__dict__
-        del d['data_objects']
+        del d['_state']
         d['pub_date'] = str(d['pub_date'])
         return d
 

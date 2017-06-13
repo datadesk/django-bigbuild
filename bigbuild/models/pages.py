@@ -13,13 +13,21 @@ import frontmatter
 from bigbuild.models import BasePage
 from bigbuild.exceptions import BadMetadata
 from django.template import Engine, Context
+from django.utils.encoding import python_2_unicode_compatible
 logger = logging.getLogger(__name__)
 
 
+@python_2_unicode_compatible
 class Page(BasePage):
     """
     A custom page published via static.latimes.com
     """
+    class Meta:
+        abstract = True
+
+    def __str__(self):
+        return self.slug
+
     def delete(self):
         """
         Delete the page directory.

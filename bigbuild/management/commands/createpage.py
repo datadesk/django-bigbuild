@@ -2,6 +2,7 @@
 # -*- coding: utf-8 -*-
 import os
 from bigbuild.models import Page
+from django.utils.text import slugify
 from django.core.management.base import BaseCommand, CommandError
 
 
@@ -27,13 +28,13 @@ class Command(BaseCommand):
         Configures the command based on user input.
         """
         self.force = options['force']
-        self.slug_list = options['slug']
+        self.slug_list = [slugify(s) for s in options['slug']]
 
     def create_page(self, slug):
         """
         Returns a new Page object given the slug submitted by the user.
         """
-        return Page(slug)
+        return Page(slug=slug)
 
     def create_page_directory(self, page):
         """
@@ -55,7 +56,7 @@ class Command(BaseCommand):
         for slug in self.slug_list:
 
             # Create the Page
-            page = self.create_page(options['slug'])
+            page = self.create_page(slug)
 
             # If the directory already exists and we're not forcing creation
             # an error should be thrown.

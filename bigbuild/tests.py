@@ -6,6 +6,7 @@ import tempfile
 from datetime import datetime
 from bigbuild import exceptions
 from greeking import latimes_ipsum
+from django.utils.text import slugify
 from bigbuild.models import PageList, Page
 from bigbuild import get_archive_directory
 from django.core.management import call_command
@@ -46,9 +47,9 @@ class FakePagesTest(SimpleTestCase):
     def setUpClass(cls):
         super(FakePagesTest, cls).setUpClass()
         pages = [
-            Page(slug='My Fake Page', published=True),
+            Page(slug=slugify('My Fake Page'), published=True),
             Page(
-                slug='My Second Fake Page',
+                slug=slugify('My Second Fake Page'),
                 published=True,
                 description="TK"
             ),

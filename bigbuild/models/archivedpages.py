@@ -3,12 +3,20 @@
 import os
 import shutil
 from bigbuild.models import BasePage
+from django.utils.encoding import python_2_unicode_compatible
 
 
+@python_2_unicode_compatible
 class ArchivedPage(BasePage):
     """
     An archived custom page.
     """
+    class Meta:
+        abstract = True
+
+    def __str__(self):
+        return self.slug
+
     def delete(self):
         """
         Delete the page directory.
