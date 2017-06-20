@@ -84,7 +84,7 @@ class TestCommand(Command):
 
 setup(
     name='django-bigbuild',
-    version='0.5.12',
+    version='0.6.0',
     description="The open-source engine that powers bigbuilder, the Los Angeles Times Data Desk's \
 system for publishing standalone pages",
     author='The Los Angeles Times Data Desk',
@@ -121,6 +121,7 @@ system for publishing standalone pages",
         'GitPython>=2.0.8',
         'python-dateutil>=2.6.0',
         'archieml>=0.3.1',
+        'django-jsonfield>=1.0.1',
         'pytz',
         'six',
     ],
