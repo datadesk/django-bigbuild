@@ -22,9 +22,6 @@ class Page(BasePage):
     """
     A custom page published via static.latimes.com
     """
-    class Meta:
-        abstract = True
-
     def __str__(self):
         return self.slug
 

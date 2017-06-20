@@ -3,21 +3,10 @@
 import io
 import os
 import six
-import json
-from datetime import datetime
+import bigbuild
 from bigbuild.models import PageList
-from bigbuild import get_archive_directory
 from django.core.management.base import BaseCommand
-
-
-def serializer(obj):
-    """
-    JSON serializer for objects not serializable by default json code
-    """
-    if isinstance(obj, datetime):
-        serial = obj.isoformat()
-        return serial
-    raise TypeError("Type not serializable")
+from bigbuild.serializers import BigBuildJSONSerializer
 
 
 class Command(BaseCommand):
@@ -25,7 +14,7 @@ class Command(BaseCommand):
 
     def handle(self, *args, **options):
         # Set the cache path for archived pages
-        archive_cache_path = os.path.join(get_archive_directory(), '.cache')
+        archive_cache_path = os.path.join(bigbuild.get_archive_directory(), '.cache')
 
         # Delete it if it already exists
         if os.path.exists(archive_cache_path):
@@ -34,11 +23,10 @@ class Command(BaseCommand):
         # Pull the live PageList from the YAML files
         page_list = PageList()
 
+        # Create a JSON serializer
+        serializer = BigBuildJSONSerializer()
+
         # Save the archived pages out to a new cache
         with io.open(archive_cache_path, 'w', encoding='utf8') as f:
-            data = json.dumps(
-                dict(archived_pages=[p.to_json() for p in page_list.archived_pages]),
-                default=serializer,
-                ensure_ascii=False
-            )
+            data = serializer.serialize(page_list)
             f.write(six.text_type(data))

@@ -2,7 +2,6 @@
 # -*- coding: utf-8 -*-
 import os
 import six
-import json
 import logging
 from django.conf import settings
 from collections import Sequence
@@ -11,7 +10,7 @@ from bigbuild.exceptions import (
     MissingRecommendedMetadataWarning
 )
 from bigbuild.models import Page, ArchivedPage
-from dateutil.parser import parse as dateparse
+from bigbuild.serializers import BigBuildJSONDeserializer
 from bigbuild import get_page_directory, get_archive_directory
 logger = logging.getLogger(__name__)
 
@@ -133,12 +132,10 @@ class PageList(Sequence):
             logger.debug("Loading cached archived page list")
             with open(self.archived_cache_path, 'r') as f:
                 page_list = []
-                dict_list = json.load(f)['archived_pages']
-                for d in dict_list:
-                    d['pub_date'] = dateparse(d['pub_date'])
-                    page = ArchivedPage(**d)
-                    if page.should_build():
-                        page_list.append(page)
+                dobj_list = BigBuildJSONDeserializer(f.read())
+                for dobj in dobj_list:
+                    if dobj.object.should_build():
+                        page_list.append(dobj.object)
         # Otherwise get them from the YAML
         else:
             logger.debug("Retrieving YAML archived page list")
