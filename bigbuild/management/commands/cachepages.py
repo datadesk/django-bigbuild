@@ -2,6 +2,7 @@
 # -*- coding: utf-8 -*-
 import io
 import os
+import six
 import json
 from datetime import datetime
 from bigbuild.models import PageList
@@ -40,4 +41,4 @@ class Command(BaseCommand):
                 default=serializer,
                 ensure_ascii=False
             )
-            f.write(unicode(data))
+            f.write(six.text_type(data))
