@@ -28,5 +28,5 @@ class Command(BaseCommand):
 
         # Save the archived pages out to a new cache
         with io.open(archive_cache_path, 'w', encoding='utf8') as f:
-            data = serializer.serialize(page_list)
+            data = serializer.serialize(page_list.archived_pages)
             f.write(six.text_type(data))

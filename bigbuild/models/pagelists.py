@@ -132,10 +132,10 @@ class PageList(Sequence):
             logger.debug("Loading cached archived page list")
             with open(self.archived_cache_path, 'r') as f:
                 page_list = []
-                dobj_list = BigBuildJSONDeserializer(f.read())
-                for dobj in dobj_list:
-                    if dobj.object.should_build():
-                        page_list.append(dobj.object)
+                obj_list = [o.object for o in BigBuildJSONDeserializer(f.read())]
+                for obj in obj_list:
+                    if obj.should_build():
+                        page_list.append(obj)
         # Otherwise get them from the YAML
         else:
             logger.debug("Retrieving YAML archived page list")
