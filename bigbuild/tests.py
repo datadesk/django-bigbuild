@@ -154,9 +154,8 @@ class FakePagesTest(SimpleTestCase):
     def test_validatepages(self):
         call_command("validatepages")
         p = Page(slug='my-invalid-page', pub_date=1)
-        p.create_directory()
-        with self.assertRaises(TypeError):
-            call_command("validatepages")
+        with self.assertRaises(ValueError):
+            p.create_directory()
 
     def test_createpage(self):
         call_command("createpage", "test-page")

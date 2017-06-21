@@ -1,7 +1,11 @@
+#!/usr/bin/env python
+# -*- coding: utf-8 -*-
 import six
 import sys
 import json
+import validictory
 import frontmatter
+from datetime import datetime
 from django.core.serializers.base import DeserializationError
 from django.core.serializers.json import Serializer as JSONSerializer
 from django.core.serializers.pyyaml import Serializer as YAMLSerializer
@@ -49,6 +53,7 @@ class BigBuildFrontmatterSerializer(YAMLSerializer):
         """
         Returns the structured "metadata" associated with this page expected by Jekyll's frontmatter.
         """
+        # Structure the metadata
         d = dict([
             ('headline', obj.headline),
             ('byline', obj.byline),
@@ -62,4 +67,33 @@ class BigBuildFrontmatterSerializer(YAMLSerializer):
             d['extra'] = obj.extra
         if obj.data:
             d['data'] = obj.data
+
+        # Make sure the page is valid
+        if not self.is_metadata_valid(d):
+            raise ValueError("Metadata is not valid for %s" % obj)
+
         return d
+
+    def is_metadata_valid(self, metadata):
+        """
+        Tests if the metadata is valid and returns True or False.
+        """
+        schema = {
+            "type": "object",
+            "properties": {
+                'headline': {"type": "string", "blank": True},
+                'byline': {"type": "string", "blank": True},
+                'description': {"type": "string", "blank": True},
+                'image_url': {"type": "any", "blank": True},
+                'pub_date': {"type": "any"},
+                'published': {"type": "boolean"},
+                'show_in_feeds': {"type": "boolean"},
+            }
+        }
+        try:
+            validictory.validate(metadata, schema)
+            if not isinstance(metadata['pub_date'], datetime):
+                return False
+            return True
+        except:
+            return False

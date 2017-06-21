@@ -96,10 +96,6 @@ class PageList(Sequence):
         # Sync in the metadata from the filesystem to the object
         page.sync_frontmatter()
 
-        # # Make sure the page is valid
-        # if not page.is_metadata_valid():
-        #     raise ValueError("Metadata is not valid for %s" % page)
-
         # # Make sure the page has recommended metadata
         # # ... if it's ready to publish
         # if page.pub_status in ['live', 'pending']:

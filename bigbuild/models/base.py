@@ -5,7 +5,6 @@ import yaml
 import logging
 import bigbuild
 import jsonfield
-# import validictory
 import frontmatter
 from django.db import models
 from datetime import datetime
@@ -189,29 +188,6 @@ class BasePage(models.Model):
     # Validation
     #
 
-    # def is_metadata_valid(self):
-    #     """
-    #     Tests if the metadata is valid and returns True or False.
-    #     """
-    #     schema = {
-    #         "type": "object",
-    #         "properties": {
-    #             'headline': {"type": "string", "blank": True},
-    #             'byline': {"type": "string", "blank": True},
-    #             'description': {"type": "string", "blank": True},
-    #             'image_url': {"type": "any", "blank": True},
-    #             'pub_date': {"type": "any"},
-    #             'published': {"type": "boolean"},
-    #             'show_in_feeds': {"type": "boolean"},
-    #         }
-    #     }
-    #     try:
-    #         validictory.validate(self.metadata, schema)
-    #         if not isinstance(self.pub_date, datetime):
-    #             return False
-    #         return True
-    #     except:
-    #         return False
     #
     # def has_recommended_metadata(self):
     #     """
