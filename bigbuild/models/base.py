@@ -55,6 +55,10 @@ class BasePage(models.Model):
     def get_static_url(self):
         return os.path.join(self.get_absolute_url(), 'static') + "/"
 
+    #
+    # Dynamic content
+    #
+
     @property
     def rendered_content(self):
         """
