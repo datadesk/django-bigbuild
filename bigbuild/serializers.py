@@ -3,6 +3,7 @@ import sys
 import json
 from django.core.serializers.base import DeserializationError
 from django.core.serializers.json import Serializer as JSONSerializer
+from django.core.serializers.yaml import Serializer as YAMLSerializer
 from django.core.serializers.python import Deserializer as PythonDeserializer
 
 
@@ -30,3 +31,10 @@ def BigBuildJSONDeserializer(stream_or_string, **options):
     except Exception as e:
         # Map to deserializer error
         six.reraise(DeserializationError, DeserializationError(e), sys.exc_info()[2])
+
+
+class BigBuildFrontmatterSerializer(YAMLSerializer):
+    """
+    A custom YAML frontmatter serializer for bigbuild models.
+    """
+    pass
