@@ -10,7 +10,7 @@ from django.db import models
 from datetime import datetime
 from django.conf import settings
 from django.utils import timezone
-# from greeking import latimes_ipsum
+from greeking import latimes_ipsum
 from django.test import RequestFactory
 from bigbuild import context_processors
 from bigbuild.exceptions import BadMetadata
@@ -188,29 +188,27 @@ class BasePage(models.Model):
     # Validation
     #
 
-    #
-    # def has_recommended_metadata(self):
-    #     """
-    #     Tests if the metadata has the fields we recommend are present
-    #     for every page have been filled.
-    #
-    #     Returns True or False.
-    #     """
-    #     recommended_fields = ['headline', 'description', 'byline', 'image_url']
-    #     md = self.metadata
-    #     boilerplate = latimes_ipsum.get_story()
-    #     for f in recommended_fields:
-    #         # If it's an empty string cry foul
-    #         if not md.get(f, ''):
-    #             return False
-    #         if f == 'image_url':
-    #             if md[f] == boilerplate.image.url:
-    #                 return False
-    #         # Same thing if the value is from our boilerplate
-    #         else:
-    #             if md[f] == getattr(boilerplate, f):
-    #                 return False
-    #     return True
+    def has_recommended_metadata(self):
+        """
+        Tests if the metadata has the fields we recommend are present
+        for every page have been filled.
+
+        Returns True or False.
+        """
+        recommended_fields = ['headline', 'description', 'byline', 'image_url']
+        boilerplate = latimes_ipsum.get_story()
+        for f in recommended_fields:
+            # If it's an empty string cry foul
+            if not getattr(self, f, ''):
+                return False
+            if f == 'image_url':
+                if getattr(self, f) == boilerplate.image.url:
+                    return False
+            # Same thing if the value is from our boilerplate
+            else:
+                if getattr(self, f) == getattr(boilerplate, f):
+                    return False
+        return True
 
     #
     # Publication controls

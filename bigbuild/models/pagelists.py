@@ -7,7 +7,7 @@ from django.conf import settings
 from collections import Sequence
 from bigbuild.exceptions import (
     MissingMetadataWarning,
-    # MissingRecommendedMetadataWarning
+    MissingRecommendedMetadataWarning
 )
 from bigbuild.models import Page, ArchivedPage
 from bigbuild.serializers import BigBuildJSONDeserializer
@@ -96,11 +96,11 @@ class PageList(Sequence):
         # Sync in the metadata from the filesystem to the object
         page.sync_frontmatter()
 
-        # # Make sure the page has recommended metadata
-        # # ... if it's ready to publish
-        # if page.pub_status in ['live', 'pending']:
-        #     if not page.has_recommended_metadata():
-        #         logger.warn(MissingRecommendedMetadataWarning(page))
+        # Make sure the page has recommended metadata
+        # ... if it's ready to publish
+        if page.pub_status in ['live', 'pending']:
+            if not page.has_recommended_metadata():
+                logger.warn(MissingRecommendedMetadataWarning(page))
 
         return page
 
