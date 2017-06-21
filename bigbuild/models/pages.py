@@ -3,7 +3,6 @@
 from __future__ import unicode_literals
 import io
 import os
-import six
 import csv
 import json
 import yaml
@@ -104,7 +103,7 @@ class Page(BasePage):
         serializer = BigBuildFrontmatterSerializer()
         with io.open(path or self.frontmatter_path, 'w', encoding='utf8') as f:
             data = serializer.serialize([self])
-            f.write(six.text_type(data))
+            f.write(data)
 
     def write_static(self):
         """
