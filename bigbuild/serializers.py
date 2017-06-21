@@ -1,12 +1,12 @@
 import six
 import sys
 import json
-from django.core.serializers.json import Serializer
 from django.core.serializers.base import DeserializationError
+from django.core.serializers.json import Serializer as JSONSerializer
 from django.core.serializers.python import Deserializer as PythonDeserializer
 
 
-class BigBuildJSONSerializer(Serializer):
+class BigBuildJSONSerializer(JSONSerializer):
     """
     A custom JSON serializer for bigbuild models.
     """
