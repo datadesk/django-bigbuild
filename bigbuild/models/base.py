@@ -55,16 +55,6 @@ class BasePage(models.Model):
     def get_static_url(self):
         return os.path.join(self.get_absolute_url(), 'static') + "/"
 
-    #
-    # Serialization
-    #
-
-    def to_json(self):
-        d = self.__dict__
-        del d['_state']
-        d['pub_date'] = str(d['pub_date'])
-        return d
-
     @property
     def rendered_content(self):
         """

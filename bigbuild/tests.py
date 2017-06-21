@@ -12,7 +12,6 @@ from bigbuild import get_archive_directory
 from django.core.management import call_command
 from bigbuild.compressors import SimpleCompressor
 from django.core.management.base import CommandError
-from bigbuild.templatetags.bigbuild_tags import jsonify
 from bigbuild.views import PageListView, PageDetailView
 from compressor.exceptions import UncompressableFileError
 from django.test import SimpleTestCase, override_settings
@@ -330,13 +329,3 @@ key: value
         after = PageList()
         self.assertEqual(before[0].slug, after[0].slug)
         call_command("cachepages")
-
-
-class JsonifyTest(SimpleTestCase):
-    """
-    Test the jsonify template filter
-    """
-    def test_jsonify(self):
-        p = Page(slug='test-sans', published=True)
-        jsonify(p)
-        jsonify(dict(foo="bar"))
