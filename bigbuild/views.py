@@ -132,7 +132,6 @@ class PageDetailView(BuildableDetailView, BigBuildMixin):
         if self.object.data_objects.keys():
             self.object.data = self.object.data_objects
         context = {
-            'metadata': self.object.metadata,
             'object': self.object,
             'STATIC_URL': self.object.get_static_url()
         }

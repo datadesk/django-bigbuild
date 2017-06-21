@@ -7,7 +7,7 @@ from django.conf import settings
 from collections import Sequence
 from bigbuild.exceptions import (
     MissingMetadataWarning,
-    MissingRecommendedMetadataWarning
+    # MissingRecommendedMetadataWarning
 )
 from bigbuild.models import Page, ArchivedPage
 from bigbuild.serializers import BigBuildJSONDeserializer
@@ -83,7 +83,7 @@ class PageList(Sequence):
             return None
 
         # Create a Page object from the directory slug
-        page = pagetype(directory)
+        page = pagetype(slug=directory)
 
         # Verify it has frontmatter and is a qualified page
         if not os.path.exists(page.frontmatter_path):
@@ -96,15 +96,15 @@ class PageList(Sequence):
         # Sync in the metadata from the filesystem to the object
         page.sync_frontmatter()
 
-        # Make sure the page is valid
-        if not page.is_metadata_valid():
-            raise ValueError("Metadata is not valid for %s" % page)
+        # # Make sure the page is valid
+        # if not page.is_metadata_valid():
+        #     raise ValueError("Metadata is not valid for %s" % page)
 
-        # Make sure the page has recommended metadata
-        # ... if it's ready to publish
-        if page.pub_status in ['live', 'pending']:
-            if not page.has_recommended_metadata():
-                logger.warn(MissingRecommendedMetadataWarning(page))
+        # # Make sure the page has recommended metadata
+        # # ... if it's ready to publish
+        # if page.pub_status in ['live', 'pending']:
+        #     if not page.has_recommended_metadata():
+        #         logger.warn(MissingRecommendedMetadataWarning(page))
 
         return page
 

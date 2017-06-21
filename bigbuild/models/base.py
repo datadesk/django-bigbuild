@@ -5,13 +5,13 @@ import yaml
 import logging
 import bigbuild
 import jsonfield
-import validictory
+# import validictory
 import frontmatter
 from django.db import models
 from datetime import datetime
 from django.conf import settings
 from django.utils import timezone
-from greeking import latimes_ipsum
+# from greeking import latimes_ipsum
 from django.test import RequestFactory
 from bigbuild import context_processors
 from bigbuild.exceptions import BadMetadata
@@ -64,28 +64,6 @@ class BasePage(models.Model):
         d = self.__dict__
         del d['_state']
         d['pub_date'] = str(d['pub_date'])
-        return d
-
-    @property
-    def metadata(self):
-        """
-        Returns the structured metadata associated with this page.
-
-        For the purpose of deconstructing this object to Jekyll frontmatter.
-        """
-        d = dict([
-            ('headline', self.headline),
-            ('byline', self.byline),
-            ('description', self.description),
-            ('image_url', self.image_url),
-            ('pub_date', self.pub_date),
-            ('published', self.published),
-            ('show_in_feeds', self.show_in_feeds),
-        ])
-        if self.extra:
-            d['extra'] = self.extra
-        if self.data:
-            d['data'] = self.data
         return d
 
     @property
@@ -211,52 +189,52 @@ class BasePage(models.Model):
     # Validation
     #
 
-    def is_metadata_valid(self):
-        """
-        Tests if the metadata is valid and returns True or False.
-        """
-        schema = {
-            "type": "object",
-            "properties": {
-                'headline': {"type": "string", "blank": True},
-                'byline': {"type": "string", "blank": True},
-                'description': {"type": "string", "blank": True},
-                'image_url': {"type": "any", "blank": True},
-                'pub_date': {"type": "any"},
-                'published': {"type": "boolean"},
-                'show_in_feeds': {"type": "boolean"},
-            }
-        }
-        try:
-            validictory.validate(self.metadata, schema)
-            if not isinstance(self.pub_date, datetime):
-                return False
-            return True
-        except:
-            return False
-
-    def has_recommended_metadata(self):
-        """
-        Tests if the metadata has the fields we recommend are present
-        for every page have been filled.
-
-        Returns True or False.
-        """
-        recommended_fields = ['headline', 'description', 'byline', 'image_url']
-        md = self.metadata
-        boilerplate = latimes_ipsum.get_story()
-        for f in recommended_fields:
-            # If it's an empty string cry foul
-            if not md.get(f, ''):
-                return False
-            if f == 'image_url':
-                if md[f] == boilerplate.image.url:
-                    return False
-            # Same thing if the value is from our boilerplate
-            else:
-                if md[f] == getattr(boilerplate, f):
-                    return False
-        return True
+    # def is_metadata_valid(self):
+    #     """
+    #     Tests if the metadata is valid and returns True or False.
+    #     """
+    #     schema = {
+    #         "type": "object",
+    #         "properties": {
+    #             'headline': {"type": "string", "blank": True},
+    #             'byline': {"type": "string", "blank": True},
+    #             'description': {"type": "string", "blank": True},
+    #             'image_url': {"type": "any", "blank": True},
+    #             'pub_date': {"type": "any"},
+    #             'published': {"type": "boolean"},
+    #             'show_in_feeds': {"type": "boolean"},
+    #         }
+    #     }
+    #     try:
+    #         validictory.validate(self.metadata, schema)
+    #         if not isinstance(self.pub_date, datetime):
+    #             return False
+    #         return True
+    #     except:
+    #         return False
+    #
+    # def has_recommended_metadata(self):
+    #     """
+    #     Tests if the metadata has the fields we recommend are present
+    #     for every page have been filled.
+    #
+    #     Returns True or False.
+    #     """
+    #     recommended_fields = ['headline', 'description', 'byline', 'image_url']
+    #     md = self.metadata
+    #     boilerplate = latimes_ipsum.get_story()
+    #     for f in recommended_fields:
+    #         # If it's an empty string cry foul
+    #         if not md.get(f, ''):
+    #             return False
+    #         if f == 'image_url':
+    #             if md[f] == boilerplate.image.url:
+    #                 return False
+    #         # Same thing if the value is from our boilerplate
+    #         else:
+    #             if md[f] == getattr(boilerplate, f):
+    #                 return False
+    #     return True
 
     #
     # Publication controls

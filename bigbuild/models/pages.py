@@ -1,7 +1,9 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
 from __future__ import unicode_literals
+import io
 import os
+import six
 import csv
 import json
 import yaml
@@ -14,6 +16,7 @@ from bigbuild.models import BasePage
 from bigbuild.exceptions import BadMetadata
 from django.template import Engine, Context
 from django.utils.encoding import python_2_unicode_compatible
+from bigbuild.serializers import BigBuildFrontmatterSerializer
 logger = logging.getLogger(__name__)
 
 
@@ -98,7 +101,10 @@ class Page(BasePage):
         """
         Creates metadata.yaml in the page directory, or a supplied target directory.
         """
-        frontmatter.dump(self, path or self.frontmatter_path)
+        serializer = BigBuildFrontmatterSerializer()
+        with io.open(path or self.frontmatter_path, 'w', encoding='utf8') as f:
+            data = serializer.serialize([self])
+            f.write(six.text_type(data))
 
     def write_static(self):
         """
