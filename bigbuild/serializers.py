@@ -43,10 +43,13 @@ class BigBuildFrontmatterSerializer(YAMLSerializer):
     A custom YAML frontmatter serializer for bigbuild models.
     """
     def get_dump_object(self, obj):
+        # Restructure to YAML schema preferred by frontmatter
         obj.metadata = self.get_metadata(obj)
+        # Pass it out
         return obj
 
     def end_serialization(self):
+        # Dump each object into the stream as as frontmatter
         [frontmatter.dump(o, self.stream) for o in self.objects]
 
     def get_metadata(self, obj):

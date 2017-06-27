@@ -104,7 +104,10 @@ class Page(BasePage):
         serializer = BigBuildFrontmatterSerializer()
         with io.open(path or self.frontmatter_path, 'w', encoding='utf8') as f:
             data = serializer.serialize([self])
-            f.write(six.text_type(data))
+            if six.PY2:
+                f.write(six.text_type(data))
+            else:
+                f.write(data)
 
     def write_static(self):
         """
