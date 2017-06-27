@@ -50,7 +50,8 @@ class BigBuildFrontmatterSerializer(YAMLSerializer):
 
     def end_serialization(self):
         # Dump each object into the stream as as frontmatter
-        [frontmatter.dump(o, self.stream) for o in self.objects]
+        content = [frontmatter.dumps(o) for o in self.objects]
+        [self.stream.write(six.text_type(chunk)) for chunk in content]
 
     def get_metadata(self, obj):
         """
