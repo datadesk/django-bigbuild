@@ -5,12 +5,8 @@ import six
 import logging
 from django.conf import settings
 from collections import Sequence
-from bigbuild.exceptions import (
-    MissingMetadataWarning,
-    MissingRecommendedMetadataWarning
-)
-from bigbuild.models import Page, ArchivedPage
 from bigbuild.serializers import BigBuildJSONDeserializer
+from bigbuild.serializers import BigBuildFrontmatterDeserializer
 from bigbuild import get_page_directory, get_archive_directory
 logger = logging.getLogger(__name__)
 
@@ -74,35 +70,16 @@ class PageList(Sequence):
                 raise IndexError("No page with this key could be found")
 
     @staticmethod
-    def get_page(directory, pagetype):
+    def get_page(slug, pagetype):
         """
-        Returns a list of Page objects from the provided directory path.
+        Returns a list of Page objects from the provided slug directory.
         """
         # Ignore any names in our blacklist
-        if directory in getattr(settings, 'BIGBUILD_PAGE_BLACKLIST', ['.DS_Store']):
+        if slug in getattr(settings, 'BIGBUILD_PAGE_BLACKLIST', ['.DS_Store']):
             return None
 
         # Create a Page object from the directory slug
-        page = pagetype(slug=directory)
-
-        # Verify it has frontmatter and is a qualified page
-        if not os.path.exists(page.frontmatter_path):
-            # If it doesn't have frontmatter broadcast a warning
-            # to the developer and skip this directory.
-            warning = MissingMetadataWarning(page)
-            logger.warn(warning)
-            return None
-
-        # Sync in the metadata from the filesystem to the object
-        page.sync_frontmatter()
-
-        # Make sure the page has recommended metadata
-        # ... if it's ready to publish
-        if page.pub_status in ['live', 'pending']:
-            if not page.has_recommended_metadata():
-                logger.warn(MissingRecommendedMetadataWarning(page))
-
-        return page
+        return BigBuildFrontmatterDeserializer(slug, pagetype)
 
     def get_dynamic_pages(self):
         """
@@ -112,7 +89,7 @@ class PageList(Sequence):
         logger.debug("Retrieving dynamic page list")
         page_list = []
         for d in os.listdir(self.dynamic_directory):
-            page = self.get_page(d, Page)
+            page = self.get_page(d, 'Page')
             if page and page.should_build():
                 page_list.append(page)
         logger.debug("{} dynamic pages retrieved".format(len(page_list)))
@@ -137,7 +114,7 @@ class PageList(Sequence):
             logger.debug("Retrieving YAML archived page list")
             page_list = []
             for d in os.listdir(os.path.join(self.archived_directory, 'static')):
-                page = self.get_page(d, ArchivedPage)
+                page = self.get_page(d, 'ArchivedPage')
                 if page and page.should_build():
                     page_list.append(page)
 

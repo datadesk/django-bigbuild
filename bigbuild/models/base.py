@@ -1,11 +1,9 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
 import os
-import yaml
 import logging
 import bigbuild
 import jsonfield
-import frontmatter
 from django.db import models
 from datetime import datetime
 from django.conf import settings
@@ -13,9 +11,9 @@ from django.utils import timezone
 from greeking import latimes_ipsum
 from django.test import RequestFactory
 from bigbuild import context_processors
-from bigbuild.exceptions import BadMetadata
 from django.template import Engine, RequestContext
 from django.utils.encoding import python_2_unicode_compatible
+from bigbuild.serializers import BigBuildFrontmatterDeserializer
 logger = logging.getLogger(__name__)
 
 
@@ -35,8 +33,6 @@ class BasePage(models.Model):
     content = models.TextField(blank=True)
     extra = jsonfield.JSONField(blank=True)
     data = jsonfield.JSONField(blank=True)
-    # A cache for data objects after they've been loaded
-    data_objects = {}
 
     class Meta:
         abstract = True
@@ -84,6 +80,13 @@ class BasePage(models.Model):
     # Actions
     #
 
+    @classmethod
+    def create(cls, **fields):
+        obj = cls(**fields)
+        obj.data_objects = {}
+        # obj.create_directory()
+        return obj
+
     def delete(self):
         """
         Delete the page directory.
@@ -103,41 +106,10 @@ class BasePage(models.Model):
         Reads in the frontmatter from metadata.yaml and syncs it with
         the object.
         """
-        with open(self.frontmatter_path) as f:
-            # Parse the YAML
-            try:
-                post = frontmatter.load(f)
-            except (yaml.scanner.ScannerError, yaml.parser.ParserError) as e:
-                raise BadMetadata(
-                    "THE METADATA.MD FILE FOR '%s' IS BROKEN! \n" % self.slug +
-                    "Here's a clue about what's wrong: \n" +
-                    "%s" % e
-                )
-
-            # Set the basic frontmatter metadata
-            self.headline = post.metadata['headline']
-            self.byline = post.metadata['byline']
-            self.description = post.metadata['description']
-            self.image_url = post.metadata['image_url']
-            self.pub_date = post.metadata['pub_date']
-            self.published = post.metadata['published']
-            self.show_in_feeds = post.metadata['show_in_feeds']
-
-            # Attach any extra stuff
-            try:
-                self.extra = post.metadata['extra']
-            except KeyError:
-                self.extra = {}
-
-            try:
-                self.data = post.metadata['data']
-            except KeyError:
-                self.data = {}
-
-            # Pull in the content as is
-            self.content = post.content
-            # Render it out as flat HTML
-            self.content = self.rendered_content
+        yaml_obj = BigBuildFrontmatterDeserializer(self.slug, self.__class__.__name__)
+        for field in yaml_obj._meta.fields:
+            setattr(self, field.name, getattr(yaml_obj, field.name))
+        self.data_objects = yaml_obj.data_objects or {}
 
     #
     # File pathing

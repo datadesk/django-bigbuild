@@ -34,7 +34,7 @@ class Command(BaseCommand):
         """
         Returns a new Page object given the slug submitted by the user.
         """
-        return Page(slug=slug)
+        return Page.create(slug=slug)
 
     def create_page_directory(self, page):
         """

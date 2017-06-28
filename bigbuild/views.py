@@ -103,11 +103,11 @@ class PageDetailView(BuildableDetailView, BigBuildMixin):
         Returns the Page object being rendered by this view.
         """
         # Check if it is a dynamic page, if so return it
-        obj = PageList.get_page(self.kwargs.get("slug"), Page)
+        obj = PageList.get_page(self.kwargs.get("slug"), 'Page')
         if obj:
             return obj
         # Check if it is an archived page, if so return it
-        obj = PageList.get_page(self.kwargs.get("slug"), ArchivedPage)
+        obj = PageList.get_page(self.kwargs.get("slug"), 'ArchivedPage')
         if obj:
             return obj
         # Otherwise, 404

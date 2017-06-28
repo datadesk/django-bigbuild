@@ -15,6 +15,7 @@ from django.core.management.base import CommandError
 from bigbuild.views import PageListView, PageDetailView
 from compressor.exceptions import UncompressableFileError
 from django.test import SimpleTestCase, override_settings
+from django.core.serializers.base import DeserializationError
 logging.disable(logging.CRITICAL)
 
 TEMP_DIR = tempfile.mkdtemp()
@@ -45,39 +46,50 @@ class FakePagesTest(SimpleTestCase):
     @classmethod
     def setUpClass(cls):
         super(FakePagesTest, cls).setUpClass()
+        # Create some pages
         pages = [
-            Page(slug=slugify('My Fake Page'), published=True),
-            Page(
+            Page.create(slug=slugify('My Fake Page'), published=True),
+            Page.create(
                 slug=slugify('My Second Fake Page'),
                 published=True,
                 description="TK"
             ),
-            Page(
+            Page.create(
                 slug='a-unpublished-fake-page',
                 published=False,
                 description="TK"
             ),
-            Page(
+            Page.create(
                 slug='a-future-fake-page',
                 published=True,
                 pub_date=datetime(2030, 1, 1, 0, 0, 0),
                 description=''
             ),
-            Page(
+            Page.create(
                 slug='a-working-page',
                 published=False,
                 description='Foobar'
             ),
-            Page(
+            Page.create(
                 slug='a-live-page',
+                published=True,
+                pub_date=datetime(2001, 1, 1, 0, 0, 0),
+                description='Foobar'
+            ),
+            Page.create(
+                slug='an-archived-page',
                 published=True,
                 pub_date=datetime(2001, 1, 1, 0, 0, 0),
                 description='Foobar'
             )
         ]
+
+        # Make directories for all of them
         [p.create_directory() for p in pages]
-        pages[0].create_directory(force=True)
-        call_command("archivepage", pages[0].slug)
+
+        # Archive one of them
+        call_command("archivepage", 'an-archived-page')
+
         # Create a blacklisted file to test that
         with open(os.path.join(BIGBUILD_PAGE_DIR, '.DS_Store'), 'w+') as f:
             f.write("foo")
@@ -92,29 +104,17 @@ class FakePagesTest(SimpleTestCase):
         obj.__repr__()
         obj.get_absolute_url()
 
+    def test_cant_remake_directory(self):
+        obj = PageList()[0]
         with self.assertRaises(ValueError):
             obj.create_directory()
-        # self.assertTrue(obj.is_metadata_valid())
 
-        obj.image_url = ''
-        obj.pub_date = 'foobar'
-        # self.assertFalse(obj.is_metadata_valid())
-
-        obj.image_url = 'http://www.foobar.com'
-        obj.pub_date = datetime.now()
-        # self.assertTrue(obj.is_metadata_valid())
-
-        obj.headline = latimes_ipsum.get_story().headline
-        obj.published = True
-        # self.assertFalse(obj.has_recommended_metadata())
-
-        obj.byline = "foobar"
-        obj.headline = "something else"
-        obj.description = "even more"
-        # self.assertTrue(obj.has_recommended_metadata())
+    def test_force_new_directory(self):
+        obj = PageList()[0]
+        obj.create_directory(force=True)
 
     def test_archivedpage(self):
-        p = PageList()['my-fake-page']
+        p = PageList()['an-archived-page']
         p.__str__()
         p.__repr__()
         p.get_absolute_url()
@@ -141,28 +141,37 @@ class FakePagesTest(SimpleTestCase):
     def test_build(self):
         call_command("build")
         self.assertTrue(os.path.exists(BUILD_DIR))
-        self.assertTrue(os.path.exists(
-            os.path.join(
-                BUILD_DIR,
-                PageList()['my-fake-page'].get_absolute_url().lstrip("/"),
-                'index.html'
-            )
-        ))
+        expected_index = os.path.join(
+            BUILD_DIR,
+            PageList()['my-fake-page'].get_absolute_url().lstrip("/"),
+            'index.html'
+        )
+        self.assertTrue(os.path.exists(expected_index))
         PageList()[0].build()
 
     def test_validatepages(self):
         call_command("validatepages")
-        p = Page(slug='my-invalid-page', pub_date=1)
-        with self.assertRaises(ValueError):
-            p.create_directory()
 
     def test_createpage(self):
         call_command("createpage", "test-page")
         with self.assertRaises(CommandError):
             call_command("createpage", "test-page")
+        call_command("createpage", "test-page", force=True)
+
+    def test_sans(self):
+        p = Page(slug='test-sans', published=True)
+        p.create_directory(index_template_context={'sans': True})
+
+    def test_dark(self):
+        p = Page.create(slug='test-dark')
+        p.create_directory(index_template_context={'dark': True})
+
+    def test_deletepage(self):
+        p = PageList()[0]
+        p.delete()
 
     def test_archivepage(self):
-        p = Page(slug='test-archived-page', published=True, description="TK")
+        p = Page.create(slug='test-archived-page')
         p.create_directory()
         call_command("archivepage", p.slug)
         with self.assertRaises(CommandError):
@@ -174,11 +183,10 @@ class FakePagesTest(SimpleTestCase):
     def test_warnings(self):
         exceptions.BadMetadata()
         exceptions.BaseWarning().get_context_data()
-        exceptions.MissingMetadataWarning('slug').__str__()
         exceptions.MissingRecommendedMetadataWarning('slug').__str__()
 
-    def test_malformed_yaml(self):
-        p = Page(slug='test-bad-yaml', published=True)
+    def test_bad_metadata(self):
+        p = Page.create(slug='test-bad-yaml')
         p.create_directory()
 
         yaml = open(p.frontmatter_path).read()
@@ -191,116 +199,159 @@ foo:: bar;:
 """)
         bad.close()
 
-        with self.assertRaises(exceptions.BadMetadata):
+        with self.assertRaises(DeserializationError):
             p.sync_frontmatter()
 
         good = open(p.frontmatter_path, 'w')
         good.write(yaml)
         good.close()
 
-    def test_delete(self):
-        p = PageList()[0]
-        p.delete()
-
     def test_missingmetadata(self):
-        p = Page(slug='test-no-yaml', published=True)
+        p = Page.create(slug='test-no-yaml')
         p.create_directory()
         os.remove(p.frontmatter_path)
-        PageList()
+        with self.assertRaises(DeserializationError):
+            PageList()
         p.delete()
 
-    def test_data(self):
-        p = PageList()['my-second-fake-page']
-        data_path = os.path.join(p.page_directory_path, 'data')
-        static_path = os.path.join(p.page_directory_path, 'static')
-
-        p.data = {"foo": "bar.csv"}
-        p.write_frontmatter()
-        with open(os.path.join(data_path, 'bar.csv'), 'w+') as f:
-            f.write('foo,bar')
-        p.sync_frontmatter()
-        p.metadata['data']['foo']
-
-        p.data = {"foo": "bar.json"}
-        p.write_frontmatter()
-        with open(os.path.join(data_path, 'bar.json'), 'w+') as f:
-            f.write('[{"foo": "bar"}]')
-        p.sync_frontmatter()
-        p.metadata['data']['foo']
-
-        p.data = {"foo": "bar.yml"}
-        p.write_frontmatter()
-        with open(os.path.join(data_path, 'bar.yml'), 'w+') as f:
-            f.write('- foo: bar')
-        p.sync_frontmatter()
-        p.metadata['data']['foo']
-
-        p.data = {"foo": "data/bar.csv"}
-        p.write_frontmatter()
-        with open(os.path.join(data_path, 'bar.csv'), 'w+') as f:
-            f.write('foo,bar')
-        p.sync_frontmatter()
-        p.metadata['data']['foo']
-
-        p.data = {"foo": "static/bar.csv"}
-        p.write_frontmatter()
-        with open(os.path.join(static_path, 'bar.csv'), 'w+') as f:
-            f.write('foo,bar')
-        p.sync_frontmatter()
-        p.metadata['data']['foo']
-
     def test_aml(self):
-        p = Page(slug='test-aml', published=True)
-        p.create_directory()
-        static_path = os.path.join(p.page_directory_path, 'static')
+        # Create an object
+        call_command("createpage", 'test-aml')
+        p = PageList()['test-aml']
 
+        # Make sure there's nothing there
+        self.assertEqual(p.data_objects, {})
+
+        # Update it with data path
         p.data = {"foo": "static/bar.aml"}
         p.write_frontmatter()
+
+        # Create that data path
+        static_path = os.path.join(p.page_directory_path, 'static')
         with open(os.path.join(static_path, 'bar.aml'), 'w+') as f:
-            f.write("""
+            f.write("[arrayName]\nkey: value")
 
-key: value
-[array]
-* 1
-* 2
-* 3
-
-""")
+        # Resync the object so that it opens the data file
         p.sync_frontmatter()
-        p.metadata['data']['foo']
-        self.assertEqual(p.data_objects['foo']['key'], 'value')
 
+        # Make sure everything matches
+        self.assertEqual(p.metadata['data']['foo'], "static/bar.aml")
+        self.assertEqual(p.data_objects['foo']['arrayName'][0]['key'], 'value')
+
+        # Make sure we can archive aml
         call_command("archivepage", p.slug)
         call_command("unarchivepage", p.slug)
 
-    def test_baddata(self):
-        p = PageList()['my-second-fake-page']
+        p.delete()
 
-        p.data = {"foo": "bar.csv"}
-        p.write_frontmatter()
-        with self.assertRaises(exceptions.BadMetadata):
-            p.sync_frontmatter()
-        p.data = {}
-        p.write_frontmatter()
+    def test_csv(self):
+        # Create an object
+        call_command("createpage", 'test-csv')
+        p = PageList()['test-csv']
 
-        data_path = os.path.join(p.page_directory_path, 'data')
-        os.path.exists(data_path) or os.mkdir(data_path)
-        with open(os.path.join(data_path, 'foo.txt'), 'w+') as f:
-            f.write("foo,bar")
-        p.data = {"foo": "foo.txt"}
-        p.write_frontmatter()
-        with self.assertRaises(exceptions.BadMetadata):
-            p.sync_frontmatter()
-        p.data = {}
+        # Make sure there's nothing there
+        self.assertEqual(p.data_objects, {})
+
+        # Update it with data path
+        p.data = {"foo": "static/bar.csv"}
         p.write_frontmatter()
 
-    def test_sans(self):
-        p = Page(slug='test-sans', published=True)
-        p.create_directory(index_template_context={'sans': True})
+        # Create that data path
+        static_path = os.path.join(p.page_directory_path, 'static')
+        with open(os.path.join(static_path, 'bar.csv'), 'w+') as f:
+            f.write('key,bar\nvalue,value')
 
-    def test_dark(self):
-        p = Page(slug='test-dark', published=True)
-        p.create_directory(index_template_context={'dark': True})
+        # Resync the object so that it opens the data file
+        p.sync_frontmatter()
+
+        # Make sure everything matches
+        self.assertEqual(p.metadata['data']['foo'], "static/bar.csv")
+        self.assertEqual(p.data_objects['foo'][0]['key'], 'value')
+
+        # Make sure we can archive aml
+        call_command("archivepage", p.slug)
+        call_command("unarchivepage", p.slug)
+
+        p.delete()
+
+    def test_json(self):
+        # Create an object
+        call_command("createpage", 'test-json')
+        p = PageList()['test-json']
+
+        # Make sure there's nothing there
+        self.assertEqual(p.data_objects, {})
+
+        # Update it with data path
+        p.data = {"foo": "static/bar.json"}
+        p.write_frontmatter()
+
+        # Create that data path
+        static_path = os.path.join(p.page_directory_path, 'static')
+        with open(os.path.join(static_path, 'bar.json'), 'w+') as f:
+            f.write('[{"key": "value"}]')
+
+        # Resync the object so that it opens the data file
+        p.sync_frontmatter()
+
+        # Make sure everything matches
+        self.assertEqual(p.metadata['data']['foo'], "static/bar.json")
+        self.assertEqual(p.data_objects['foo'][0]['key'], 'value')
+
+        # Make sure we can archive aml
+        call_command("archivepage", p.slug)
+        call_command("unarchivepage", p.slug)
+
+        p.delete()
+
+    def test_yaml(self):
+        # Create an object
+        call_command("createpage", 'test-yaml')
+        p = PageList()['test-yaml']
+
+        # Make sure there's nothing there
+        self.assertEqual(p.data_objects, {})
+
+        # Update it with data path
+        p.data = {"foo": "static/bar.yaml"}
+        p.write_frontmatter()
+
+        # Create that data path
+        static_path = os.path.join(p.page_directory_path, 'static')
+        with open(os.path.join(static_path, 'bar.yaml'), 'w+') as f:
+            f.write('- key: value')
+
+        # Resync the object so that it opens the data file
+        p.sync_frontmatter()
+
+        # Make sure everything matches
+        self.assertEqual(p.metadata['data']['foo'], "static/bar.yaml")
+        self.assertEqual(p.data_objects['foo'][0]['key'], 'value')
+
+        # Make sure we can archive aml
+        call_command("archivepage", p.slug)
+        call_command("unarchivepage", p.slug)
+
+        p.delete()
+
+    # def test_baddata(self):
+    #     p = PageList()['my-second-fake-page']
+    #
+    #     p.data = {"foo": "bar.csv"}
+    #     p.write_frontmatter()
+    #     p.sync_frontmatter()
+    #     p.data = {}
+    #     p.write_frontmatter()
+    #
+    #     data_path = os.path.join(p.page_directory_path, 'data')
+    #     os.path.exists(data_path) or os.mkdir(data_path)
+    #     with open(os.path.join(data_path, 'foo.txt'), 'w+') as f:
+    #         f.write("foo,bar")
+    #     p.data = {"foo": "foo.txt"}
+    #     p.write_frontmatter()
+    #     p.sync_frontmatter()
+    #     p.data = {}
+    #     p.write_frontmatter()
 
     def test_nofile(self):
         """

@@ -3,16 +3,10 @@
 from __future__ import unicode_literals
 import io
 import os
-import csv
-import json
-import yaml
 import codecs
 import shutil
 import logging
-import archieml
-import frontmatter
 from bigbuild.models import BasePage
-from bigbuild.exceptions import BadMetadata
 from django.template import Engine, Context
 from django.utils.encoding import python_2_unicode_compatible
 from bigbuild.serializers import BigBuildFrontmatterSerializer
@@ -102,8 +96,7 @@ class Page(BasePage):
         """
         serializer = BigBuildFrontmatterSerializer()
         with io.open(path or self.frontmatter_path, 'w', encoding='utf8') as f:
-            data = serializer.serialize([self])
-            f.write(data)
+            f.write(serializer.serialize([self]))
 
     def write_static(self):
         """
@@ -138,46 +131,3 @@ class Page(BasePage):
         """
         engine = Engine.get_default()
         return engine.get_template(name)
-
-    def sync_frontmatter(self):
-        # Do the typical frontmatter syncing
-        super(Page, self).sync_frontmatter()
-
-        # Now some extra stuff in case there are any data files included in the metadata
-        with codecs.open(self.frontmatter_path) as f:
-
-            # Parse the YAML with confidence since the super call above
-            # has already weeded out any errors
-            post = frontmatter.load(f)
-
-            # Loop through any data files
-            for key, path in post.metadata.get('data', {}).items():
-
-                # Generate the path if it's stored in the default `data` directory
-                data_dir = os.path.join(self.page_directory_path, 'data')
-                p = os.path.join(data_dir, path)
-                # If it doesn't exist, see if it's in another folder
-                if not os.path.exists(p):
-                    p = os.path.join(self.page_directory_path, path)
-                    # If it's not there either, throw an error
-                    if not os.path.exists(p):
-                        raise BadMetadata("Data file could not be found at %s" % p)
-
-                # Open the file
-                with codecs.open(p, 'r') as f:
-                    # If it's a CSV file open it that way...
-                    if p.endswith(".csv"):
-                        self.data_objects[key] = list(csv.DictReader(f))
-                    # If it's a JSON file open it this way ...
-                    elif p.endswith(".json"):
-                        self.data_objects[key] = json.load(f)
-                    # If it's a YAML file open it t'other way ...
-                    elif (p.endswith(".yml") or p.endswith(".yaml")):
-                        self.data_objects[key] = yaml.load(f)
-                    elif p.endswith(".aml"):
-                        self.data_objects[key] = archieml.load(f)
-                    # If it's none of those throw an error.
-                    else:
-                        raise BadMetadata(
-                            "Data file at %s not recognizable type" % path
-                        )

@@ -74,20 +74,6 @@ class BaseWarning(Warning):
         return self.banner + message + self.footer
 
 
-class MissingMetadataWarning(BaseWarning):
-    """
-    A custom warning to broadcast when a page directory does not
-    have a metadata.md configuration file.
-    """
-    template_name = "bigbuild/warnings/missing_metadata.txt"
-
-    def __init__(self, page):
-        self.page = page
-
-    def get_context_data(self):
-        return dict(page=self.page)
-
-
 class MissingRecommendedMetadataWarning(BaseWarning):
     """
     A custom warning that will be raised when a published page is missing
