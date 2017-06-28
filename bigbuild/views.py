@@ -84,12 +84,12 @@ class PageListView(BuildableTemplateView, BigBuildMixin):
     def get_context_data(self):
         PAGE_PUBLICATION_STATUS = getattr(
             settings,
-            'PAGE_PUBLICATION_STATUS',
+            'BIGBUILD_PAGE_PUBLICATION_STATUS',
             'working'
         )
         context = {
             'object_list': [p for p in PageList() if p.show_in_feeds],
-            'PAGE_PUBLICATION_STATUS': PAGE_PUBLICATION_STATUS
+            'BIGBUILD_PAGE_PUBLICATION_STATUS': PAGE_PUBLICATION_STATUS
         }
         return self.process_context(context)
 

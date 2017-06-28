@@ -83,7 +83,7 @@ TEMPLATES=[
 
 BIGBUILD_GIT_DIR = os.path.join(BASE_DIR, "../")
 BIGBUILD_BASE_URL = "/projects/"
-BIGBUILD_PAGE_PUBLICATION_STATUS = 'live'
+BIGBUILD_PAGE_PUBLICATION_STATUS = 'working'
 BIGBUILD_BRANCH_BUILD = False
 
 BUILD_DIR = os.path.join(BASE_DIR, "..", ".build")

@@ -3,9 +3,11 @@
 {% block container %}
 <h1>All pages</h1>
 
+<p>{{ object_list|length }} page{{ object_list|pluralize }}</p>
+
 <div class="row">
     <div class="span12">
-        <table class="table">
+        <table class="table" border=1 cellpadding=5>
             <thead>
                 <tr>
                     <th>Title</th>
@@ -17,7 +19,8 @@
                 <tr class="{% if obj.is_live %}live{% else %}{{ obj.pub_status }}{% endif%}">
                     <td>
                         <a href="{{ obj.get_absolute_url }}">
-                            {% if not obj.is_live %}<span class="blink">{{ obj.pub_status|upper }}:</span> {% endif %}{{ obj.headline|safe }}
+                            {% if not obj.is_live %}<span class="blink">{{ obj.pub_status|upper }}:</span> {% endif %}
+                            {{ obj.headline|safe }}
                         </a>
                     </td>
                     <td class="align-right">

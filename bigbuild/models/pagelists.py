@@ -3,11 +3,11 @@
 import os
 import six
 import logging
+import bigbuild
 from django.conf import settings
 from collections import Sequence
 from bigbuild.serializers import BigBuildJSONDeserializer
 from bigbuild.serializers import BigBuildFrontmatterDeserializer
-from bigbuild import get_page_directory, get_archive_directory
 logger = logging.getLogger(__name__)
 
 
@@ -17,8 +17,8 @@ class PageList(Sequence):
     """
     def __init__(self):
         # Set the page directories
-        self.dynamic_directory = get_page_directory()
-        self.archived_directory = get_archive_directory()
+        self.dynamic_directory = bigbuild.get_page_directory()
+        self.archived_directory = bigbuild.get_archive_directory()
 
         # Set the cache path
         self.archived_cache_path = os.path.join(self.archived_directory, '.cache')
@@ -92,7 +92,7 @@ class PageList(Sequence):
             page = self.get_page(d, 'Page')
             if page and page.should_build():
                 page_list.append(page)
-        logger.debug("{} dynamic pages retrieved".format(len(page_list)))
+        logger.debug("{} dynamic pages retrieved from YAML".format(len(page_list)))
         return page_list
 
     def get_archived_pages(self):
@@ -102,22 +102,21 @@ class PageList(Sequence):
         """
         # Pull the cached data if it exists
         if os.path.exists(self.archived_cache_path):
-            logger.debug("Loading cached archived page list")
             with open(self.archived_cache_path, 'r') as f:
                 page_list = []
                 obj_list = [o.object for o in BigBuildJSONDeserializer(f.read())]
                 for obj in obj_list:
                     if obj.should_build():
                         page_list.append(obj)
+            logger.debug("{} archived pages retrieved from cache".format(len(page_list)))
         # Otherwise get them from the YAML
         else:
-            logger.debug("Retrieving YAML archived page list")
             page_list = []
             for d in os.listdir(os.path.join(self.archived_directory, 'static')):
                 page = self.get_page(d, 'ArchivedPage')
                 if page and page.should_build():
                     page_list.append(page)
+            logger.debug("{} archived pages retrieved from YAML".format(len(page_list)))
 
         # Log and return
-        logger.debug("{} archived pages retrieved".format(len(page_list)))
         return page_list
