@@ -117,7 +117,7 @@ def BigBuildFrontmatterDeserializer(slug, model_name='Page'):
     Given the page to a YAML deserialize it from Jekyll's frontmatter format.
     """
     model = apps.get_app_config('bigbuild').get_model(model_name)
-    obj = model.create(slug=slug)
+    obj = model.create(slug=slug, skip_create_directory=True)
     try:
         stream = open(obj.frontmatter_path, 'r')
         post = frontmatter.load(stream)

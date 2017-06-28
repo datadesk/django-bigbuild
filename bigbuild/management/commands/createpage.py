@@ -1,9 +1,8 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
-import os
 from bigbuild.models import Page
 from django.utils.text import slugify
-from django.core.management.base import BaseCommand, CommandError
+from django.core.management.base import BaseCommand
 
 
 class Command(BaseCommand):
@@ -34,13 +33,8 @@ class Command(BaseCommand):
         """
         Returns a new Page object given the slug submitted by the user.
         """
-        return Page.create(slug=slug)
-
-    def create_page_directory(self, page):
-        """
-        Create a new directory for the provided page.
-        """
-        page.create_directory(
+        return Page.create(
+            slug=slug,
             force=self.force,
             index_template_name=self.INDEX_TEMPLATE_NAME
         )
@@ -57,18 +51,6 @@ class Command(BaseCommand):
 
             # Create the Page
             page = self.create_page(slug)
-
-            # If the directory already exists and we're not forcing creation
-            # an error should be thrown.
-            if os.path.exists(page.page_directory_path) and not self.force:
-                raise CommandError(self.style.ERROR('Page directory already exists'))
-
-            elif os.path.exists(page.archive_dynamic_directory_path) and not self.force:
-                raise CommandError(self.style.ERROR('Page directory already exists'))
-
-            # Otherwise we make the page
-            else:
-                self.create_page_directory(page)
 
             # Print out the result
             self.stdout.write(self.style.SUCCESS('Created page "%s"' % page))

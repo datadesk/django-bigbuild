@@ -82,9 +82,50 @@ class BasePage(models.Model):
 
     @classmethod
     def create(cls, **fields):
+        """
+        Create a new object.
+        """
+        # Pop out any extra inputs for the directory
+        try:
+            force = fields.pop("force")
+        except KeyError:
+            force = False
+        try:
+            index_template_name = fields.pop("index_template_name")
+        except KeyError:
+            index_template_name = 'bigbuild/pages/default_index.html'
+        try:
+            index_template_context = fields.pop("index_template_context")
+        except KeyError:
+            index_template_context = {}
+        try:
+            skip_create_directory = fields.pop("skip_create_directory")
+        except KeyError:
+            skip_create_directory = False
+
+        # Create the object
         obj = cls(**fields)
+
+        # Cache attribute to store rendered data files
         obj.data_objects = {}
-        # obj.create_directory()
+
+        if not skip_create_directory:
+
+            # If the directory already exists and we're not forcing creation
+            # an error should be thrown.
+            if os.path.exists(obj.page_directory_path) and not force:
+                raise ValueError('Page directory already exists')
+            elif os.path.exists(obj.archive_dynamic_directory_path) and not force:
+                raise ValueError('Page directory already exists')
+
+            # Create directory with any extra options passed in
+            obj.create_directory(
+                force=force,
+                index_template_name=index_template_name,
+                index_template_context=index_template_context,
+            )
+
+        # Return the object
         return obj
 
     def delete(self):

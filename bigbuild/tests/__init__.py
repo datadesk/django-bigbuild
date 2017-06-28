@@ -36,45 +36,48 @@ class TestBase(SimpleTestCase):
     def setUpClass(cls):
         super(TestBase, cls).setUpClass()
         # Create some pages
-        pages = [
-            Page.create(slug=slugify('My Fake Page'), published=True),
+        [
+            Page.create(slug=slugify('My Fake Page'), published=True, force=True),
             Page.create(
                 slug=slugify('My Second Fake Page'),
                 published=True,
-                description="TK"
+                description="TK",
+                force=True
             ),
             Page.create(
                 slug='a-unpublished-fake-page',
                 published=False,
-                description="TK"
+                description="TK",
+                force=True
             ),
             Page.create(
                 slug='a-future-fake-page',
                 published=True,
                 pub_date=datetime(2030, 1, 1, 0, 0, 0),
-                description=''
+                description='',
+                force=True
             ),
             Page.create(
                 slug='a-working-page',
                 published=False,
-                description='Foobar'
+                description='Foobar',
+                force=True
             ),
             Page.create(
                 slug='a-live-page',
                 published=True,
                 pub_date=datetime(2001, 1, 1, 0, 0, 0),
-                description='Foobar'
+                description='Foobar',
+                force=True
             ),
             Page.create(
                 slug='an-archived-page',
                 published=True,
                 pub_date=datetime(2001, 1, 1, 0, 0, 0),
-                description='Foobar'
+                description='Foobar',
+                force=True
             )
         ]
-
-        # Make directories for all of them
-        [p.create_directory(force=True) for p in pages]
 
         # Create a blacklisted file to test that
         with open(os.path.join(BIGBUILD_PAGE_DIR, '.DS_Store'), 'w+') as f:

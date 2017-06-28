@@ -15,13 +15,13 @@ logging.disable(logging.CRITICAL)
 class TestCommands(TestBase):
 
     def test_build(self):
-        Page.create(slug="my-fake-page")
+        Page.create(slug="yet-another-fake-page")
         Page.create(slug="my-archived-page")
         call_command("build")
         self.assertTrue(os.path.exists(BUILD_DIR))
         expected_index = os.path.join(
             BUILD_DIR,
-            PageList()['my-fake-page'].get_absolute_url().lstrip("/"),
+            PageList()['yet-another-fake-page'].get_absolute_url().lstrip("/"),
             'index.html'
         )
         self.assertTrue(os.path.exists(expected_index))
@@ -36,13 +36,12 @@ class TestCommands(TestBase):
 
     def test_createpage(self):
         call_command("createpage", "test-page")
-        with self.assertRaises(CommandError):
+        with self.assertRaises(ValueError):
             call_command("createpage", "test-page")
         call_command("createpage", "test-page", force=True)
 
     def test_archivepage(self):
         p = Page.create(slug='test-archived-page')
-        p.create_directory()
         call_command("archivepage", p.slug)
         with self.assertRaises(CommandError):
             call_command("archivepage", p.slug)

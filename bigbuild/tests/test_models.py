@@ -50,12 +50,10 @@ class TestModels(TestBase):
             page_list[100]
 
     def test_sans(self):
-        p = Page(slug='test-sans', published=True)
-        p.create_directory(index_template_context={'sans': True})
+        Page.create(slug='test-sans', published=True, index_template_context={'sans': True})
 
     def test_dark(self):
-        p = Page.create(slug='test-dark')
-        p.create_directory(index_template_context={'dark': True})
+        Page.create(slug='test-dark', index_template_context={'dark': True})
 
     def test_deletepage(self):
         p = PageList()[0]
@@ -68,7 +66,6 @@ class TestModels(TestBase):
 
     def test_bad_metadata(self):
         p = Page.create(slug='test-bad-yaml')
-        p.create_directory()
 
         yaml = open(p.frontmatter_path).read()
 
@@ -89,7 +86,6 @@ foo:: bar;:
 
     def test_missingmetadata(self):
         p = Page.create(slug='test-no-yaml')
-        p.create_directory()
         os.remove(p.frontmatter_path)
         with self.assertRaises(DeserializationError):
             PageList()
