@@ -28,7 +28,7 @@ class TestData(TestBase):
             f.write("[arrayName]\nkey: value")
 
         # Resync the object so that it opens the data file
-        p.sync_frontmatter()
+        p.refresh_from_db()
 
         # Make sure everything matches
         self.assertEqual(p.metadata['data']['foo'], "static/bar.aml")
@@ -58,7 +58,7 @@ class TestData(TestBase):
             f.write('key,bar\nvalue,value')
 
         # Resync the object so that it opens the data file
-        p.sync_frontmatter()
+        p.refresh_from_db()
 
         # Make sure everything matches
         self.assertEqual(p.metadata['data']['foo'], "static/bar.csv")
@@ -88,7 +88,7 @@ class TestData(TestBase):
             f.write('[{"key": "value"}]')
 
         # Resync the object so that it opens the data file
-        p.sync_frontmatter()
+        p.refresh_from_db()
 
         # Make sure everything matches
         self.assertEqual(p.metadata['data']['foo'], "static/bar.json")
@@ -118,7 +118,7 @@ class TestData(TestBase):
             f.write('- key: value')
 
         # Resync the object so that it opens the data file
-        p.sync_frontmatter()
+        p.refresh_from_db()
 
         # Make sure everything matches
         self.assertEqual(p.metadata['data']['foo'], "static/bar.yaml")

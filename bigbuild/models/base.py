@@ -101,10 +101,9 @@ class BasePage(models.Model):
         view = PageDetailView()
         view.build_object(self)
 
-    def sync_frontmatter(self):
+    def refresh_from_db(self):
         """
-        Reads in the frontmatter from metadata.yaml and syncs it with
-        the object.
+        Reads in the frontmatter from metadata.yaml and syncs it with the object.
         """
         yaml_obj = BigBuildFrontmatterDeserializer(self.slug, self.__class__.__name__)
         for field in yaml_obj._meta.fields:
