@@ -6,8 +6,8 @@ import logging
 import bigbuild
 from django.conf import settings
 from collections import Sequence
+from bigbuild.serializers import deserializers
 from bigbuild.serializers import BigBuildJSONDeserializer
-from bigbuild.serializers import BigBuildFrontmatterDeserializer
 logger = logging.getLogger(__name__)
 
 
@@ -79,8 +79,8 @@ class PageList(Sequence):
             return None
 
         # Create a Page object from the directory slug
-        deserializer = BigBuildFrontmatterDeserializer(slug, pagetype)
-        return deserializer.deserialize()
+        deserializer = deserializers[pagetype]()
+        return deserializer.deserialize(slug)
 
     def get_dynamic_pages(self):
         """

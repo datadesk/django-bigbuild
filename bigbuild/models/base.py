@@ -11,9 +11,9 @@ from django.utils import timezone
 from greeking import latimes_ipsum
 from django.test import RequestFactory
 from bigbuild import context_processors
+from bigbuild.serializers import deserializers
 from django.template import Engine, RequestContext
 from django.utils.encoding import python_2_unicode_compatible
-from bigbuild.serializers import BigBuildFrontmatterDeserializer
 logger = logging.getLogger(__name__)
 
 
@@ -146,8 +146,8 @@ class BasePage(models.Model):
         """
         Reads in the frontmatter from metadata.yaml and syncs it with the object.
         """
-        deserializer = BigBuildFrontmatterDeserializer(self.slug, self.__class__.__name__)
-        yaml_obj = deserializer.deserialize()
+        deserializer = deserializer = deserializers[self.__class__.__name__]()
+        yaml_obj = deserializer.deserialize(self.slug)
         for field in yaml_obj._meta.fields:
             setattr(self, field.name, getattr(yaml_obj, field.name))
         self.data_objects = yaml_obj.data_objects or {}
