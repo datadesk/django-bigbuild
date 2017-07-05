@@ -97,7 +97,8 @@ class PageList(Sequence):
         Returns a list of Page objects ready to be built in this environment.
         """
         dir_list = self.get_directory_list(self.dynamic_directory)
-        page_list = [self.get_page(d, 'Page') for d in dir_list]
+        deserializer = deserializers['Page']()
+        page_list = [deserializer.deserialize(d) for d in dir_list]
         page_list = [p for p in page_list if p.should_build()]
         logger.debug("{} dynamic pages retrieved from YAML".format(len(page_list)))
         return page_list
@@ -120,7 +121,8 @@ class PageList(Sequence):
         # Otherwise get them from the YAML
         static_archive_path = os.path.join(self.archived_directory, 'static')
         dir_list = self.get_directory_list(static_archive_path)
-        page_list = [self.get_page(d, 'ArchivedPage') for d in dir_list]
+        deserializer = deserializers['ArchivedPage']()
+        page_list = [deserializer.deserialize(d) for d in dir_list]
         page_list = [p for p in page_list if p.should_build()]
         logger.debug("{} archived pages retrieved from YAML".format(len(page_list)))
         return page_list
