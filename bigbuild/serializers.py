@@ -236,9 +236,11 @@ class ArchivedPageFrontmatterDeserializer(BaseBigBuildFrontmatterDeserializer):
     def __init__(self):
         self.model = apps.get_app_config('bigbuild').get_model('ArchivedPage')
 
+
 #
 # Lookups
 #
+
 
 deserializers = {
     'Page': PageFrontmatterDeserializer,
