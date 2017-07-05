@@ -90,14 +90,17 @@ class BasePage(models.Model):
             force = fields.pop("force")
         except KeyError:
             force = False
+
         try:
             index_template_name = fields.pop("index_template_name")
         except KeyError:
             index_template_name = 'bigbuild/pages/default_index.html'
+
         try:
             index_template_context = fields.pop("index_template_context")
         except KeyError:
             index_template_context = {}
+
         try:
             skip_create_directory = fields.pop("skip_create_directory")
         except KeyError:
