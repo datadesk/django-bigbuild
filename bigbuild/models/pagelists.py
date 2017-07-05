@@ -118,7 +118,6 @@ class PageList(Sequence):
             return page_list
 
         # Otherwise get them from the YAML
-        page_list = []
         static_archive_path = os.path.join(self.archived_directory, 'static')
         dir_list = self.get_directory_list(static_archive_path)
         page_list = [self.get_page(d, 'ArchivedPage') for d in dir_list]
