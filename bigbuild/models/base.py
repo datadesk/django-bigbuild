@@ -145,7 +145,7 @@ class BasePage(models.Model):
         view = PageDetailView()
         view.build_object(self)
 
-    def refresh_from_db(self):
+    def refresh_from_yaml(self):
         """
         Reads in the frontmatter from metadata.yaml and syncs it with the object.
         """

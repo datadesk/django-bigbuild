@@ -78,7 +78,7 @@ foo:: bar;:
         bad.close()
 
         with self.assertRaises(DeserializationError):
-            p.refresh_from_db()
+            p.refresh_from_yaml()
 
         good = open(p.frontmatter_path, 'w')
         good.write(yaml)
