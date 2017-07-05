@@ -2,6 +2,7 @@
 # -*- coding: utf-8 -*-
 import os
 import logging
+import bigbuild
 from bigbuild.tests import TestBase
 from bigbuild.tests import BUILD_DIR
 from django.test import override_settings
@@ -26,6 +27,18 @@ class TestCommands(TestBase):
         )
         self.assertTrue(os.path.exists(expected_index))
         PageList()[0].build()
+        with override_settings(BUILD_DIR=''):
+            bigbuild.get_build_directory()
+
+    @override_settings(BIGBUILD_GIT_BRANCH='test', BIGBUILD_BRANCH_BUILD=True)
+    def test_branch_build(self):
+        call_command("build")
+        self.assertTrue(os.path.exists(os.path.join(BUILD_DIR, 'test')))
+        self.assertTrue('test' in bigbuild.get_base_url())
+
+    @override_settings(BIGBUILD_BRANCH_BUILD=False)
+    def test_base_url(self):
+        bigbuild.get_base_url()
 
     @override_settings(BAKERY_GZIP=True)
     def test_gzip(self):
