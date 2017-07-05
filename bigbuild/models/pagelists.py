@@ -103,11 +103,11 @@ class PageList(Sequence):
         # Pull the cached data if it exists
         if os.path.exists(self.archived_cache_path):
             with open(self.archived_cache_path, 'r') as f:
-                page_list = []
-                obj_list = [o.object for o in BigBuildJSONDeserializer(f.read())]
-                for obj in obj_list:
-                    if obj.should_build():
-                        page_list.append(obj)
+                page_list = [
+                    o.object for o in
+                    BigBuildJSONDeserializer(f.read())
+                    if o.object.should_build()
+                ]
             logger.debug("{} archived pages retrieved from cache".format(len(page_list)))
         # Otherwise get them from the YAML
         else:
