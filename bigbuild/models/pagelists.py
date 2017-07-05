@@ -74,7 +74,7 @@ class PageList(Sequence):
         """
         Returns a list of Page objects from the provided slug directory.
         """
-        # Create a Page object from the directory slug
+        # Create an object from the directory slug
         deserializer = deserializers[pagetype]()
         return deserializer.deserialize(slug)
 
@@ -96,11 +96,9 @@ class PageList(Sequence):
         """
         Returns a list of Page objects ready to be built in this environment.
         """
-        page_list = []
-        for d in self.get_directory_list(self.dynamic_directory):
-            page = self.get_page(d, 'Page')
-            if page and page.should_build():
-                page_list.append(page)
+        dir_list = self.get_directory_list(self.dynamic_directory)
+        page_list = [self.get_page(d, 'Page') for d in dir_list]
+        page_list = [p for p in page_list if p.should_build()]
         logger.debug("{} dynamic pages retrieved from YAML".format(len(page_list)))
         return page_list
 
@@ -117,14 +115,13 @@ class PageList(Sequence):
                     if o.object.should_build()
                 ]
             logger.debug("{} archived pages retrieved from cache".format(len(page_list)))
-        # Otherwise get them from the YAML
-        else:
-            page_list = []
-            for d in self.get_directory_list(os.path.join(self.archived_directory, 'static')):
-                page = self.get_page(d, 'ArchivedPage')
-                if page and page.should_build():
-                    page_list.append(page)
-            logger.debug("{} archived pages retrieved from YAML".format(len(page_list)))
+            return page_list
 
-        # Log and return
+        # Otherwise get them from the YAML
+        page_list = []
+        static_archive_path = os.path.join(self.archived_directory, 'static')
+        dir_list = self.get_directory_list(static_archive_path)
+        page_list = [self.get_page(d, 'ArchivedPage') for d in dir_list]
+        page_list = [p for p in page_list if p.should_build()]
+        logger.debug("{} archived pages retrieved from YAML".format(len(page_list)))
         return page_list
