@@ -115,9 +115,30 @@ class BigBuildFrontmatterSerializer(YAMLSerializer):
 
 class BaseBigBuildFrontmatterDeserializer(object):
     """
-    Given the page to a YAML deserialize it from Jekyll's frontmatter format.
+    Abstract method for deserializing YAML data from Jekyll's frontmatter format.
     """
+    def deserialize(self, slug):
+        """
+        Retrieves the provided slug and returns a bigbuild object
+        """
+        logger.debug("Retrieving {} as {} object".format(
+            slug,
+            self.model.__name__
+        ))
+        obj = self.model.create(slug=slug, skip_create_directory=True)
+        try:
+            # Sync the metadata from the YAML frontmatter with the object
+            obj = self.set_metadata(obj)
+            # Pass it out
+            return obj
+        except Exception as e:
+            # Map to deserializer error
+            six.reraise(DeserializationError, DeserializationError(e), sys.exc_info()[2])
+
     def set_metadata(self, obj):
+        """
+        Syncs metadata with YAML frontmatter with provided bigbuild model object.
+        """
         stream = open(obj.frontmatter_path, 'r')
         post = frontmatter.load(stream)
 
@@ -156,28 +177,18 @@ class BaseBigBuildFrontmatterDeserializer(object):
         # Pass it back out
         return obj
 
-    def deserialize(self, slug):
-        logger.debug("Retrieving {} as {} object".format(
-            slug,
-            self.model.__name__
-        ))
-        obj = self.model.create(slug=slug, skip_create_directory=True)
-        try:
-            # Sync the metadata from the YAML frontmatter with the object
-            obj = self.set_metadata(obj)
-            # Pass it out
-            return obj
-        except Exception as e:
-            # Map to deserializer error
-            six.reraise(DeserializationError, DeserializationError(e), sys.exc_info()[2])
-
 
 class PageFrontmatterDeserializer(BaseBigBuildFrontmatterDeserializer):
-
+    """
+    Deserializes Jekyll frontmatter from YAML to a bigbuild Page object.
+    """
     def __init__(self):
         self.model = apps.get_app_config('bigbuild').get_model('Page')
 
     def set_metadata(self, obj):
+        """
+        Extends the base deserialization with techniques for syncing data files.
+        """
         obj = super(PageFrontmatterDeserializer, self).set_metadata(obj)
 
         # Reopen the YAML frontmatter
@@ -219,10 +230,15 @@ class PageFrontmatterDeserializer(BaseBigBuildFrontmatterDeserializer):
 
 
 class ArchivedPageFrontmatterDeserializer(BaseBigBuildFrontmatterDeserializer):
-
+    """
+    Deserializes Jekyll frontmatter from YAML to a bigbuild ArchivedPage object.
+    """
     def __init__(self):
         self.model = apps.get_app_config('bigbuild').get_model('ArchivedPage')
 
+#
+# Lookups
+#
 
 deserializers = {
     'Page': PageFrontmatterDeserializer,
