@@ -74,21 +74,30 @@ class PageList(Sequence):
         """
         Returns a list of Page objects from the provided slug directory.
         """
-        # Ignore any names in our blacklist
-        if slug in getattr(settings, 'BIGBUILD_PAGE_BLACKLIST', ['.DS_Store']):
-            return None
-
         # Create a Page object from the directory slug
         deserializer = deserializers[pagetype]()
         return deserializer.deserialize(slug)
 
+    def get_directory_list(self, path):
+        """
+        Returns the list of slugged page modules in the provided directory.
+        """
+        # Get the list of directories found on the filesystem
+        dir_list = os.listdir(path)
+
+        # Omit any that are on our blacklist
+        blacklist = getattr(settings, 'BIGBUILD_PAGE_BLACKLIST', ['.DS_Store'])
+        dir_list = [d for d in dir_list if d not in blacklist]
+
+        # Return what remains
+        return dir_list
+
     def get_dynamic_pages(self):
         """
-        Returns a list of Page objects ready to be built
-        in this environment.
+        Returns a list of Page objects ready to be built in this environment.
         """
         page_list = []
-        for d in os.listdir(self.dynamic_directory):
+        for d in self.get_directory_list(self.dynamic_directory):
             page = self.get_page(d, 'Page')
             if page and page.should_build():
                 page_list.append(page)
@@ -97,8 +106,7 @@ class PageList(Sequence):
 
     def get_archived_pages(self):
         """
-        Returns a list of ArchivedPage objects ready to be built
-        in this environment.
+        Returns a list of ArchivedPage objects ready to be built in this environment.
         """
         # Pull the cached data if it exists
         if os.path.exists(self.archived_cache_path):
@@ -112,7 +120,7 @@ class PageList(Sequence):
         # Otherwise get them from the YAML
         else:
             page_list = []
-            for d in os.listdir(os.path.join(self.archived_directory, 'static')):
+            for d in self.get_directory_list(os.path.join(self.archived_directory, 'static')):
                 page = self.get_page(d, 'ArchivedPage')
                 if page and page.should_build():
                     page_list.append(page)
