@@ -60,6 +60,7 @@ class BigBuildFrontmatterSerializer(YAMLSerializer):
     def end_serialization(self):
         # Dump each object into the stream as as frontmatter
         content = [frontmatter.dumps(o) for o in self.objects]
+        # Write out as text to the stream in a safe string format
         [self.stream.write(six.text_type(chunk)) for chunk in content]
 
     def get_metadata(self, obj):
@@ -112,82 +113,91 @@ class BigBuildFrontmatterSerializer(YAMLSerializer):
             return False
 
 
-def BigBuildFrontmatterDeserializer(slug, model_name='Page'):
+class BigBuildFrontmatterDeserializer(object):
     """
     Given the page to a YAML deserialize it from Jekyll's frontmatter format.
     """
-    model = apps.get_app_config('bigbuild').get_model(model_name)
-    obj = model.create(slug=slug, skip_create_directory=True)
-    try:
-        stream = open(obj.frontmatter_path, 'r')
-        post = frontmatter.load(stream)
+    def __init__(self, slug, model_name='Page'):
+        logger.debug("Retrieving {} as {} object".format(
+            slug,
+            model_name
+        ))
+        self.slug = slug
+        self.model_name = model_name
+        self.model = apps.get_app_config('bigbuild').get_model(model_name)
 
-        # Set the basic frontmatter metadata
-        obj.headline = post.metadata['headline']
-        obj.byline = post.metadata['byline']
-        obj.description = post.metadata['description']
-        obj.image_url = post.metadata['image_url']
-        obj.pub_date = post.metadata['pub_date']
-        obj.published = post.metadata['published']
-        obj.show_in_feeds = post.metadata['show_in_feeds']
-
-        # Attach any extra stuff
+    def deserialize(self):
+        obj = self.model.create(slug=self.slug, skip_create_directory=True)
         try:
-            obj.extra = post.metadata['extra']
-        except KeyError:
-            obj.extra = {}
+            stream = open(obj.frontmatter_path, 'r')
+            post = frontmatter.load(stream)
 
-        try:
-            obj.data = post.metadata['data']
-        except KeyError:
-            obj.data = {}
+            # Set the basic frontmatter metadata
+            obj.headline = post.metadata['headline']
+            obj.byline = post.metadata['byline']
+            obj.description = post.metadata['description']
+            obj.image_url = post.metadata['image_url']
+            obj.pub_date = post.metadata['pub_date']
+            obj.published = post.metadata['published']
+            obj.show_in_feeds = post.metadata['show_in_feeds']
 
-        # Pull in the content as is
-        obj.content = post.content
+            # Attach any extra stuff
+            try:
+                obj.extra = post.metadata['extra']
+            except KeyError:
+                obj.extra = {}
 
-        # Render it out as flat HTML
-        obj.content = obj.rendered_content
+            try:
+                obj.data = post.metadata['data']
+            except KeyError:
+                obj.data = {}
 
-        # Make sure the page has recommended metadata
-        # ... if it's ready to publish
-        if obj.pub_status in ['live', 'pending']:
-            if not obj.has_recommended_metadata():
-                logger.warn(MissingRecommendedMetadataWarning(obj))
+            # Pull in the content as is
+            obj.content = post.content
 
-        # Extra stuff if this is a live Page model
-        if model_name == 'Page':
-            # Loop through any data files
-            for key, path in post.metadata.get('data', {}).items():
+            # Render it out as flat HTML
+            obj.content = obj.rendered_content
 
-                # Generate the path if it's stored in the default `data` directory
-                data_dir = os.path.join(obj.page_directory_path, 'data')
-                p = os.path.join(data_dir, path)
-                # If it doesn't exist, see if it's in another folder
-                if not os.path.exists(p):
-                    p = os.path.join(obj.page_directory_path, path)
-                    # If it's not there either, throw an error
+            # Make sure the page has recommended metadata
+            # ... if it's ready to publish
+            if obj.pub_status in ['live', 'pending']:
+                if not obj.has_recommended_metadata():
+                    logger.warn(MissingRecommendedMetadataWarning(obj))
+
+            # Extra stuff if this is a live Page model
+            if self.model_name == 'Page':
+                # Loop through any data files
+                for key, path in post.metadata.get('data', {}).items():
+
+                    # Generate the path if it's stored in the default `data` directory
+                    data_dir = os.path.join(obj.page_directory_path, 'data')
+                    p = os.path.join(data_dir, path)
+                    # If it doesn't exist, see if it's in another folder
                     if not os.path.exists(p):
-                        logging.debug("Data file could not be found at %s" % p)
+                        p = os.path.join(obj.page_directory_path, path)
+                        # If it's not there either, throw an error
+                        if not os.path.exists(p):
+                            logging.debug("Data file could not be found at %s" % p)
 
-                # Open the file
-                with codecs.open(p, 'r') as f:
-                    # If it's a CSV file open it that way...
-                    if p.endswith(".csv"):
-                        obj.data_objects[key] = list(csv.DictReader(f))
-                    # If it's a JSON file open it this way ...
-                    elif p.endswith(".json"):
-                        obj.data_objects[key] = json.load(f)
-                    # If it's a YAML file open it t'other way ...
-                    elif (p.endswith(".yml") or p.endswith(".yaml")):
-                        obj.data_objects[key] = yaml.load(f)
-                    elif p.endswith(".aml"):
-                        obj.data_objects[key] = archieml.load(f)
-                    # If it's none of those throw an error.
-                    else:
-                        logging.debug("Data file at %s not recognizable type" % path)
+                    # Open the file
+                    with codecs.open(p, 'r') as f:
+                        # If it's a CSV file open it that way...
+                        if p.endswith(".csv"):
+                            obj.data_objects[key] = list(csv.DictReader(f))
+                        # If it's a JSON file open it this way ...
+                        elif p.endswith(".json"):
+                            obj.data_objects[key] = json.load(f)
+                        # If it's a YAML file open it t'other way ...
+                        elif (p.endswith(".yml") or p.endswith(".yaml")):
+                            obj.data_objects[key] = yaml.load(f)
+                        elif p.endswith(".aml"):
+                            obj.data_objects[key] = archieml.load(f)
+                        # If it's none of those throw an error.
+                        else:
+                            logging.debug("Data file at %s not recognizable type" % path)
 
-        # Pass it out
-        return obj
-    except Exception as e:
-        # Map to deserializer error
-        six.reraise(DeserializationError, DeserializationError(e), sys.exc_info()[2])
+            # Pass it out
+            return obj
+        except Exception as e:
+            # Map to deserializer error
+            six.reraise(DeserializationError, DeserializationError(e), sys.exc_info()[2])

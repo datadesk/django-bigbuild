@@ -79,14 +79,14 @@ class PageList(Sequence):
             return None
 
         # Create a Page object from the directory slug
-        return BigBuildFrontmatterDeserializer(slug, pagetype)
+        deserializer = BigBuildFrontmatterDeserializer(slug, pagetype)
+        return deserializer.deserialize()
 
     def get_dynamic_pages(self):
         """
         Returns a list of Page objects ready to be built
         in this environment.
         """
-        logger.debug("Retrieving dynamic page list")
         page_list = []
         for d in os.listdir(self.dynamic_directory):
             page = self.get_page(d, 'Page')

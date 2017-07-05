@@ -146,7 +146,8 @@ class BasePage(models.Model):
         """
         Reads in the frontmatter from metadata.yaml and syncs it with the object.
         """
-        yaml_obj = BigBuildFrontmatterDeserializer(self.slug, self.__class__.__name__)
+        deserializer = BigBuildFrontmatterDeserializer(self.slug, self.__class__.__name__)
+        yaml_obj = deserializer.deserialize()
         for field in yaml_obj._meta.fields:
             setattr(self, field.name, getattr(yaml_obj, field.name))
         self.data_objects = yaml_obj.data_objects or {}
