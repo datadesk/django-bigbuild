@@ -13,7 +13,7 @@ logger = logging.getLogger(__name__)
 
 class PageList(Sequence):
     """
-    A list of all the Page objects in the application.
+    A list of all the Page and ArchivedPage objects in the application.
     """
     def __init__(self):
         # Set the page directories
