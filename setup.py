@@ -114,7 +114,7 @@ system for publishing standalone pages",
     ],
     install_requires=[
         'python-frontmatter>=0.4.2',
-        'django-bakery>=0.10.3',
+        'django-bakery>=0.10.4',
         'validictory>=1.0.1',
         'django-compressor>=2.0',
         'greeking>=2.2.0',

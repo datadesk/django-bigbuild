@@ -1,7 +1,7 @@
 # Django
 .build/
 config/django.log
-config/settings_local.py
+example/project/settings_local.py
 .sass-cache
 
 # Sqlite db
