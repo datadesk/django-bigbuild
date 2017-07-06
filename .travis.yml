@@ -15,7 +15,7 @@ env:
   - BIGBUILD_GIT_BRANCH=$TRAVIS_BRANCH
   matrix:
     - DJANGO_VERSION=1.10.7
-    - DJANGO_VERSION=1.11.2
+    - DJANGO_VERSION=1.11.3
 
 install:
   - pip install -r requirements.txt
