@@ -6,8 +6,10 @@ import bigbuild
 from django.urls import reverse
 from django.http import Http404
 from django.conf import settings
+from bigbuild.forms import PageForm
 from django.views.static import serve
 from bigbuild import context_processors
+from django.views.generic.edit import UpdateView
 from bigbuild.models import PageList, Page, ArchivedPage
 from bigbuild.management.commands.build import Command as Build
 from bakery.views import (
@@ -196,6 +198,20 @@ class PageArchiveView(PageDetailView):
         context = super(PageArchiveView, self).get_context_data(object=object)
         context['ARCHIVAL'] = True
         return self.process_context(context)
+
+
+class PageUpdateView(UpdateView):
+    form = PageForm
+    template_name_suffix = '_update_form'
+
+    def get_queryset(self):
+        return PageList()
+
+    def get_object(self, queryset=None):
+        if queryset is None:
+            queryset = self.get_queryset()
+        slug = self.kwargs.get(self.slug_url_kwarg)
+        return queryset[slug]
 
 
 def page_static_serve(request, slug, path):  # pragma: no cover

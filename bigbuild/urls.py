@@ -17,6 +17,11 @@ basepatterns = [
         views.PageDetailView.as_view(),
         name='bigbuild-page-detail'
     ),
+    url(
+        r'^(?P<slug>[-\w]+)/edit/$',
+        views.PageUpdateView.as_view(),
+        name='bigbuild-page-update'
+    ),
 
     # Static assets
     url(
