@@ -29,7 +29,7 @@ class BasePage(models.Model):
     image_url = models.CharField(max_length=1000, blank=True, default="")
     pub_date = models.DateTimeField(default=datetime.now)
     published = models.BooleanField(default=False)
-    show_in_feeds = models.BooleanField(default=False)
+    show_in_feeds = models.BooleanField(default=True)
     content = models.TextField(blank=True)
     extra = jsonfield.JSONField(blank=True)
     data = jsonfield.JSONField(blank=True)
