@@ -66,9 +66,11 @@ class TestCommand(Command):
                 'compressor.filters.jsmin.JSMinFilter',
             ],
             COMPRESS_PRECOMPILERS = (
-                ('text/coffeescript', 'coffee --compile --stdio'),
-                ('text/less', 'lessc {infile} {outfile}'),
-                ('text/x-sass', 'sass {infile} {outfile}'),
+                ('module', 'bigbuild.precompilers.ES6Compiler'),
+            ),
+            COMPRESS_BROWSERIFY_BIN = os.path.join(
+                os.path.dirname(__file__),
+                "node_modules/.bin/browserify"
             ),
             COMPRESS_CACHEABLE_PRECOMPILERS = (),
             USE_TZ = True,
