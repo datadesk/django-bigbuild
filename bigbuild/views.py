@@ -11,6 +11,7 @@ from django.views.static import serve
 from bigbuild import context_processors
 from django.views.generic.edit import UpdateView
 from bigbuild.models import PageList, Page, ArchivedPage
+from django.core.serializers.base import DeserializationError
 from bigbuild.management.commands.build import Command as Build
 from bakery.views import (
     BuildableTemplateView,
@@ -105,13 +106,15 @@ class PageDetailView(BuildableDetailView, BigBuildMixin):
         Returns the Page object being rendered by this view.
         """
         # Check if it is a dynamic page, if so return it
-        obj = PageList.get_page(self.kwargs.get("slug"), 'Page')
-        if obj:
-            return obj
+        try:
+            return PageList.get_page(self.kwargs.get("slug"), 'Page')
+        except DeserializationError:
+            pass
         # Check if it is an archived page, if so return it
-        obj = PageList.get_page(self.kwargs.get("slug"), 'ArchivedPage')
-        if obj:
-            return obj
+        try:
+            return PageList.get_page(self.kwargs.get("slug"), 'ArchivedPage')
+        except DeserializationError:
+            pass
         # Otherwise, 404
         raise Http404("No page found with the slug '{}'".format(self.kwargs.get("slug")))
 
