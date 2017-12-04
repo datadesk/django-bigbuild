@@ -22,7 +22,7 @@ class Command(BaseCommand):
         for slug in options['slug']:
             try:
                 p = PageList()[slug]
-            except:
+            except Exception:
                 raise CommandError("Slug provided (%s) does not exist" % slug)
 
             # Make sure it's an archived page

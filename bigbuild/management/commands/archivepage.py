@@ -31,7 +31,7 @@ class Command(BaseCommand):
             # Pull the object
             try:
                 p = PageList()[slug]
-            except:
+            except Exception:
                 raise CommandError("Slug provided (%s) does not exist" % slug)
 
             if not isinstance(p, Page):
