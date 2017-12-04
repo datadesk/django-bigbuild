@@ -109,7 +109,7 @@ class BigBuildFrontmatterSerializer(YAMLSerializer):
             if not isinstance(metadata['pub_date'], datetime):
                 return False
             return True
-        except:
+        except Exception:
             return False
 
 
