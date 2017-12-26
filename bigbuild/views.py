@@ -157,7 +157,9 @@ class PageDetailView(BuildableDetailView, BigBuildMixin):
 
         # An internal django-bakery trick to gzip them if we need to
         if settings.BAKERY_GZIP:
-            Build().copytree_and_gzip(
+            cmd = Build()
+            cmd.set_options()
+            cmd.copytree_and_gzip(
                 source_dir,
                 target_dir
             )
