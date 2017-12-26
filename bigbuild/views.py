@@ -184,7 +184,9 @@ class PageDetailView(BuildableDetailView, BigBuildMixin):
             target = obj.build_directory_path
             os.path.exists(target) and shutil.rmtree(target)
             if settings.BAKERY_GZIP:
-                Build().copytree_and_gzip(
+                cmd = Build()
+                cmd.set_options()
+                cmd.copytree_and_gzip(
                     obj.archive_static_directory_path,
                     target
                 )
