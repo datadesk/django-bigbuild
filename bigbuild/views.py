@@ -3,6 +3,7 @@
 import os
 import bigbuild
 from fs import path
+from fs import copy
 from django.urls import reverse
 from django.http import Http404
 from django.conf import settings
@@ -166,7 +167,8 @@ class PageDetailView(BuildableDetailView, BigBuildMixin):
             )
         else:
             # Or a more vanilla way of copying the files with Python
-            self.fs.copydir(smart_text(source_dir), smart_text(target_dir), create=True)
+            logger.debug("Copying {}{} to {}{}".format("osfs://", self.static_root, self.fs_name, target_dir))
+            copy.copy_dir("osfs:///", smart_text(source_dir), self.fs, smart_text(target_dir))
 
     def build_object(self, obj):
         """
@@ -190,7 +192,13 @@ class PageDetailView(BuildableDetailView, BigBuildMixin):
                     target
                 )
             else:
-                self.fs.copydir(smart_text(obj.archive_static_directory_path), smart_text(target), create=True)
+                logger.debug("Copying {}{} to {}{}".format("osfs://", obj.archive_static_directory_path, self.fs_name, target))
+                copy.copy_dir(
+                    "osfs:///",
+                    smart_text(obj.archive_static_directory_path),
+                    self.fs,
+                    smart_text(target)
+                )
 
     def build_queryset(self):
         [self.build_object(o) for o in PageList()]
