@@ -1,4 +1,4 @@
-.PHONY: ship test html livehtml
+.PHONY: ship test html livehtml build
 
 ship:
 	python setup.py sdist bdist_wheel
@@ -14,3 +14,9 @@ docs:
 
 docslive:
 	cd docs && make livehtml
+
+build:
+	clear
+	rm -rf .build
+	python example/manage.py build bigbuild.views.PageListView --skip-media --skip-static
+	ls .build
