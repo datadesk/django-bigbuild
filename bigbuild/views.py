@@ -1,14 +1,15 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
 import os
-import shutil
 import bigbuild
+from fs import path
 from django.urls import reverse
 from django.http import Http404
 from django.conf import settings
 from bigbuild.forms import PageForm
 from django.views.static import serve
 from bigbuild import context_processors
+from django.utils.encoding import smart_text
 from django.views.generic.edit import UpdateView
 from bigbuild.models import PageList, Page, ArchivedPage
 from django.core.serializers.base import DeserializationError
@@ -150,7 +151,7 @@ class PageDetailView(BuildableDetailView, BigBuildMixin):
         source_dir = os.path.join(obj.page_directory_path, 'static')
 
         # The location in the build directory where we want to copy them
-        target_dir = os.path.join(
+        target_dir = path.join(
             bigbuild.get_build_directory(),
             obj.get_static_url().lstrip("/")
         )
@@ -165,8 +166,7 @@ class PageDetailView(BuildableDetailView, BigBuildMixin):
             )
         else:
             # Or a more vanilla way of copying the files with Python
-            os.path.exists(target_dir) and shutil.rmtree(target_dir)
-            shutil.copytree(source_dir, target_dir)
+            self.fs.copydir(smart_text(source_dir), smart_text(target_dir), create=True)
 
     def build_object(self, obj):
         """
@@ -182,7 +182,6 @@ class PageDetailView(BuildableDetailView, BigBuildMixin):
         elif isinstance(obj, ArchivedPage):
             # ... do a copy and paste from the archive to the build directory
             target = obj.build_directory_path
-            os.path.exists(target) and shutil.rmtree(target)
             if settings.BAKERY_GZIP:
                 cmd = Build()
                 cmd.set_options()
@@ -191,7 +190,7 @@ class PageDetailView(BuildableDetailView, BigBuildMixin):
                     target
                 )
             else:
-                shutil.copytree(obj.archive_static_directory_path, target)
+                self.fs.copydir(smart_text(obj.archive_static_directory_path), smart_text(target), create=True)
 
     def build_queryset(self):
         [self.build_object(o) for o in PageList()]
