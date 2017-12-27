@@ -1,7 +1,7 @@
 # Dependencies
 Django==1.11
 python-frontmatter==0.4.2
--e git+git://github.com/datadesk/django-bakery.git@fs#egg=django-bakery
+django-bakery==0.12.0
 PyYAML==3.11
 validictory==1.0.1
 django-compressor==2.0
