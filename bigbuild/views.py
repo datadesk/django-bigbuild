@@ -1,6 +1,7 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
 import os
+import logging
 import bigbuild
 from fs import path
 from fs import copy
@@ -21,6 +22,7 @@ from bakery.views import (
     Buildable404View,
     BuildableRedirectView
 )
+logger = logging.getLogger(__name__)
 
 
 class BigBuildMixin(object):
@@ -167,7 +169,7 @@ class PageDetailView(BuildableDetailView, BigBuildMixin):
             )
         else:
             # Or a more vanilla way of copying the files with Python
-            logger.debug("Copying {}{} to {}{}".format("osfs://", self.static_root, self.fs_name, target_dir))
+            logger.debug("Copying {}{} to {}{}".format("osfs://", source_dir, self.fs_name, target_dir))
             copy.copy_dir("osfs:///", smart_text(source_dir), self.fs, smart_text(target_dir))
 
     def build_object(self, obj):
@@ -192,7 +194,12 @@ class PageDetailView(BuildableDetailView, BigBuildMixin):
                     target
                 )
             else:
-                logger.debug("Copying {}{} to {}{}".format("osfs://", obj.archive_static_directory_path, self.fs_name, target))
+                logger.debug("Copying {}{} to {}{}".format(
+                    "osfs://",
+                    obj.archive_static_directory_path,
+                    self.fs_name,
+                    target
+                ))
                 copy.copy_dir(
                     "osfs:///",
                     smart_text(obj.archive_static_directory_path),
