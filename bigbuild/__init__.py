@@ -6,7 +6,7 @@ from django.conf import settings
 from django.utils.version import get_version
 default_app_config = 'bigbuild.apps.BigbuildConfig'
 
-VERSION = (0, 9, 3, 'final', 0)
+VERSION = (0, 9, 4, 'final', 0)
 __version__ = get_version(VERSION)
 
 
