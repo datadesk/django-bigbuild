@@ -29,6 +29,7 @@ class TestCommand(Command):
                 'django.contrib.staticfiles',
                 'compressor',
                 'greeking',
+                'bakery',
                 'bigbuild',
             ),
             TEMPLATES=[
