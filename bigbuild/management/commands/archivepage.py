@@ -2,6 +2,7 @@
 # -*- coding: utf-8 -*-
 import os
 import shutil
+from django.test import override_settings
 from bigbuild.views import PageArchiveView
 from bigbuild.models import PageList, Page
 from django.core.management import call_command
@@ -37,8 +38,11 @@ class Command(BaseCommand):
             if not isinstance(p, Page):
                 raise CommandError("Slug (%s) is not a Page object" % slug)
 
-            # Build it
-            PageArchiveView().build_object(p)
+            # Build it ...
+            # ... but force to os filesystem in case project is in-memory.
+            # This ensures there's a hard folder to copy below.
+            with override_settings(BAKERY_FILESYSTEM="osfs:///"):
+                PageArchiveView().build_object(p)
 
             # If the retired directory exists, kill it
             if os.path.exists(p.archive_static_directory_path):
