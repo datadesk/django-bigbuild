@@ -2,9 +2,11 @@
 # -*- coding: utf-8 -*-
 import os
 import shutil
-from django.test import override_settings
+from fs import copy
+from django.apps import apps
 from bigbuild.views import PageArchiveView
 from bigbuild.models import PageList, Page
+from django.utils.encoding import smart_text
 from django.core.management import call_command
 from django.core.management.base import BaseCommand, CommandError
 
@@ -12,6 +14,8 @@ from django.core.management.base import BaseCommand, CommandError
 class Command(BaseCommand):
     help = "Archive a page directory by permanently rendering its HTML"
     args = "<slug>"
+    fs_name = apps.get_app_config("bakery").filesystem_name
+    fs = apps.get_app_config("bakery").filesystem
 
     def add_arguments(self, parser):
         parser.add_argument('slug', nargs='+', type=str)
@@ -38,18 +42,20 @@ class Command(BaseCommand):
             if not isinstance(p, Page):
                 raise CommandError("Slug (%s) is not a Page object" % slug)
 
-            # Build it ...
-            # ... but force to os filesystem in case project is in-memory.
-            # This ensures there's a hard folder to copy below.
-            with override_settings(BAKERY_FILESYSTEM="osfs:///"):
-                PageArchiveView().build_object(p)
+            # Build it
+            PageArchiveView().build_object(p)
 
             # If the retired directory exists, kill it
             if os.path.exists(p.archive_static_directory_path):
                 shutil.rmtree(p.archive_static_directory_path)  # pragma: no cover
 
             # Save that directory to the retired folder
-            shutil.copytree(p.build_directory_path, p.archive_static_directory_path)
+            copy.copy_dir(
+                self.fs,
+                smart_text(p.build_directory_path),
+                "osfs:///",
+                smart_text(p.archive_static_directory_path)
+            )
 
             # Save the metadata to the retired folder
             frontmatter_path = os.path.join(p.archive_static_directory_path, 'metadata.md')
