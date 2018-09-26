@@ -74,6 +74,7 @@ class BasePage(models.Model):
                 # If it's not there either, throw an error
                 if not os.path.exists(p):
                     logging.debug("Data file could not be found at %s" % p)
+                    continue
 
             # Open the file
             with codecs.open(p, 'r') as f:
