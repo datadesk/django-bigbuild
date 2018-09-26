@@ -92,7 +92,6 @@ class BasePage(models.Model):
                 else:
                     logging.debug("Data file at %s not recognizable type" % path)
 
-
     @property
     def rendered_content(self):
         """
