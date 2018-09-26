@@ -1,0 +1,30 @@
+[[source]]
+url = "https://pypi.python.org/simple"
+verify_ssl = true
+name = "pypi"
+
+[packages]
+Django = "==1.11"
+python-frontmatter = "==0.4.2"
+django-bakery = "==0.12.5"
+PyYAML = "==3.11"
+validictory = "==1.0.1"
+django_compressor = "==2.0"
+greeking = "==2.2.0"
+python-dateutil = ">=2.6.0"
+archieml = ">=0.3.1"
+django-jsonfield = ">=1.0.1"
+GitPython = "*"
+pytz = "*"
+six = "*"
+Sphinx = "*"
+sphinx-autobuild = "*"
+"flake8" = "*"
+coverage = "*"
+coveralls = "*"
+twine = "*"
+
+[dev-packages]
+
+[requires]
+python_version = "3.6"

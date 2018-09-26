@@ -1,6 +1,12 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
 import os
+import csv
+import copy
+import json
+import yaml
+import archieml
+import codecs
 import logging
 import bigbuild
 import jsonfield
@@ -55,6 +61,38 @@ class BasePage(models.Model):
     # Dynamic content
     #
 
+    def set_data_objects(self):
+        # Loop through any data files
+        for key, path in self.data.items():
+
+            # Generate the path if it's stored in the default `data` directory
+            data_dir = os.path.join(self.page_directory_path, 'data')
+            p = os.path.join(data_dir, path)
+            # If it doesn't exist, see if it's in another folder
+            if not os.path.exists(p):
+                p = os.path.join(self.page_directory_path, path)
+                # If it's not there either, throw an error
+                if not os.path.exists(p):
+                    logging.debug("Data file could not be found at %s" % p)
+
+            # Open the file
+            with codecs.open(p, 'r') as f:
+                # If it's a CSV file open it that way...
+                if p.endswith(".csv"):
+                    self.data_objects[key] = list(csv.DictReader(f))
+                # If it's a JSON file open it this way ...
+                elif p.endswith(".json"):
+                    self.data_objects[key] = json.load(f)
+                # If it's a YAML file open it t'other way ...
+                elif (p.endswith(".yml") or p.endswith(".yaml")):
+                    self.data_objects[key] = yaml.load(f)
+                elif p.endswith(".aml"):
+                    self.data_objects[key] = archieml.load(f)
+                # If it's none of those throw an error.
+                else:
+                    logging.debug("Data file at %s not recognizable type" % path)
+
+
     @property
     def rendered_content(self):
         """
@@ -66,11 +104,14 @@ class BasePage(models.Model):
             os.path.join(bigbuild.get_archive_directory(), 'static')
         ])
         template = engine.from_string(self.content)
+        obj = copy.deepcopy(self)
+        obj.set_data_objects()
+        obj.data = obj.data_objects
         context = RequestContext(
             RequestFactory().get(self.get_absolute_url()),
             {
-                "object": self,
-                'STATIC_URL': self.get_static_url()
+                "object": obj,
+                'STATIC_URL': obj.get_static_url()
             },
             [context_processors.bigbuild]
         )
